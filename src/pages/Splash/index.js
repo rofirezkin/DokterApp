@@ -1,11 +1,10 @@
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { Logo } from "../..assets";
-
+import Logo from "./logo.png";
 const Splash = () => {
   return (
     <View style={styles.pages}>
-      <Image source={Logo} style={{ marginLeft: -10 }} />
+      <Image source={Logo} />
       <Text style={styles.title}>Adadokter</Text>
     </View>
   );

@@ -1,4 +1,4 @@
 import GetStarted from "./GetStarted";
-// import Splash from "./Splash";
+import Splash from "./Splash";
 
-export { GetStarted };
+export { GetStarted, Splash };

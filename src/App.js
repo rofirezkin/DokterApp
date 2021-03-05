@@ -1,5 +1,4 @@
 import React from "react";
-import { GetStarted } from "./pages";
 import Router from "./router";
 import { NavigationContainer } from "@react-navigation/native";
 
