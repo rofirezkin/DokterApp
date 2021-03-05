@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import { ImageGetStarted } from "../../assets";
 import { Button, Gap } from "../../components/atoms";
 
-const GetStarted = () => {
+const GetStarted = ({ navigation }) => {
   return (
     <>
       <View style={styles.pages}>
@@ -22,9 +22,12 @@ const GetStarted = () => {
           </Text>
         </View>
         <View>
-          <Button title="Get Started" />
+          <Button
+            title="Get Started"
+            onPress={() => navigation.navigate("Register")}
+          />
           <Gap height={12} />
-          <Button title="Sign In" />
+          <Button title="Sign In" onPress={() => navigation.replace("Login")} />
         </View>
       </View>
     </>
