@@ -4,9 +4,11 @@ import { Button, Input, Link } from "../../components/atoms";
 import Logo from "./logo.png";
 const Login = () => {
   return (
-    <View>
-      <Image source={Logo} />
-      <Text>Masuk Dan Mulai Konsultasi</Text>
+    <View style={styles.page}>
+      <View style={styles.wrapper}>
+        <Image source={Logo} />
+        <Text>Masuk Dan Mulai Konsultasi</Text>
+      </View>
       <Input />
       <Input />
       <Link />
@@ -17,4 +19,13 @@ const Login = () => {
 
 export default Login;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  page: {
+    backgroundColor: gradient(red, yellow),
+    flex: 1,
+  },
+  wrapper: {
+    backgroundColor: "red",
+    height: "35%",
+  },
+});
