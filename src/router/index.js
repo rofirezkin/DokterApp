@@ -1,11 +1,11 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { GetStarted, Splash, Register, Login } from "../pages";
+import { GetStarted, Splash, Register, Login, AR, UploadPhoto } from "../pages";
 const Stack = createStackNavigator();
 
 const Router = () => {
   return (
-    <Stack.Navigator initialRouteName="Splash">
+    <Stack.Navigator initialRouteName="Register">
       <Stack.Screen
         name="Splash"
         component={Splash}
@@ -26,6 +26,12 @@ const Router = () => {
         component={Login}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="UploadPhoto"
+        component={UploadPhoto}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="AR" component={AR} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };
