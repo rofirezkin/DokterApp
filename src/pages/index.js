@@ -4,5 +4,28 @@ import Register from "./Register";
 import Login from "./Login";
 import AR from "./ViroAR";
 import UploadPhoto from "./UploadPhoto";
+import Messages from "./Messages";
+import Dashboard from "./Dashboard";
+import Artikel from "./Artikel";
+import Chatting from "./Chatting";
+import UserProfile from "./UserProfile";
+import UpdateProfile from "./UpdateProfile";
+import DoctorProfile from "./DoctorProfile";
+import UpdateStatus from "./UpdateStatus";
 
-export { GetStarted, Splash, Register, Login, AR, UploadPhoto };
+export {
+  UpdateStatus,
+  Chatting,
+  GetStarted,
+  Splash,
+  Register,
+  Login,
+  AR,
+  UploadPhoto,
+  Dashboard,
+  Messages,
+  Artikel,
+  UserProfile,
+  UpdateProfile,
+  DoctorProfile,
+};

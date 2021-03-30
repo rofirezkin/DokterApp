@@ -2,7 +2,7 @@ import React from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Button, Gap, Input, Link } from "../../components/atoms";
 import Logo from "./logo.png";
-const Login = () => {
+const Login = ({ navigation }) => {
   return (
     <View style={styles.page}>
       <ScrollView>
@@ -18,7 +18,12 @@ const Login = () => {
           <Gap height={17} />
           <Link title="Forgot My Password" size={12} />
           <Gap height={40} />
-          <Button type="secondary" text="secondary" title="Sign In" />
+          <Button
+            type="secondary"
+            text="secondary"
+            title="Sign In"
+            onPress={() => navigation.replace("MainApp")}
+          />
           <Gap height={30} />
           <Link title="Create New Account" size={16} align="center" />
         </View>

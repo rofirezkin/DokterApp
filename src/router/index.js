@@ -1,11 +1,39 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { GetStarted, Splash, Register, Login, AR, UploadPhoto } from "../pages";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  GetStarted,
+  Splash,
+  Register,
+  Login,
+  AR,
+  UploadPhoto,
+  Messages,
+  Dashboard,
+  Artikel,
+  Chatting,
+  UserProfile,
+  UpdateProfile,
+  DoctorProfile,
+  UpdateStatus,
+} from "../pages";
+import { BottomNavigator } from "../components";
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+const MainApp = () => {
+  return (
+    <Tab.Navigator tabBar={(props) => <BottomNavigator {...props} />}>
+      <Tab.Screen name="Home" component={Dashboard} />
+      <Tab.Screen name="Messages" component={Messages} />
+      <Tab.Screen name="Artikel" component={Artikel} />
+    </Tab.Navigator>
+  );
+};
 
 const Router = () => {
   return (
-    <Stack.Navigator initialRouteName="Register">
+    <Stack.Navigator initialRouteName="Splash">
       <Stack.Screen
         name="Splash"
         component={Splash}
@@ -32,6 +60,41 @@ const Router = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="AR" component={AR} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="MainApp"
+        component={MainApp}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Artikel"
+        component={Artikel}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Chatting"
+        component={Chatting}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="UserProfile"
+        component={UserProfile}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="UpdateProfile"
+        component={UpdateProfile}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DoctorProfile"
+        component={DoctorProfile}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="UpdateStatus"
+        component={UpdateStatus}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
