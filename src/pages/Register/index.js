@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Header, Input, Button, Gap } from "../../components";
+import { Fire } from "../../config";
 import { colors, useForm } from "../../utils";
 
 const Register = ({ navigation }) => {
@@ -15,6 +16,15 @@ const Register = ({ navigation }) => {
 
   const onContinue = () => {
     console.log(form);
+    Fire.auth()
+      .createUserWithEmailAndPassword(form.email, form.password)
+      .then((success) => {
+        console.log("registes sukese", success);
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log("eror register", errorMessage);
+      });
   };
   return (
     <View style={styles.page}>
