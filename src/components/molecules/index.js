@@ -9,7 +9,9 @@ import UpdateStatus from "./UpdateStatus";
 import ChatItem from "./ChatItem";
 import InputChat from "./InputChat";
 import Profile from "./Profile";
+import Loading from "./Loading";
 export {
+  Loading,
   Profile,
   InputChat,
   UpdateStatus,

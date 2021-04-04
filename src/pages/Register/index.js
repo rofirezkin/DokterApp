@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { Header, Input, Button, Gap } from "../../components";
+import { Header, Input, Button, Gap, Loading } from "../../components";
 import { Fire } from "../../config";
 import { colors, useForm } from "../../utils";
 
@@ -13,74 +13,82 @@ const Register = ({ navigation }) => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const onContinue = () => {
+    setLoading(true);
     console.log(form);
     Fire.auth()
       .createUserWithEmailAndPassword(form.email, form.password)
       .then((success) => {
-        console.log("registes sukese", success);
+        setLoading(false);
+        setForm("reset");
+        console.log("registes sukses", success);
       })
       .catch((error) => {
+        setLoading(false);
         const errorMessage = error.message;
         console.log("eror register", errorMessage);
       });
   };
   return (
-    <View style={styles.page}>
-      <Header
-        title="Register"
-        onPress={() => navigation.navigate("GetStarted")}
-      />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.content}>
-          <Gap height={20} />
-          <Input
-            label="Full Name"
-            onChangeText={(value) => setForm("fullName", value)}
-            value={form.fullName}
-          />
-          <Gap height={20} />
-          <Input
-            label="Kategori Dokter"
-            onChangeText={(value) => setForm("category", value)}
-            value={form.category}
-          />
-          <Gap height={20} />
-          <Input
-            label="Universitas"
-            onChangeText={(value) => setForm("universitas", value)}
-            value={form.universitas}
-          />
-          <Gap height={20} />
-          <Input
-            label="Nomor STR"
-            onChangeText={(value) => setForm("nomorSTR", value)}
-            value={form.nomorSTR}
-          />
-          <Gap height={20} />
-          <Input
-            label="Email"
-            onChangeText={(value) => setForm("email", value)}
-            value={form.email}
-          />
-          <Gap height={20} />
-          <Input
-            label="Password"
-            onChangeText={(value) => setForm("password", value)}
-            value={form.password}
-            secureTextEntry
-          />
-          <Gap height={20} />
-          <Button
-            type="secondary"
-            title="Continue"
-            text="secondary"
-            onPress={onContinue}
-          />
-        </View>
-      </ScrollView>
-    </View>
+    <>
+      <View style={styles.page}>
+        <Header
+          title="Register"
+          onPress={() => navigation.navigate("GetStarted")}
+        />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.content}>
+            <Gap height={20} />
+            <Input
+              label="Full Name"
+              onChangeText={(value) => setForm("fullName", value)}
+              value={form.fullName}
+            />
+            <Gap height={20} />
+            <Input
+              label="Kategori Dokter"
+              onChangeText={(value) => setForm("category", value)}
+              value={form.category}
+            />
+            <Gap height={20} />
+            <Input
+              label="Universitas"
+              onChangeText={(value) => setForm("universitas", value)}
+              value={form.universitas}
+            />
+            <Gap height={20} />
+            <Input
+              label="Nomor STR"
+              onChangeText={(value) => setForm("nomorSTR", value)}
+              value={form.nomorSTR}
+            />
+            <Gap height={20} />
+            <Input
+              label="Email"
+              onChangeText={(value) => setForm("email", value)}
+              value={form.email}
+            />
+            <Gap height={20} />
+            <Input
+              label="Password"
+              onChangeText={(value) => setForm("password", value)}
+              value={form.password}
+              secureTextEntry
+            />
+            <Gap height={20} />
+            <Button
+              type="secondary"
+              title="Continue"
+              text="secondary"
+              onPress={onContinue}
+            />
+          </View>
+        </ScrollView>
+      </View>
+      {loading && <Loading />}
+    </>
   );
 };
 

@@ -11,10 +11,10 @@ import { TambahGambar } from "../../assets";
 import { Button, Gap, Header } from "../../components";
 import { colors } from "../../utils";
 
-const UpdateStatus = () => {
+const UpdateStatus = ({ navigation }) => {
   return (
     <View style={styles.page}>
-      <Header title="Buat Artikel" />
+      <Header title="Buat Artikel" onPress={() => navigation.goBack()} />
       <Gap height={30} />
       <View style={styles.container}>
         <View>
