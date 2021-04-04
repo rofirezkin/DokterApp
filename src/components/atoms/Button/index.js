@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import BtnIconSend from "./BtnIconSend";
 import ButtonPasien from "./ButtonPasien";
+import { colors } from "../../../utils";
 
 const Button = ({ text, type, title, onPress, pasien, disable }) => {
   if (type === "btn-icon-send") {
@@ -9,6 +10,13 @@ const Button = ({ text, type, title, onPress, pasien, disable }) => {
   }
   if (pasien) {
     return <ButtonPasien title={title} onPress={onPress} />;
+  }
+  if (disable) {
+    return (
+      <View style={styles.disableBg}>
+        <Text style={styles.disableText}>{title}</Text>
+      </View>
+    );
   }
   return (
     <TouchableOpacity style={styles.container(type)} onPress={onPress}>
@@ -27,10 +35,21 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignSelf: "center",
   }),
+  disableBg: {
+    borderRadius: 20,
+    paddingVertical: 10,
+    backgroundColor: colors.button.disable.background,
+  },
   text: (text) => ({
     fontSize: 15,
     fontWeight: "600",
     color: text === "secondary" ? "white" : "#33B9B2",
     textAlign: "center",
   }),
+  disableText: {
+    fontSize: 15,
+    fontWeight: "600",
+    textAlign: "center",
+    color: colors.button.disable.text,
+  },
 });

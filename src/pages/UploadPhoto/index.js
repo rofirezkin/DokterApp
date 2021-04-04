@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { AddPhoto, NullPhoto } from "../../assets";
+import { AddPhoto, NullPhoto, RemovePhoto } from "../../assets";
 import { Button, Gap, Header, Link } from "../../components";
 import { colors } from "../../utils";
 
 const UploadPhoto = ({ navigation }) => {
+  const [hasPhoto, setHasPhoto] = useState(false);
   return (
     <View style={styles.page}>
       <Header title="Upload Photo" onPress={() => navigation.goBack()} />
@@ -12,13 +13,15 @@ const UploadPhoto = ({ navigation }) => {
         <View style={styles.profile}>
           <View style={styles.avatarWrapper}>
             <Image source={NullPhoto} style={styles.avatar} />
-            <Image source={AddPhoto} style={styles.AddPhoto} />
+            {hasPhoto && <Image source={RemovePhoto} style={styles.AddPhoto} />}
+            {!hasPhoto && <Image source={AddPhoto} style={styles.AddPhoto} />}
           </View>
           <Text style={styles.name}>Rina Alvira</Text>
           <Text style={styles.profession}>Dokter Umum</Text>
         </View>
         <View>
           <Button
+            disable
             text="secondary"
             type="secondary"
             title="Upload and Continue"

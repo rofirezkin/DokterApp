@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Header, Input, Button, Gap, Loading } from "../../components";
 import { Fire } from "../../config";
 import { colors, useForm } from "../../utils";
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 const Register = ({ navigation }) => {
   const [form, setForm] = useForm({
@@ -17,18 +18,36 @@ const Register = ({ navigation }) => {
 
   const onContinue = () => {
     setLoading(true);
+
     console.log(form);
+
     Fire.auth()
       .createUserWithEmailAndPassword(form.email, form.password)
       .then((success) => {
         setLoading(false);
         setForm("reset");
+        const data = {
+          fullName: form.fullName,
+          category: form.category,
+          universitas: form.universitas,
+          nomorSTR: form.nomorSTR,
+          email: form.email,
+        };
+        Fire.database()
+          .ref("users/" + success.user.uid + "/")
+          .set(data);
         console.log("registes sukses", success);
       })
       .catch((error) => {
-        setLoading(false);
         const errorMessage = error.message;
-        console.log("eror register", errorMessage);
+        setLoading(false);
+        showMessage({
+          message: errorMessage,
+          type: "default",
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
+        console.log("error", error);
       });
   };
   return (
