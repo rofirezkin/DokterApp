@@ -1,13 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { showMessage } from "react-native-flash-message";
+import { NullPhoto } from "../../assets";
 import { Gap, Header, List, Profile } from "../../components";
+import { Fire } from "../../config";
+import { colors, getData } from "../../utils";
 
 const UserProfile = ({ navigation }) => {
+  const [profile, setProfile] = useState({
+    fullName: "",
+    category: "",
+    photo: NullPhoto,
+  });
+  useEffect(() => {
+    getData("user").then((res) => {
+      const data = res;
+      data.photo = { uri: res.photo };
+      setProfile(data);
+    });
+  }, []);
+
+  const signOut = () => {
+    Fire.auth()
+      .signOut()
+      .then((res) => {
+        console.log("succes sign out");
+        navigation.replace("GetStarted");
+      })
+      .catch((err) => {
+        showMessage({
+          message: err.message,
+          type: "default",
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
+      });
+  };
   return (
     <View style={styles.page}>
       <Header title="User Profile" />
       <Gap height={10} />
-      <Profile />
+      {profile.fullName.length > 0 && (
+        <Profile
+          name={profile.fullName}
+          desc={profile.category}
+          photo={profile.photo}
+        />
+      )}
+
       <Gap height={14} />
       <List
         name="Edit Profile"
@@ -23,10 +63,11 @@ const UserProfile = ({ navigation }) => {
         icon="rate"
       />
       <List
-        name="Help Center"
+        name="Logout"
         desc="Last Update Yesterday"
         type="next"
         icon="help"
+        onPres={signOut}
       />
     </View>
   );

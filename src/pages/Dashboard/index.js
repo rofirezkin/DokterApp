@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Category1, Category2, Category3 } from "../../assets";
 
@@ -9,9 +9,10 @@ import {
   HomeProfile,
   RatedDoctor,
 } from "../../components";
-import { colors } from "../../utils";
+import { colors, getData } from "../../utils";
 
 const Dashboard = ({ navigation }) => {
+
   const [images] = useState([
     {
       id: 1,

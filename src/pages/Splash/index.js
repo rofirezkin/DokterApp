@@ -1,10 +1,17 @@
 import React, { useEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
+import { Fire } from "../../config";
 import Logo from "./logo.png";
 const Splash = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.replace("GetStarted");
+      Fire.auth().onAuthStateChanged((user) => {
+        if (user) {
+          navigation.replace("MainApp");
+        } else {
+          navigation.replace("GetStarted");
+        }
+      });
     }, 3000);
   }, []);
   return (

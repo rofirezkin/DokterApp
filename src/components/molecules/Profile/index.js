@@ -1,10 +1,10 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { DummyDoctor1, RemovePhoto } from "../../../assets";
 import { colors } from "../../../utils";
 
-const Profile = ({ name, desc, profile }) => {
+const Profile = ({ isRemove, name, desc, profile, photo, onPress }) => {
   const PushProfileDoctor = () => {
     if (profile) {
       return (
@@ -23,10 +23,20 @@ const Profile = ({ name, desc, profile }) => {
     }
     return (
       <View style={styles.container}>
-        <View style={styles.borderProfile}>
-          <Image source={DummyDoctor1} style={styles.avatar} />
-          <Image source={RemovePhoto} style={styles.removePhoto} />
-        </View>
+        {!isRemove && (
+          <View style={styles.borderProfile}>
+            <Image source={photo} style={styles.avatar} />
+          </View>
+        )}
+
+        {isRemove && (
+          <TouchableOpacity style={styles.borderProfile} onPress={onPress}>
+            <Image source={photo} style={styles.avatar} />
+            {isRemove && (
+              <Image source={RemovePhoto} style={styles.removePhoto} />
+            )}
+          </TouchableOpacity>
+        )}
         {name && (
           <View>
             <Text style={styles.name(profile)}>{name}</Text>
