@@ -4,65 +4,64 @@ import { Garuda, Universitas, Work } from "../../assets";
 import { Button, Gap, Header, Profile } from "../../components";
 import { colors } from "../../utils";
 
-const DoctorProfile = ({ navigation }) => {
+const DoctorProfile = ({ navigation, route }) => {
+  const dataDoctor = route.params;
   return (
     <View style={styles.page}>
       <Header title="Profil Dokter" onPress={() => navigation.goBack()} />
-      <ScrollView>
+
+      <View style={styles.doublePage}>
         <View>
-          <Profile profile name="dr. Brooklyn Sam" desc="Dokter Umum" />
+          <Profile
+            photo={{ uri: dataDoctor.data.photo }}
+            profile
+            name={dataDoctor.data.fullName}
+            desc={dataDoctor.data.category}
+          />
           <Gap height={5} />
-          <Text style={styles.univ}>
-            S1 Kedokteran, Universitas Sebelas Maret
-          </Text>
+          <Text style={styles.univ}>{dataDoctor.data.universitas}</Text>
           <Text style={styles.status}>Sedang Buka Konsultasi</Text>
+
           <Gap height={10} />
-          <Gap height={18} />
-          <View style={styles.description}>
-            <View style={styles.desc}>
-              <Text style={styles.nameDesc}>Tentang Saya</Text>
-              <Text style={styles.about}>
-                Saya Adalah Dokter Di Rumah Sakit Sari Asih Serang, keseharian
-                saya selalu melakukan pemeriksaan kepada pasien pasien yang
-                mempunyai penyakit ringan, dan saya juga membuka konsultasi
-                secara online di aplikasi Adadokter
-              </Text>
-              <Gap height={13} />
-              <Text style={styles.nameDesc}>Tempat Kerja</Text>
-              <Gap height={10} />
-              <View style={styles.universitas}>
-                <View style={styles.logoUniv}>
-                  <Image source={Universitas} />
-                </View>
-                <View>
-                  <Text style={styles.penjelasan}>
-                    - Rumah Sakit Sari Asih Serang
-                  </Text>
-                </View>
+        </View>
+        <View style={styles.description}>
+          <View style={styles.desc}>
+            <Text style={styles.nameDesc}>Tentang Saya</Text>
+            <Text style={styles.about}>
+              Saya Adalah Dokter Di Rumah Sakit Sari Asih Serang, keseharian
+              saya selalu melakukan pemeriksaan kepada pasien pasien yang
+              mempunyai penyakit ringan, dan saya juga membuka konsultasi secara
+              online di aplikasi Adadokter
+            </Text>
+            <Gap height={13} />
+            <Text style={styles.nameDesc}>Tempat Kerja</Text>
+            <Gap height={10} />
+            <View style={styles.universitas}>
+              <View style={styles.logoUniv}>
+                <Image source={Universitas} />
               </View>
-              <Gap height={13} />
-              <Text style={styles.nameDesc}>Nomor STR</Text>
-              <Gap height={10} />
-              <View style={styles.universitas}>
-                <View style={styles.logoUniv}>
-                  <Image source={Garuda} style={styles.garuda} />
-                </View>
-                <View>
-                  <Text style={styles.penjelasan}>- 90949095465868</Text>
-                </View>
+              <View>
+                <Text style={styles.penjelasan}>
+                  - Rumah Sakit Sari Asih Serang
+                </Text>
               </View>
-              <Gap height={20} />
-              <Button
-                type="secondary"
-                text="secondary"
-                title="Lakukan Konsultasi"
-                onPress={() => navigation.navigate("Chatting")}
-              />
-              <Gap height={20} />
+            </View>
+            <Gap height={13} />
+            <Text style={styles.nameDesc}>Nomor STR</Text>
+            <Gap height={10} />
+            <View style={styles.universitas}>
+              <View style={styles.logoUniv}>
+                <Image source={Garuda} style={styles.garuda} />
+              </View>
+              <View>
+                <Text style={styles.penjelasan}>
+                  - {dataDoctor.data.nomorSTR}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -70,6 +69,10 @@ const DoctorProfile = ({ navigation }) => {
 export default DoctorProfile;
 
 const styles = StyleSheet.create({
+  doublePage: {
+    justifyContent: "space-between",
+    flex: 1,
+  },
   page: {
     flex: 1,
     backgroundColor: colors.primary,
@@ -91,7 +94,6 @@ const styles = StyleSheet.create({
   },
   description: {
     backgroundColor: colors.background,
-    height: "100%",
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,
   },

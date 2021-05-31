@@ -1,14 +1,20 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { BtnIconNotActive, BtnIconActive } from "../../../assets";
 import { colors } from "../../../utils";
 
-const BtnIconSend = ({ disable }) => {
+const BtnIconSend = ({ disable, onPress }) => {
+  if (disable) {
+    return (
+      <View style={styles.container(disable)}>
+        <Image source={BtnIconNotActive} style={styles.button} />
+      </View>
+    );
+  }
   return (
-    <View style={styles.container(disable)}>
-      {disable && <Image source={BtnIconNotActive} style={styles.button} />}
-      {!disable && <Image source={BtnIconActive} style={styles.button} />}
-    </View>
+    <TouchableOpacity onPress={onPress} style={styles.container(disable)}>
+      <Image source={BtnIconActive} style={styles.button} />
+    </TouchableOpacity>
   );
 };
 

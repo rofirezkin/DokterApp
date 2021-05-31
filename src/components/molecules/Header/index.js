@@ -5,9 +5,17 @@ import { colors } from "../../../utils";
 import { Gap } from "../../atoms";
 import PasienChatting from "./PasienChatting";
 
-const Header = ({ onPress, title, type }) => {
+const Header = ({ desc, onPress, title, type, photo }) => {
   if (type === "chatting-pasien") {
-    return <PasienChatting />;
+    return (
+      <PasienChatting
+        onPress={onPress}
+        title={title}
+        type={type}
+        photo={photo}
+        desc={desc}
+      />
+    );
   }
   return (
     <View style={styles.container(type)}>

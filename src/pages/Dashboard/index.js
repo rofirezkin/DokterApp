@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { Category1, Category2, Category3 } from "../../assets";
+import { Category1, Category2, Category3, NullPhoto } from "../../assets";
 
 import {
   Category,
@@ -9,9 +9,74 @@ import {
   HomeProfile,
   RatedDoctor,
 } from "../../components";
-import { colors, getData } from "../../utils";
-
+import { colors, getData, showError } from "../../utils";
+import { Fire } from "../../config";
 const Dashboard = ({ navigation }) => {
+  const [news, setNews] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const [profile, setProfile] = useState({
+    photo: NullPhoto,
+    fullName: "",
+    category: "",
+  });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getUserData();
+    getNews();
+    getTopRatedDoctors();
+  }, []);
+
+  const getTopRatedDoctors = () => {
+    setLoading(true);
+    Fire.database()
+      .ref("doctors/")
+      .orderByChild("rate")
+      .limitToLast(3)
+      .once("value")
+      .then((res) => {
+        console.log("top rated Doctors", res.val());
+        if (res.val()) {
+          setLoading(false);
+          const oldData = res.val();
+          const data = [];
+          Object.keys(oldData).map((key) => {
+            data.push({
+              id: key,
+              data: oldData[key],
+            });
+          });
+          console.log("data hasil parse", data);
+          setDoctors(data);
+        }
+      })
+      .catch((err) => {
+        showError(err.message);
+      });
+  };
+
+  getNews = () => {
+    Fire.database()
+      .ref("news/")
+      .once("value")
+      .then((res) => {
+        if (res.val()) {
+          const data = res.val();
+          const filterData = data.filter((el) => el !== null);
+          setNews(filterData);
+          console.log("data news", filterData);
+        }
+      });
+  };
+
+  const getUserData = () => {
+    getData("user").then((res) => {
+      console.log("data untuk ddaSHBOAR ", res);
+      const data = res;
+      data.photo = res?.photo?.length > 1 ? { uri: res.photo } : NullPhoto;
+      setProfile(res);
+    });
+  };
 
   const [images] = useState([
     {
@@ -28,13 +93,18 @@ const Dashboard = ({ navigation }) => {
     },
   ]);
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.pages}>
+    <ScrollView style={styles.pages} showsVerticalScrollIndicator={false}>
+      <View>
         <View style={styles.wrapperSection}>
-          <HomeProfile onPress={() => navigation.navigate("UserProfile")} />
-          <Text style={styles.welcome}>Selamat Pagi Shayna Melinda</Text>
+          <HomeProfile
+            profile={profile}
+            onPress={() => navigation.navigate("UserProfile", profile)}
+          />
+          <Text
+            style={styles.welcome}
+          >{`Selamat Pagi ${profile.fullName}`}</Text>
           <Text style={styles.welcome2}>
-            Ayo Lakukan konsultasi Dengan Dokter Terbaik
+            Ayo Lakukan konsultasi Dengan Pasien Anda
           </Text>
           <View style={styles.wrapperScroll}>
             <ScrollView horizontal>
@@ -51,23 +121,39 @@ const Dashboard = ({ navigation }) => {
           <Text style={styles.TopDoct}>Top Doctors</Text>
           <Gap height={8} />
           <View style={styles.wrapperScroll}>
+            {loading && <Text>Loading</Text>}
             <ScrollView horizontal>
               <View style={styles.topDokter}>
                 <Gap width={18} />
-                <RatedDoctor
-                  onPress={() => navigation.navigate("DoctorProfile")}
-                />
-                <RatedDoctor />
-                <RatedDoctor />
+                {doctors.map((doctor) => {
+                  return (
+                    <RatedDoctor
+                      key={doctor.data.uid}
+                      name={doctor.data.fullName}
+                      desc={doctor.data.category}
+                      avatar={{ uri: doctor.data.photo }}
+                      onPress={() =>
+                        navigation.navigate("DoctorProfile", doctor)
+                      }
+                    />
+                  );
+                })}
               </View>
             </ScrollView>
           </View>
         </View>
         <Gap height={20} />
         <Text style={styles.TopHealth}>Health Information</Text>
-        <HealthInfo />
-        <HealthInfo />
-        <HealthInfo />
+        {news.map((item) => {
+          return (
+            <HealthInfo
+              key={item.id}
+              title={item.title}
+              body={item.body}
+              image={item.image}
+            />
+          );
+        })}
       </View>
     </ScrollView>
   );
@@ -83,6 +169,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   pages: {
+    flex: 1,
     paddingVertical: 30,
     backgroundColor: "#F3FFFE",
   },

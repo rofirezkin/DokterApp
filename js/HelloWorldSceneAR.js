@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 
 import { StyleSheet } from "react-native";
 
@@ -23,14 +23,63 @@ import {
   ViroNode,
   Viro3DObject,
   ViroQuad,
+  ViroARSceneNavigator,
 } from "react-viro";
+import { Fire } from "../src/config";
+import { getData } from "../src/utils";
 
 export class BusinessCard extends Component {
+  constructor(props) {
+    super(props);
+    console.log("constructor");
+    this.getUserData();
+
+    this.state = {
+      namaPasien: "initializing",
+      beratBadan: "initializing",
+      tinggiBadan: "initializing",
+      tekananDarah: "initializing",
+      detakJantung: "initializing",
+      bmiPasien: "initializing",
+      suhu: "initializing",
+      photo: "initializing",
+    };
+    console.log("cobain", this.state.namaPasien);
+  }
   state = {
     isTracking: false,
     initialized: false,
     runAnimation: false,
   };
+
+  getUserData() {
+    getData("user").then((res) => {
+      console.log("data untuk ddaSHBOAR ", res);
+      const data = res;
+      const urlDOctor = data.uid;
+      console.log("ini Url doctor", urlDOctor);
+      Fire.database()
+        .ref(`doctors/${urlDOctor}/dataAR/`)
+        .once("value")
+        .then((res) => {
+          if (res.val()) {
+            const data = res.val();
+            console.log("data news", data);
+
+            this.setState({
+              namaPasien: data.namaPasien,
+              beratBadan: data.beratBadan,
+              tinggiBadan: data.tinggiBadan,
+              tekananDarah: data.tekananDarah,
+              detakJantung: data.detakJantung,
+              suhu: data.suhu,
+              bmiPasien: data.bmiPasien,
+              photo: data.photo,
+            });
+          }
+        });
+    });
+  }
 
   getNoTrackingUI() {
     const { isTracking, initialized } = this.state;
@@ -43,6 +92,7 @@ export class BusinessCard extends Component {
     return (
       <ViroNode>
         <ViroARImageMarker
+          autoFocus={true}
           target={"businessCard"}
           onAnchorFound={() =>
             this.setState({
@@ -53,7 +103,7 @@ export class BusinessCard extends Component {
           <ViroNode key="card">
             <ViroNode
               opacity={0}
-              position={[0, -0.02, 0]}
+              position={[0, -0.03, 0]}
               animation={{
                 name: "animateImage",
                 run: this.state.runAnimation,
@@ -61,37 +111,147 @@ export class BusinessCard extends Component {
             >
               <ViroFlexView
                 rotation={[-90, 0, 0]}
-                height={0.03}
+                height={0.09}
                 width={0.05}
                 style={styles.card}
               >
-                <ViroFlexView style={styles.cardWrapper}>
-                  <ViroImage
-                    height={0.015}
-                    width={0.015}
-                    style={styles.image}
-                    source={require("./res/avatar.png")}
-                  />
-                  <ViroText
-                    textClipMode="None"
-                    text="Vladimir Novick"
-                    scale={[0.015, 0.015, 0.015]}
-                    style={styles.textStyle}
-                  />
+                <ViroFlexView style={styles.cardWrapper2}>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      textClipMode="None"
+                      text={`nama_pasien`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={`${this.state.namaPasien}`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                </ViroFlexView>
+                <ViroFlexView style={styles.cardWrapper2}>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      textClipMode="None"
+                      text={`berat_badan`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={`${this.state.beratBadan}`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                </ViroFlexView>
+                <ViroFlexView style={styles.cardWrapper2}>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      textClipMode="None"
+                      text={`tinggiBadan`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={`${this.state.tinggiBadan}`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                </ViroFlexView>
+                <ViroFlexView style={styles.cardWrapper2}>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      textClipMode="None"
+                      text={`tekanan_darah`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={`${this.state.tekananDarah}`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                </ViroFlexView>
+                <ViroFlexView style={styles.cardWrapper2}>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      textClipMode="None"
+                      text={`detakJantung`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={`${this.state.detakJantung}`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                </ViroFlexView>
+                <ViroFlexView style={styles.cardWrapper2}>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      textClipMode="None"
+                      text={`suhu_badan`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={`${this.state.suhu}`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                </ViroFlexView>
+                <ViroFlexView style={styles.cardWrapper2}>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      textClipMode="None"
+                      text={`BMI_pasien`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={`${this.state.bmiPasien}`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
                 </ViroFlexView>
                 <ViroFlexView
-                  onTouch={() => alert("twitter")}
+                  onTouch={() => alert("Testing")}
                   style={styles.subText}
                 >
-                  <ViroText
-                    width={0.01}
-                    height={0.01}
-                    textAlign="left"
-                    textClipMode="None"
-                    text="@VladimirNovick"
-                    scale={[0.01, 0.01, 0.01]}
-                    style={styles.textStyle}
-                  />
                   <ViroAnimatedImage
                     height={0.01}
                     width={0.01}
@@ -108,14 +268,7 @@ export class BusinessCard extends Component {
                 name: "animateViro",
                 run: this.state.runAnimation,
               }}
-            >
-              <ViroText
-                text="Devthias Developer"
-                rotation={[-90, 0, 0]}
-                scale={[0.01, 0.01, 0.01]}
-                style={styles.textStyle}
-              />
-            </ViroNode>
+            ></ViroNode>
           </ViroNode>
         </ViroARImageMarker>
       </ViroNode>
@@ -141,7 +294,6 @@ export class BusinessCard extends Component {
 
 var styles = StyleSheet.create({
   textStyle: {
-    flex: 0.5,
     fontFamily: "Roboto",
     fontSize: 30,
     color: "#ffffff",
@@ -155,9 +307,16 @@ var styles = StyleSheet.create({
   cardWrapper: {
     flexDirection: "row",
     alignItems: "flex-start",
-    padding: 0.001,
+
     flex: 0.5,
   },
+  cardWrapper2: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+
+    flex: 0.5,
+  },
+
   subText: {
     flexDirection: "column",
     alignItems: "flex-start",
@@ -168,7 +327,7 @@ var styles = StyleSheet.create({
 
 ViroARTrackingTargets.createTargets({
   businessCard: {
-    source: require("./res/business_card.png"),
+    source: require("./res/rofi.jpg"),
     orientation: "Up",
     physicalWidth: 0.05, // real world width in meters
   },

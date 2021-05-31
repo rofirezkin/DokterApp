@@ -1,7 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { ImageGetStarted } from "../../assets";
 import { Button, Gap } from "../../components/atoms";
+import { colors } from "../../utils";
 
 const GetStarted = ({ navigation }) => {
   return (
@@ -21,13 +22,20 @@ const GetStarted = ({ navigation }) => {
             out there to understand your symptoms
           </Text>
         </View>
-        <View>
-          <Button
-            title="Get Started"
+        <View style={{ width: "100%" }}>
+          <TouchableOpacity
+            style={styles.button}
             onPress={() => navigation.navigate("Register")}
-          />
+          >
+            <Text style={styles.text}>Get Started</Text>
+          </TouchableOpacity>
           <Gap height={12} />
-          <Button title="Sign In" onPress={() => navigation.replace("Login")} />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.replace("Login")}
+          >
+            <Text style={styles.text}>Sign In</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </>
@@ -71,5 +79,17 @@ const styles = StyleSheet.create({
   titleTwo: {
     fontSize: 15,
     color: "#DEDEDE",
+  },
+  button: {
+    backgroundColor: colors.white,
+    borderRadius: 20,
+    paddingVertical: 10,
+    marginHorizontal: 30,
+  },
+  text: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: colors.primary,
+    textAlign: "center",
   },
 });

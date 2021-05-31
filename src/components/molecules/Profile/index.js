@@ -10,7 +10,7 @@ const Profile = ({ isRemove, name, desc, profile, photo, onPress }) => {
       return (
         <View style={styles.container}>
           <View>
-            <Image source={DummyDoctor1} style={styles.avatar} />
+            <Image source={photo} style={styles.avatar} />
           </View>
           {name && (
             <View>

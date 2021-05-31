@@ -3,17 +3,14 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { News1 } from "../../../assets";
 import { colors } from "../../../utils";
 
-const HealthInfo = () => {
+const HealthInfo = ({ title, body, image }) => {
   return (
     <View style={styles.container}>
-        
       <View style={styles.titleWrapper}>
-        <Text style={styles.title}>Kesehatan Yang Paling Utama</Text>
-        <Text style={styles.desc}>
-          Pada saat ini banyak orang-orang yang ingin hidup ...
-        </Text>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.desc}>{body}</Text>
       </View>
-      <Image source={News1} style={styles.image} />
+      <Image source={{ uri: image }} style={styles.image} />
     </View>
   );
 };

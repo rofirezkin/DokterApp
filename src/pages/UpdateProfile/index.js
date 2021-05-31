@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { ScrollView } from "react-native-gesture-handler";
@@ -7,28 +7,35 @@ import { Fire } from "../../config";
 import { colors, getData, storeData } from "../../utils";
 import ImagePicker from "react-native-image-picker";
 import { NullPhoto } from "../../assets";
+import { useDispatch } from "react-redux";
 
 const UpdateProfile = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [profile, setProfile] = useState({
     fullName: "",
     category: "",
     email: "",
+    photoForDB: "",
   });
   const [password, setPassword] = useState("");
-  const [photo, setPhoto] = useState(NullPhoto);
-  const [phtoForDB, setPhotoForDB] = useState("");
 
+  const [photo, setPhoto] = useState(NullPhoto);
   useEffect(() => {
     getData("user").then((res) => {
       const data = res;
-      setPhoto({ uri: res.photo });
+      data.photoForDB = res?.photo?.length > 1 ? res.photo : ILNullPhoto;
+      const tempPhoto = res?.photo?.length > 1 ? { uri: res.photo } : NullPhoto;
       setProfile(data);
+      setPhoto(tempPhoto);
     });
-  });
+  }, []);
 
   const update = () => {
+    dispatch({ type: "SET_LOADING", value: true });
+
     if (password.length > 0) {
       if (password.length < 6) {
+        dispatch({ type: "SET_LOADING", value: false });
         showMessage({
           message: "Password Kurang dari 6 Karakter",
           type: "default",
@@ -38,11 +45,11 @@ const UpdateProfile = ({ navigation }) => {
       } else {
         updatePassword();
         updateProfileData();
-        navigation.replace("MainApp");
+        dispatch({ type: "SET_LOADING", value: false });
       }
     } else {
       updateProfileData();
-      navigation.replace("MainApp");
+      dispatch({ type: "SET_LOADING", value: false });
     }
   };
   const updatePassword = () => {
@@ -62,14 +69,15 @@ const UpdateProfile = ({ navigation }) => {
 
   const updateProfileData = () => {
     const data = profile;
-    data.photo = setPhotoForDB;
-
+    data.photo = profile.photoForDB;
+    delete data.photoForDB;
     Fire.database()
-      .ref(`users/${profile.uid}/`)
+      .ref(`doctors/${profile.uid}/`)
       .update(data)
       .then(() => {
-        console.log("success");
+        console.log("success", data);
         storeData("user", data);
+        navigation.replace("MainApp");
       })
       .catch((err) => {
         showMessage({
@@ -101,10 +109,11 @@ const UpdateProfile = ({ navigation }) => {
             color: colors.white,
           });
         } else {
-          console.log("response getImage", response);
           const source = { uri: response.uri };
-          setPhotoForDB(`data:${response.type};base64, ${response.data}`);
-
+          setProfile({
+            ...profile,
+            photoForDB: `data:${response.type};base64, ${response.data}`,
+          });
           setPhoto(source);
         }
       }
@@ -113,7 +122,10 @@ const UpdateProfile = ({ navigation }) => {
 
   return (
     <View style={styles.page}>
-      <Header title="Edit Profile" />
+      <Header
+        title="Edit Profile"
+        onPress={() => navigation.navigate("UserProfile")}
+      />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <Gap height={24} />

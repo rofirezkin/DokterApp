@@ -43,7 +43,7 @@ const Register = ({ navigation }) => {
           uid: success.user.uid,
         };
         Fire.database()
-          .ref("users/" + success.user.uid + "/")
+          .ref("doctors/" + success.user.uid + "/")
           .set(data);
 
         storeData("user", data);

@@ -3,15 +3,15 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Hari, TopDoct1, Waktu, Work } from "../../../assets";
 import { Gap } from "../../atoms";
 
-const RatedDoctor = ({ onPress }) => {
+const RatedDoctor = ({ onPress, name, desc, avatar }) => {
   return (
     <View style={styles.page}>
       <TouchableOpacity onPress={onPress}>
         <View style={styles.container}>
-          <Image source={TopDoct1} style={styles.avatar} />
+          <Image source={avatar} style={styles.avatar} />
           <View style={styles.wrapperText}>
-            <Text style={styles.name}>Dr. Reza Adrian</Text>
-            <Text style={styles.category}>Dokter Umum - RSUD Banten</Text>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.category}>{desc}</Text>
             <View style={styles.work}>
               <View style={styles.direction1}>
                 <Image source={Work} />
@@ -22,20 +22,11 @@ const RatedDoctor = ({ onPress }) => {
           </View>
         </View>
         <Gap height={2} />
-        <Text style={styles.name}>Hari & Waktu</Text>
+        <Text style={styles.name}>Status Konsultasi</Text>
         <View style={styles.spaceDate}>
           <View style={styles.work}>
             <View style={styles.direction}>
-              <Image source={Hari} style={styles.imageIcon} />
-              <Gap width={4} />
-              <Text style={styles.pad}>Senin - Sabtu</Text>
-            </View>
-          </View>
-          <View style={styles.work}>
-            <View style={styles.direction}>
-              <Image source={Waktu} style={styles.imageIcon} />
-              <Gap width={4} />
-              <Text style={styles.pad}>12.00 - 16.00</Text>
+              <Text style={styles.pad}>Sedang Membuka Konsultasi</Text>
             </View>
           </View>
         </View>
@@ -48,6 +39,7 @@ export default RatedDoctor;
 
 const styles = StyleSheet.create({
   page: {
+    width: 229,
     marginRight: 15,
     marginBottom: 10,
     marginTop: 5,
@@ -104,7 +96,6 @@ const styles = StyleSheet.create({
   spaceDate: {
     marginTop: 4,
     flexDirection: "row",
-    justifyContent: "space-between",
   },
   imageIcon: {
     width: 15,

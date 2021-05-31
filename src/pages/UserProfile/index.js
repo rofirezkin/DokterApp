@@ -1,31 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { showMessage } from "react-native-flash-message";
+
 import { NullPhoto } from "../../assets";
 import { Gap, Header, List, Profile } from "../../components";
 import { Fire } from "../../config";
 import { colors, getData } from "../../utils";
 
-const UserProfile = ({ navigation }) => {
-  const [profile, setProfile] = useState({
-    fullName: "",
-    category: "",
-    photo: NullPhoto,
-  });
-  useEffect(() => {
-    getData("user").then((res) => {
-      const data = res;
-      data.photo = { uri: res.photo };
-      setProfile(data);
-    });
-  }, []);
+const UserProfile = ({ navigation, route }) => {
+  const profile = route.params;
 
-  const signOut = () => {
+  const signOut1 = () => {
     Fire.auth()
       .signOut()
       .then((res) => {
-        console.log("succes sign out");
-        navigation.replace("GetStarted");
+        console.log("succes sign out", res);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "GetStarted" }],
+        });
       })
       .catch((err) => {
         showMessage({
@@ -38,7 +31,7 @@ const UserProfile = ({ navigation }) => {
   };
   return (
     <View style={styles.page}>
-      <Header title="User Profile" />
+      <Header title="User Profile" onPress={() => navigation.goBack()} />
       <Gap height={10} />
       {profile.fullName.length > 0 && (
         <Profile
@@ -64,10 +57,10 @@ const UserProfile = ({ navigation }) => {
       />
       <List
         name="Logout"
-        desc="Last Update Yesterday"
+        desc="Labbst Update Yesterday"
         type="next"
         icon="help"
-        onPres={signOut}
+        onPress={signOut1}
       />
     </View>
   );

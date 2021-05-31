@@ -6,7 +6,7 @@ import { colors } from "../../../utils";
 
 const Button = ({ text, type, title, onPress, pasien, disable }) => {
   if (type === "btn-icon-send") {
-    return <BtnIconSend disable={disable} />;
+    return <BtnIconSend disable={disable} onPress={onPress} />;
   }
   if (pasien) {
     return <ButtonPasien title={title} onPress={onPress} />;

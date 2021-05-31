@@ -5,17 +5,17 @@ import { Arrow, User } from "../../../assets";
 import { colors } from "../../../utils";
 import { Button } from "../../atoms";
 
-const PasienChatting = ({ onPress }) => {
+const PasienChatting = ({ onPress, title, type, photo, desc }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onPress}>
         <Image source={Arrow} width={20} />
       </TouchableOpacity>
       <View style={styles.content}>
-        <Text style={styles.name}>Reina Melinda</Text>
-        <Text style={styles.desc}>Desain Interior</Text>
+        <Text style={styles.name}>{title}</Text>
+        <Text style={styles.desc}>{desc}</Text>
       </View>
-      <Image source={User} style={styles.avatar} />
+      <Image source={photo} style={styles.avatar} />
     </View>
   );
 };

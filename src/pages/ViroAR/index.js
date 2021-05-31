@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import {
   AppRegistry,
   Text,
@@ -39,15 +39,16 @@ var AR_NAVIGATOR_TYPE = "AR";
 var defaultNavigatorType = UNSET;
 
 export default class ViroSample extends Component {
-  constructor() {
+  constructor({ route }) {
+    const dataMonitoring = route.params;
+    console.log("data monitroing", dataMonitoring);
     super();
-
     this.state = {
       navigatorType: defaultNavigatorType,
       sharedProps: sharedProps,
     };
     this._getExperienceSelector = this._getExperienceSelector.bind(this);
-    this._getARNavigator = this._getARNavigator.bind(this);
+    this._getARNavigator = this._getARNavigator.bind(this, dataMonitoring);
     this._getVRNavigator = this._getVRNavigator.bind(this);
     this._getExperienceButtonOnPress = this._getExperienceButtonOnPress.bind(
       this
@@ -97,9 +98,12 @@ export default class ViroSample extends Component {
   }
 
   // Returns the ViroARSceneNavigator which will start the AR experience
-  _getARNavigator() {
+  _getARNavigator(dataMonitoring) {
+    var lool = dataMonitoring;
+    console.log("data nih", dataMonitoring);
     return (
       <ViroARSceneNavigator
+        autofocus={true}
         {...this.state.sharedProps}
         initialScene={{ scene: InitialARScene }}
       />

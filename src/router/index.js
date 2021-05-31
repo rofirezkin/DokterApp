@@ -33,7 +33,7 @@ const MainApp = () => {
 
 const Router = () => {
   return (
-    <Stack.Navigator initialRouteName="Splash">
+    <Stack.Navigator initialRouteName="AR">
       <Stack.Screen
         name="Splash"
         component={Splash}
@@ -88,6 +88,11 @@ const Router = () => {
       <Stack.Screen
         name="DoctorProfile"
         component={DoctorProfile}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Messages"
+        component={Messages}
         options={{ headerShown: false }}
       />
       <Stack.Screen
