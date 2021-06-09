@@ -2,11 +2,11 @@ import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { User } from "../../../assets";
 
-const UpdateStatus = ({ onPress }) => {
+const UpdateStatus = ({ onPress, photo }) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
-        <Image source={User} style={styles.avatar} />
+        <Image source={photo} style={styles.avatar} />
         <View style={styles.boxStatus}>
           <Text style={styles.text}>Buat Artikel ?</Text>
         </View>

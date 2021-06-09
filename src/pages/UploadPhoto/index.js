@@ -70,7 +70,17 @@ const UploadPhoto = ({ navigation, route }) => {
             onPress={uploadAndContinue}
           />
           <Gap height={30} />
-          <Link title="Skip for this" align="center" size={16} />
+          <Link
+            onPress={() =>
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "MainApp" }],
+              })
+            }
+            title="Skip for this"
+            align="center"
+            size={16}
+          />
         </View>
       </View>
     </View>

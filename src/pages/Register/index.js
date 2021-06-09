@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { Header, Input, Button, Gap, Loading } from "../../components";
 import { Fire } from "../../config";
 import { colors, getData, storeData, useForm } from "../../utils";
@@ -8,12 +8,52 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 const Register = ({ navigation }) => {
   const [form, setForm] = useForm({
     fullName: "",
-    category: "",
+    category: "dokter umum",
     universitas: "",
     nomorSTR: "",
+    gender: "pria",
+    hospital: "",
     email: "",
     password: "",
+    pengalaman: "",
   });
+  const [description, setDescription] = useState("");
+  const [itemCategory] = useState([
+    {
+      id: 1,
+      label: "Dokter Umum",
+      value: "Dokter Umum",
+    },
+    {
+      id: 2,
+      label: "Dokter Bedah",
+      value: "Dokter Bedah",
+    },
+    {
+      id: 3,
+      label: "Dokter Obat",
+      value: "Dokter Obat",
+    },
+    {
+      id: 4,
+      label: "Sepesialis Gizi",
+      value: "Spesialis Gizi",
+    },
+  ]);
+
+  const [itemGender] = useState([
+    {
+      id: 1,
+      label: "Pria",
+      value: "pria",
+    },
+    {
+      id: 2,
+      label: "Wanita",
+      value: "wanita",
+    },
+  ]);
+
   const [loading, setLoading] = useState(false);
 
   const onContinue = () => {
@@ -41,7 +81,13 @@ const Register = ({ navigation }) => {
           nomorSTR: form.nomorSTR,
           email: form.email,
           uid: success.user.uid,
+          hospital: form.hospital,
+          gender: form.gender,
+          shortDesc: description,
+          rate: "0",
+          pengalaman: form.pengalaman,
         };
+        console.log("data shortdes", data);
         Fire.database()
           .ref("doctors/" + success.user.uid + "/")
           .set(data);
@@ -80,10 +126,26 @@ const Register = ({ navigation }) => {
             />
             <Gap height={20} />
             <Input
-              placeholder="category"
-              label="Kategori Dokter"
-              onChangeText={(value) => setForm("category", value)}
+              label="Kategori"
               value={form.category}
+              onValueChange={(value) => setForm("category", value)}
+              select
+              selectItem={itemCategory}
+            />
+            <Gap height={20} />
+            <Input
+              label="Jenis Kelamin"
+              value={form.gender}
+              onValueChange={(value) => setForm("gender", value)}
+              select
+              selectItem={itemGender}
+            />
+            <Gap height={20} />
+            <Input
+              placeholder="rumah sakit tempat anda kerja"
+              label="Nama Rumah Sakit"
+              value={form.hospital}
+              onChangeText={(value) => setForm("hospital", value)}
             />
             <Gap height={20} />
             <Input
@@ -101,6 +163,13 @@ const Register = ({ navigation }) => {
             />
             <Gap height={20} />
             <Input
+              placeholder="Misal : 2 Tahun"
+              label="Pengalaman Bekerja"
+              onChangeText={(value) => setForm("pengalaman", value)}
+              value={form.pengalaman}
+            />
+            <Gap height={20} />
+            <Input
               placeholder="email anda"
               label="Email"
               onChangeText={(value) => setForm("email", value)}
@@ -114,6 +183,20 @@ const Register = ({ navigation }) => {
               value={form.password}
               secureTextEntry
             />
+            <Gap height={20} />
+            <View>
+              <Text style={styles.label}>Deskripsi Singkat</Text>
+              <TextInput
+                style={styles.textArea}
+                underlineColorAndroid="transparent"
+                placeholder="Tulis Deskripsi Singkat Anda disini"
+                placeholderTextColor="grey"
+                numberOfLines={10}
+                multiline={true}
+                onChangeText={(value) => setDescription(value)}
+                value={description}
+              />
+            </View>
             <Gap height={20} />
             <Button
               type="secondary"
@@ -134,9 +217,18 @@ export default Register;
 const styles = StyleSheet.create({
   page: { backgroundColor: colors.background, flex: 1 },
   content: {
-    padding: 35,
+    padding: 30,
     paddingTop: 0,
     backgroundColor: colors.background,
     flex: 1,
   },
+  textArea: {
+    borderRadius: 8,
+    height: 200,
+    padding: 10,
+    backgroundColor: "#F3F3F3",
+    justifyContent: "flex-start",
+    textAlignVertical: "top",
+  },
+  label: { fontSize: 16, color: "#7D8797", marginBottom: 6 },
 });

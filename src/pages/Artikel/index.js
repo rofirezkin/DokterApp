@@ -44,13 +44,17 @@ const Artikel = ({ navigation }) => {
             <Image source={FotoBlog} style={styles.image} />
           </View>
           <Gap height={30} />
-          <UpdateStatus onPress={() => navigation.navigate("UpdateStatus")} />
+          <UpdateStatus
+            photo={profile.photo}
+            onPress={() => navigation.navigate("UpdateStatus")}
+          />
           <Gap height={25} />
           <Text style={styles.titleArtikel}>Artikel Yang anda dibuat</Text>
         </View>
         {artikel.map((item) => {
           return (
             <HealthInfo
+              onPress={() => navigation.navigate("ArtikelPage", item.data)}
               key={item.id}
               title={item.data.title}
               body={item.data.body}

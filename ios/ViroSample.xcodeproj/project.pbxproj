@@ -44,6 +44,7 @@
 		0D027C9137E24A36B0FC5111 /* libRNGestureHandler-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A605C3DFEB431B8710AFE5 /* libRNGestureHandler-tvOS.a */; };
 		BA93071FA7724D0C819454ED /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 141926879C0A4C79BE802B65 /* libRNImagePicker.a */; };
 		E8EC7D45621043F380B0961B /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D25AC90524B64AA09BC6AF31 /* libRNCAsyncStorage.a */; };
+		0D384A83ABC8412488124DA6 /* libRNCPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EAD3477935B4829A93F6FA0 /* libRNCPicker.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -358,6 +359,8 @@
 		141926879C0A4C79BE802B65 /* libRNImagePicker.a */ = {isa = PBXFileReference; name = "libRNImagePicker.a"; path = "libRNImagePicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		A564ED1DE1C8493FA50CE115 /* RNCAsyncStorage.xcodeproj */ = {isa = PBXFileReference; name = "RNCAsyncStorage.xcodeproj"; path = "../node_modules/@react-native-async-storage/async-storage/ios/RNCAsyncStorage.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		D25AC90524B64AA09BC6AF31 /* libRNCAsyncStorage.a */ = {isa = PBXFileReference; name = "libRNCAsyncStorage.a"; path = "libRNCAsyncStorage.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		8D5B39C0CEE741B69078F42D /* RNCPicker.xcodeproj */ = {isa = PBXFileReference; name = "RNCPicker.xcodeproj"; path = "../node_modules/@react-native-picker/picker/ios/RNCPicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		5EAD3477935B4829A93F6FA0 /* libRNCPicker.a */ = {isa = PBXFileReference; name = "libRNCPicker.a"; path = "libRNCPicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -389,6 +392,7 @@
 				4975FE5D3CA04752A8F57C29 /* libRNGestureHandler.a in Frameworks */,
 				BA93071FA7724D0C819454ED /* libRNImagePicker.a in Frameworks */,
 				E8EC7D45621043F380B0961B /* libRNCAsyncStorage.a in Frameworks */,
+				0D384A83ABC8412488124DA6 /* libRNCPicker.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -582,6 +586,7 @@
 				1C0760E5E6DC46CDB291560C /* RNGestureHandler.xcodeproj */,
 				1477532D33724AC2A2C66822 /* RNImagePicker.xcodeproj */,
 				A564ED1DE1C8493FA50CE115 /* RNCAsyncStorage.xcodeproj */,
+				8D5B39C0CEE741B69078F42D /* RNCPicker.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1213,12 +1218,14 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-async-storage\async-storage\ios/**",
+					"$(SRCROOT)\..\node_modules\@react-native-picker\picker/**",
 				);
 			};
 			name = Debug;
@@ -1244,12 +1251,14 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-async-storage\async-storage\ios/**",
+					"$(SRCROOT)\..\node_modules\@react-native-picker\picker/**",
 				);
 			};
 			name = Release;
@@ -1275,6 +1284,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-async-storage\async-storage\ios/**",
+					"$(SRCROOT)\..\node_modules\@react-native-picker\picker/**",
 				);
 			};
 			name = Debug;
@@ -1299,6 +1309,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-async-storage\async-storage\ios/**",
+					"$(SRCROOT)\..\node_modules\@react-native-picker\picker/**",
 				);
 			};
 			name = Release;
@@ -1332,12 +1343,14 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-async-storage\async-storage\ios/**",
+					"$(SRCROOT)\..\node_modules\@react-native-picker\picker/**",
 				);
 			};
 			name = Debug;
@@ -1371,12 +1384,14 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-async-storage\async-storage\ios/**",
+					"$(SRCROOT)\..\node_modules\@react-native-picker\picker/**",
 				);
 			};
 			name = Release;
@@ -1409,12 +1424,14 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-async-storage\async-storage\ios/**",
+					"$(SRCROOT)\..\node_modules\@react-native-picker\picker/**",
 				);
 			};
 			name = Debug;
@@ -1447,12 +1464,14 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-gesture-handler\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@react-native-async-storage\async-storage\ios/**",
+					"$(SRCROOT)\..\node_modules\@react-native-picker\picker/**",
 				);
 			};
 			name = Release;

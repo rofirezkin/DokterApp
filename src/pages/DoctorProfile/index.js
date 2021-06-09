@@ -9,8 +9,7 @@ const DoctorProfile = ({ navigation, route }) => {
   return (
     <View style={styles.page}>
       <Header title="Profil Dokter" onPress={() => navigation.goBack()} />
-
-      <View style={styles.doublePage}>
+      <ScrollView>
         <View>
           <Profile
             photo={{ uri: dataDoctor.data.photo }}
@@ -18,21 +17,17 @@ const DoctorProfile = ({ navigation, route }) => {
             name={dataDoctor.data.fullName}
             desc={dataDoctor.data.category}
           />
-          <Gap height={5} />
-          <Text style={styles.univ}>{dataDoctor.data.universitas}</Text>
-          <Text style={styles.status}>Sedang Buka Konsultasi</Text>
+
+          <Text
+            style={styles.status}
+          >{`pengalaman : ${dataDoctor.data.pengalaman}`}</Text>
 
           <Gap height={10} />
         </View>
         <View style={styles.description}>
           <View style={styles.desc}>
             <Text style={styles.nameDesc}>Tentang Saya</Text>
-            <Text style={styles.about}>
-              Saya Adalah Dokter Di Rumah Sakit Sari Asih Serang, keseharian
-              saya selalu melakukan pemeriksaan kepada pasien pasien yang
-              mempunyai penyakit ringan, dan saya juga membuka konsultasi secara
-              online di aplikasi Adadokter
-            </Text>
+            <Text style={styles.about}>{dataDoctor.data.shortDesc}</Text>
             <Gap height={13} />
             <Text style={styles.nameDesc}>Tempat Kerja</Text>
             <Gap height={10} />
@@ -42,7 +37,21 @@ const DoctorProfile = ({ navigation, route }) => {
               </View>
               <View>
                 <Text style={styles.penjelasan}>
-                  - Rumah Sakit Sari Asih Serang
+                  {`- ${dataDoctor.data.hospital}`}
+                </Text>
+              </View>
+            </View>
+
+            <Gap height={13} />
+            <Text style={styles.nameDesc}>Pendidikan Terakhir</Text>
+            <Gap height={10} />
+            <View style={styles.universitas}>
+              <View style={styles.logoUniv}>
+                <Image source={Universitas} />
+              </View>
+              <View>
+                <Text style={styles.penjelasan}>
+                  {`- ${dataDoctor.data.universitas}`}
                 </Text>
               </View>
             </View>
@@ -61,7 +70,7 @@ const DoctorProfile = ({ navigation, route }) => {
             </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };

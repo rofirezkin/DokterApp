@@ -19,6 +19,7 @@ import {
   getData,
   getUidTime,
   setDateChat,
+  setDateChatMessage,
   showError,
 } from "../../utils";
 
@@ -33,10 +34,11 @@ const UpdateStatus = ({ navigation }) => {
 
   useEffect(() => {
     getData("user").then((res) => {
-      console.log("data untuk ddaSHBOAR ", res);
       const data = res;
-      data.photo = res?.photo?.length > 1 ? { uri: res.photo } : NullPhoto;
-      setProfile(res);
+      data.photoForDB = res?.photo?.length > 1 ? res.photo : NullPhoto;
+      const tempPhoto = res?.photo?.length > 1 ? { uri: res.photo } : NullPhoto;
+
+      setProfile(data);
     });
   }, []);
 
@@ -69,13 +71,15 @@ const UpdateStatus = ({ navigation }) => {
       dispatch({ type: "SET_LOADING", value: true });
       const today = new Date();
       const uidArtikel = `${getUidTime(today)}`;
+      const dateArtikel = `${setDateChatMessage(today)}- ${getChatTime(today)}`;
       console.log("datamasuk", description);
       const formArtikel = {
         title: title,
         body: description,
         image: photoForDB,
         nama: profile.fullName,
-        date: uidArtikel,
+        date: dateArtikel,
+        uid: uidArtikel,
       };
 
       console.log("data mau di kirim firebhase", formArtikel);

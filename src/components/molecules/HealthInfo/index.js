@@ -12,7 +12,7 @@ const HealthInfo = ({ title, body, image, onPress }) => {
   } else {
     fixedDesc = shortDesc;
   }
-  const shortBody = title;
+  const shortBody = body;
   shortBody.toString();
   let fixedBody = "";
   if (shortBody.length > 30) {

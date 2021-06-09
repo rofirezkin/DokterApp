@@ -8,7 +8,7 @@ import { colors, getData } from "../../utils";
 const Messages = ({ navigation }) => {
   const [user, setUser] = useState({});
   const [historyChat, setHistoryChat] = useState([]);
-  const [short, setShort] = useState("");
+  const [chatEmpty, setChatEmpty] = useState(false);
   useEffect(() => {
     getDataUserFromLocal();
     const rootDB = Fire.database().ref();
@@ -34,11 +34,13 @@ const Messages = ({ navigation }) => {
           await Promise.all(promises);
           if (!unmounted) {
             setHistoryChat(data);
+            setChatEmpty(false);
           }
         }
       });
     return () => {
       unmounted = true;
+      setChatEmpty(true);
     };
   }, [user.uid]);
 
@@ -76,6 +78,17 @@ const Messages = ({ navigation }) => {
           />
         );
       })}
+      {chatEmpty && (
+        <View
+          style={{
+            alignSelf: "center",
+            justifyContent: "center",
+            marginTop: 50,
+          }}
+        >
+          <Text>Uppss Sepertinya anda belum melakukan konsultasi</Text>
+        </View>
+      )}
     </View>
   );
 };

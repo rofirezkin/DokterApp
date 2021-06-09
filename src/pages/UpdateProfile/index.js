@@ -18,12 +18,34 @@ const UpdateProfile = ({ navigation }) => {
     photoForDB: "",
   });
   const [password, setPassword] = useState("");
+  const [itemCategory] = useState([
+    {
+      id: 1,
+      label: "Dokter Umum",
+      value: "Dokter Umum",
+    },
+    {
+      id: 2,
+      label: "Dokter Bedah",
+      value: "Dokter Bedah",
+    },
+    {
+      id: 3,
+      label: "Dokter Obat",
+      value: "Dokter Obat",
+    },
+    {
+      id: 4,
+      label: "Sepesialis Gizi",
+      value: "Spesialis Gizi",
+    },
+  ]);
 
   const [photo, setPhoto] = useState(NullPhoto);
   useEffect(() => {
     getData("user").then((res) => {
       const data = res;
-      data.photoForDB = res?.photo?.length > 1 ? res.photo : ILNullPhoto;
+      data.photoForDB = res?.photo?.length > 1 ? res.photo : NullPhoto;
       const tempPhoto = res?.photo?.length > 1 ? { uri: res.photo } : NullPhoto;
       setProfile(data);
       setPhoto(tempPhoto);
@@ -45,11 +67,9 @@ const UpdateProfile = ({ navigation }) => {
       } else {
         updatePassword();
         updateProfileData();
-        dispatch({ type: "SET_LOADING", value: false });
       }
     } else {
       updateProfileData();
-      dispatch({ type: "SET_LOADING", value: false });
     }
   };
   const updatePassword = () => {
@@ -77,7 +97,11 @@ const UpdateProfile = ({ navigation }) => {
       .then(() => {
         console.log("success", data);
         storeData("user", data);
-        navigation.replace("MainApp");
+        dispatch({ type: "SET_LOADING", value: false });
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "MainApp" }],
+        });
       })
       .catch((err) => {
         showMessage({
@@ -138,9 +162,23 @@ const UpdateProfile = ({ navigation }) => {
           />
           <Gap height={24} />
           <Input
+            label="Kategori"
             value={profile.category}
-            label="Category"
-            onChangeText={(value) => changeText("category", value)}
+            onValueChange={(value) => changeText("category", value)}
+            select
+            selectItem={itemCategory}
+          />
+          <Gap height={24} />
+          <Input
+            value={profile.hospital}
+            label="Nama Rumah Sakit"
+            onChangeText={(value) => changeText("hospital", value)}
+          />
+          <Gap height={24} />
+          <Input
+            value={profile.universitas}
+            label="Pendidikan Terakhir"
+            onChangeText={(value) => changeText("universitas", value)}
           />
           <Gap height={24} />
           <Input
@@ -150,12 +188,7 @@ const UpdateProfile = ({ navigation }) => {
             onChangeText={(value) => changeText("email", value)}
           />
           <Gap height={24} />
-          <Input
-            secureTextEntry
-            value={password}
-            label="Password"
-            onChangeText={(value) => setPassword(value)}
-          />
+
           <Gap height={24} />
           <Button
             title="Save Profile"
