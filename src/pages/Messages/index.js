@@ -8,13 +8,13 @@ import { colors, getData } from "../../utils";
 const Messages = ({ navigation }) => {
   const [user, setUser] = useState({});
   const [historyChat, setHistoryChat] = useState([]);
-
+  const [short, setShort] = useState("");
   useEffect(() => {
     getDataUserFromLocal();
     const rootDB = Fire.database().ref();
     const urlHistory = `messages/${user.uid}/`;
     const messagesDB = rootDB.child(urlHistory);
-
+    let unmounted = false;
     Fire.database()
       .ref(urlHistory)
       .on("value", async (snapshot) => {
@@ -32,10 +32,14 @@ const Messages = ({ navigation }) => {
             });
           });
           await Promise.all(promises);
-
-          setHistoryChat(data);
+          if (!unmounted) {
+            setHistoryChat(data);
+          }
         }
       });
+    return () => {
+      unmounted = true;
+    };
   }, [user.uid]);
 
   const getDataUserFromLocal = () => {
@@ -53,13 +57,22 @@ const Messages = ({ navigation }) => {
           id: chat.detailUser.uid,
           data: chat.detailUser,
         };
+        const shortDesc = chat.lastContentChat;
+        shortDesc.toString();
+        let fixedDesc = "";
+        if (shortDesc.length > 30) {
+          fixedDesc = shortDesc.substring(0, 28) + "...";
+        } else {
+          fixedDesc = shortDesc;
+        }
+
         return (
           <List
             onPress={() => navigation.navigate("Chatting", dataDoctor)}
             key={chat.id}
             profile={{ uri: chat.detailUser.photo }}
             name={chat.detailUser.fullName}
-            desc={chat.lastContentChat}
+            desc={fixedDesc}
           />
         );
       })}

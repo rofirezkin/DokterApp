@@ -12,8 +12,12 @@ import UserProfile from "./UserProfile";
 import UpdateProfile from "./UpdateProfile";
 import DoctorProfile from "./DoctorProfile";
 import UpdateStatus from "./UpdateStatus";
+import DataHistory from "./DataHistory";
+import ArtikelPage from "./ArtikelPage";
 
 export {
+  ArtikelPage,
+  DataHistory,
   UpdateStatus,
   Chatting,
   GetStarted,

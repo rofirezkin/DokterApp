@@ -33,6 +33,7 @@ export class BusinessCard extends Component {
     super(props);
     console.log("constructor");
     this.getUserData();
+    this.getStatusPasien();
 
     this.state = {
       namaPasien: "initializing",
@@ -43,15 +44,18 @@ export class BusinessCard extends Component {
       bmiPasien: "initializing",
       suhu: "initializing",
       photo: "initializing",
+      statusBmiPasien: "process",
+      statusSuhuPasien: "process",
     };
-    console.log("cobain", this.state.namaPasien);
   }
   state = {
     isTracking: false,
     initialized: false,
     runAnimation: false,
   };
-
+  getStatusPasien() {
+    console.log("cobain", this.state.namaPasien);
+  }
   getUserData() {
     getData("user").then((res) => {
       console.log("data untuk ddaSHBOAR ", res);
@@ -64,10 +68,47 @@ export class BusinessCard extends Component {
         .then((res) => {
           if (res.val()) {
             const data = res.val();
+            const suhu = data.suhu;
+            if (suhu > 38) {
+              this.setState({
+                statusSuhuPasien: "tidak_normal",
+              });
+            } else if (suhu <= 37 && suhu >= 36) {
+              this.setState({
+                statusSuhuPasien: "normal",
+              });
+            } else {
+              this.setState({
+                statusSuhuPasien: "tidak_normal",
+              });
+            }
             console.log("data news", data);
-
+            const bmiPasien = data.bmiPasien;
+            console.log("bmiPasiennn", bmiPasien);
+            if (bmiPasien > 0 && bmiPasien < 17) {
+              this.setState({
+                statusBmiPasien: "kurang_BB_berat",
+              });
+            } else if (bmiPasien >= 17 && bmiPasien <= 18) {
+              this.setState({
+                statusBmiPasien: "kurang_BB_ringan",
+              });
+            } else if (bmiPasien > 18 && bmiPasien <= 25) {
+              this.setState({
+                statusBmiPasien: "BB_Normal",
+              });
+            } else if (bmiPasien > 25 && bmiPasien <= 27) {
+              this.setState({
+                statusBmiPasien: "lebih_BB_ringan",
+              });
+            } else if (bmiPasien > 27) {
+              console.log("sudahdi mount");
+              this.setState({
+                statusBmiPasien: "lebih_BB_berat",
+              });
+            }
             this.setState({
-              namaPasien: data.namaPasien,
+              namaPasien: data.fullName,
               beratBadan: data.beratBadan,
               tinggiBadan: data.tinggiBadan,
               tekananDarah: data.tekananDarah,
@@ -103,6 +144,32 @@ export class BusinessCard extends Component {
           <ViroNode key="card">
             <ViroNode
               opacity={0}
+              position={[0.2, -0.03, 0.05]}
+              animation={{
+                name: "animateImage2",
+                run: this.state.runAnimation,
+              }}
+            >
+              <ViroFlexView
+                rotation={[-90, 0, 0]}
+                height={0.01}
+                width={0.06}
+                style={styles.card}
+              >
+                <ViroFlexView style={styles.cardWrapper2}>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroImage
+                      height={0.015}
+                      width={0.015}
+                      style={styles.image}
+                      source={{ uri: this.state.photo }}
+                    />
+                  </ViroFlexView>
+                </ViroFlexView>
+              </ViroFlexView>
+            </ViroNode>
+            <ViroNode
+              opacity={0}
               position={[0, -0.03, 0]}
               animation={{
                 name: "animateImage",
@@ -111,8 +178,8 @@ export class BusinessCard extends Component {
             >
               <ViroFlexView
                 rotation={[-90, 0, 0]}
-                height={0.09}
-                width={0.05}
+                height={0.07}
+                width={0.06}
                 style={styles.card}
               >
                 <ViroFlexView style={styles.cardWrapper2}>
@@ -133,6 +200,15 @@ export class BusinessCard extends Component {
                       style={styles.textStyle}
                     />
                   </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={` `}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
                 </ViroFlexView>
                 <ViroFlexView style={styles.cardWrapper2}>
                   <ViroFlexView style={styles.cardWrapper}>
@@ -147,17 +223,7 @@ export class BusinessCard extends Component {
                     <ViroText
                       position={[0.3, -0.02, 0]}
                       textClipMode="None"
-                      text={`${this.state.beratBadan}`}
-                      scale={[0.009, 0.009, 0.009]}
-                      style={styles.textStyle}
-                    />
-                  </ViroFlexView>
-                </ViroFlexView>
-                <ViroFlexView style={styles.cardWrapper2}>
-                  <ViroFlexView style={styles.cardWrapper}>
-                    <ViroText
-                      textClipMode="None"
-                      text={`tinggiBadan`}
+                      text={`${this.state.beratBadan}Kg`}
                       scale={[0.009, 0.009, 0.009]}
                       style={styles.textStyle}
                     />
@@ -166,9 +232,9 @@ export class BusinessCard extends Component {
                     <ViroText
                       position={[0.3, -0.02, 0]}
                       textClipMode="None"
-                      text={`${this.state.tinggiBadan}`}
+                      text={`sehat`}
                       scale={[0.009, 0.009, 0.009]}
-                      style={styles.textStyle}
+                      style={styles.textStyleKeterangan}
                     />
                   </ViroFlexView>
                 </ViroFlexView>
@@ -176,7 +242,7 @@ export class BusinessCard extends Component {
                   <ViroFlexView style={styles.cardWrapper}>
                     <ViroText
                       textClipMode="None"
-                      text={`tekanan_darah`}
+                      text={`tinggi_badan`}
                       scale={[0.009, 0.009, 0.009]}
                       style={styles.textStyle}
                     />
@@ -185,17 +251,7 @@ export class BusinessCard extends Component {
                     <ViroText
                       position={[0.3, -0.02, 0]}
                       textClipMode="None"
-                      text={`${this.state.tekananDarah}`}
-                      scale={[0.009, 0.009, 0.009]}
-                      style={styles.textStyle}
-                    />
-                  </ViroFlexView>
-                </ViroFlexView>
-                <ViroFlexView style={styles.cardWrapper2}>
-                  <ViroFlexView style={styles.cardWrapper}>
-                    <ViroText
-                      textClipMode="None"
-                      text={`detakJantung`}
+                      text={`${this.state.tinggiBadan}cm`}
                       scale={[0.009, 0.009, 0.009]}
                       style={styles.textStyle}
                     />
@@ -204,28 +260,9 @@ export class BusinessCard extends Component {
                     <ViroText
                       position={[0.3, -0.02, 0]}
                       textClipMode="None"
-                      text={`${this.state.detakJantung}`}
+                      text={`sehat`}
                       scale={[0.009, 0.009, 0.009]}
-                      style={styles.textStyle}
-                    />
-                  </ViroFlexView>
-                </ViroFlexView>
-                <ViroFlexView style={styles.cardWrapper2}>
-                  <ViroFlexView style={styles.cardWrapper}>
-                    <ViroText
-                      textClipMode="None"
-                      text={`suhu_badan`}
-                      scale={[0.009, 0.009, 0.009]}
-                      style={styles.textStyle}
-                    />
-                  </ViroFlexView>
-                  <ViroFlexView style={styles.cardWrapper}>
-                    <ViroText
-                      position={[0.3, -0.02, 0]}
-                      textClipMode="None"
-                      text={`${this.state.suhu}`}
-                      scale={[0.009, 0.009, 0.009]}
-                      style={styles.textStyle}
+                      style={styles.textStyleKeterangan}
                     />
                   </ViroFlexView>
                 </ViroFlexView>
@@ -247,17 +284,99 @@ export class BusinessCard extends Component {
                       style={styles.textStyle}
                     />
                   </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={`${this.state.statusBmiPasien}`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyleKeterangan}
+                    />
+                  </ViroFlexView>
                 </ViroFlexView>
-                <ViroFlexView
-                  onTouch={() => alert("Testing")}
-                  style={styles.subText}
-                >
-                  <ViroAnimatedImage
-                    height={0.01}
-                    width={0.01}
-                    loop={true}
-                    source={require("./res/tweet.gif")}
-                  />
+                <ViroFlexView style={styles.cardWrapper2}>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      textClipMode="None"
+                      text={`tekanan_darah`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={`${this.state.tekananDarah}mm/hg`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={`sehat`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyleKeterangan}
+                    />
+                  </ViroFlexView>
+                </ViroFlexView>
+                <ViroFlexView style={styles.cardWrapper2}>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      textClipMode="None"
+                      text={`detak_jantung`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapperSatuan}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={`${this.state.detakJantung}bpm`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={`sehat`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyleKeterangan}
+                    />
+                  </ViroFlexView>
+                </ViroFlexView>
+                <ViroFlexView style={styles.cardWrapper2}>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      textClipMode="None"
+                      text={`suhu_badan`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={`${this.state.suhu}°C`}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyle}
+                    />
+                  </ViroFlexView>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroText
+                      position={[0.3, -0.02, 0]}
+                      textClipMode="None"
+                      text={this.state.statusSuhuPasien}
+                      scale={[0.009, 0.009, 0.009]}
+                      style={styles.textStyleKeterangan}
+                    />
+                  </ViroFlexView>
                 </ViroFlexView>
               </ViroFlexView>
             </ViroNode>
@@ -301,7 +420,18 @@ var styles = StyleSheet.create({
     textAlign: "left",
     fontWeight: "bold",
   },
+  textStyleSatuan: {
+    fontFamily: "Roboto",
+    fontSize: 30,
+    color: "#ffffff",
+    textAlignVertical: "top",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
   card: {
+    flexDirection: "column",
+  },
+  card2: {
     flexDirection: "column",
   },
   cardWrapper: {
@@ -310,11 +440,32 @@ var styles = StyleSheet.create({
 
     flex: 0.5,
   },
+  cardWrapperTinggi: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    backgroundColor: "red",
+    flex: 0.5,
+  },
+  cardWrapperSatuan: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    backgroundColor: "blue",
+    flex: 0.5,
+  },
   cardWrapper2: {
     flexDirection: "row",
     alignItems: "flex-start",
 
     flex: 0.5,
+  },
+  textStyleKeterangan: {
+    fontFamily: "Roboto",
+    fontSize: 30,
+    color: "#ffffff",
+    textAlignVertical: "top",
+    textAlign: "left",
+    fontWeight: "bold",
+    marginLeft: -8,
   },
 
   subText: {
@@ -345,7 +496,17 @@ ViroMaterials.createMaterials({
 ViroAnimations.registerAnimations({
   animateImage: {
     properties: {
-      positionX: 0.05,
+      positionX: 0.055,
+      positionZ: 0.003,
+      opacity: 1.0,
+    },
+    easing: "Bounce",
+    duration: 500,
+  },
+  animateImage2: {
+    properties: {
+      positionX: 0.01,
+      positionZ: -0.03,
       opacity: 1.0,
     },
     easing: "Bounce",

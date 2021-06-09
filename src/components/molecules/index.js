@@ -10,8 +10,10 @@ import ChatItem from "./ChatItem";
 import InputChat from "./InputChat";
 import Profile from "./Profile";
 import Loading from "./Loading";
+import ListData from "./ListData";
 export {
   Loading,
+  ListData,
   Profile,
   InputChat,
   UpdateStatus,

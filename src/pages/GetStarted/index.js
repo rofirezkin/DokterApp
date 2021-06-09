@@ -8,7 +8,6 @@ const GetStarted = ({ navigation }) => {
   return (
     <>
       <View style={styles.pages}>
-        <Text>fhfh</Text>
         <Image source={ImageGetStarted} style={styles.image} />
       </View>
       <View style={styles.pageTwo}>
@@ -82,7 +81,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: colors.white,
-    borderRadius: 20,
+    borderRadius: 8,
     paddingVertical: 10,
     marginHorizontal: 30,
   },

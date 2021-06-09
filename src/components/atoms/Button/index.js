@@ -30,9 +30,9 @@ export default Button;
 const styles = StyleSheet.create({
   container: (type) => ({
     paddingVertical: 10,
-    paddingHorizontal: 70,
+    width: "100%",
     backgroundColor: type === "secondary" ? "#33B9B2" : "white",
-    borderRadius: 20,
+    borderRadius: 8,
     alignSelf: "center",
   }),
   disableBg: {

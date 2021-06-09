@@ -1,25 +1,65 @@
-import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { FotoBlog } from "../../assets";
 import { Gap, HealthInfo, UpdateStatus } from "../../components";
-import { colors } from "../../utils";
+import { Fire } from "../../config";
+import { colors, getData } from "../../utils";
 
 const Artikel = ({ navigation }) => {
+  const [profile, setProfile] = useState([]);
+  const [artikel, setArtikel] = useState([]);
+  useEffect(() => {
+    getUserData();
+    Fire.database()
+      .ref(`doctors/${profile.uid}/artikel/`)
+      .once("value", (snapshot) => {
+        const oldData = snapshot.val();
+        if (snapshot.val()) {
+          const data = [];
+          Object.keys(oldData).map((key) => {
+            data.push({
+              id: key,
+              data: oldData[key],
+            });
+          });
+          setArtikel(data);
+        }
+      });
+  }, [profile.uid]);
+
+  const getUserData = () => {
+    getData("user").then((res) => {
+      console.log("data untuk ddaSHBOAR ", res);
+      const data = res;
+      data.photo = res?.photo?.length > 1 ? { uri: res.photo } : NullPhoto;
+      setProfile(res);
+    });
+  };
   return (
     <View style={styles.page}>
-      <Text style={styles.title}>Artikel Anda</Text>
-      <View style={styles.wrapperSection}>
-        <View style={styles.centerArtikel}>
-          <Image source={FotoBlog} style={styles.image} />
+      <ScrollView>
+        <Text style={styles.title}>Artikel Anda</Text>
+        <View style={styles.wrapperSection}>
+          <View style={styles.centerArtikel}>
+            <Image source={FotoBlog} style={styles.image} />
+          </View>
+          <Gap height={30} />
+          <UpdateStatus onPress={() => navigation.navigate("UpdateStatus")} />
+          <Gap height={25} />
+          <Text style={styles.titleArtikel}>Artikel Yang anda dibuat</Text>
         </View>
-        <Gap height={30} />
-        <UpdateStatus onPress={() => navigation.navigate("UpdateStatus")} />
-        <Gap height={25} />
-        <Text style={styles.titleArtikel}>Artikel Yang anda dibuat</Text>
-      </View>
-      <HealthInfo />
-      <HealthInfo />
-      <HealthInfo />
+        {artikel.map((item) => {
+          return (
+            <HealthInfo
+              key={item.id}
+              title={item.data.title}
+              body={item.data.body}
+              image={item.data.image}
+            />
+          );
+        })}
+        <Gap height={50} />
+      </ScrollView>
     </View>
   );
 };

@@ -18,6 +18,7 @@ import {
 } from "react-native";
 
 import { ViroVRSceneNavigator, ViroARSceneNavigator } from "react-viro";
+import { Fire } from "../../config";
 
 /*
    TODO: Insert your API key below
@@ -39,21 +40,43 @@ var AR_NAVIGATOR_TYPE = "AR";
 var defaultNavigatorType = UNSET;
 
 export default class ViroSample extends Component {
-  constructor({ route }) {
+  constructor({ route, props }) {
     const dataMonitoring = route.params;
-    console.log("data monitroing", dataMonitoring);
-    super();
+    console.log("data monitroing AR", dataMonitoring);
+    const urlData = `doctors/${dataMonitoring.uidUser}/dataAR`;
+    const dataPush = {
+      beratBadan: dataMonitoring.datamonitor.beratBadan,
+      tinggiBadan: dataMonitoring.datamonitor.tinggiBadan,
+      suhu: dataMonitoring.datamonitor.suhu,
+      detakJantung: dataMonitoring.datamonitor.detakJantung,
+      tekananDarah: dataMonitoring.datamonitor.tekananDarah,
+      photo: dataMonitoring.photo,
+      fullName: dataMonitoring.name,
+      bmiPasien: dataMonitoring.datamonitor.bmi,
+    };
+    console.log("data monitroing ARssa", dataPush);
+    Fire.database()
+      .ref(urlData)
+      .set(dataPush)
+      .then(() => {
+        console.log("berhasil");
+      });
+    super(props);
     this.state = {
       navigatorType: defaultNavigatorType,
       sharedProps: sharedProps,
+      dataMonitoring: dataMonitoring.data,
     };
     this._getExperienceSelector = this._getExperienceSelector.bind(this);
     this._getARNavigator = this._getARNavigator.bind(this, dataMonitoring);
     this._getVRNavigator = this._getVRNavigator.bind(this);
-    this._getExperienceButtonOnPress = this._getExperienceButtonOnPress.bind(
-      this
-    );
+    this._getExperienceButtonOnPress =
+      this._getExperienceButtonOnPress.bind(this);
     this._exitViro = this._exitViro.bind(this);
+  }
+
+  componentDidMount() {
+    console.log("component didmount");
   }
 
   // Replace this function with the contents of _getVRNavigator() or _getARNavigator()
@@ -74,7 +97,7 @@ export default class ViroSample extends Component {
       <View style={localStyles.outer}>
         <View style={localStyles.inner}>
           <Text style={localStyles.titleText}>
-            Choose your desired experience:
+            Augmented Reality Experience:
           </Text>
 
           <TouchableHighlight
@@ -83,14 +106,6 @@ export default class ViroSample extends Component {
             underlayColor={"#68a0ff"}
           >
             <Text style={localStyles.buttonText}>AR</Text>
-          </TouchableHighlight>
-
-          <TouchableHighlight
-            style={localStyles.buttons}
-            onPress={this._getExperienceButtonOnPress(VR_NAVIGATOR_TYPE)}
-            underlayColor={"#68a0ff"}
-          >
-            <Text style={localStyles.buttonText}>VR</Text>
           </TouchableHighlight>
         </View>
       </View>

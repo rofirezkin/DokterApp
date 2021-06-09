@@ -73,36 +73,42 @@ const Register = ({ navigation }) => {
           <View style={styles.content}>
             <Gap height={20} />
             <Input
+              placeholder="nama lengkap anda"
               label="Full Name"
               onChangeText={(value) => setForm("fullName", value)}
               value={form.fullName}
             />
             <Gap height={20} />
             <Input
+              placeholder="category"
               label="Kategori Dokter"
               onChangeText={(value) => setForm("category", value)}
               value={form.category}
             />
             <Gap height={20} />
             <Input
+              placeholder="pendidikan terakhir anda"
               label="Universitas"
               onChangeText={(value) => setForm("universitas", value)}
               value={form.universitas}
             />
             <Gap height={20} />
             <Input
+              placeholder="nomor STR anda"
               label="Nomor STR"
               onChangeText={(value) => setForm("nomorSTR", value)}
               value={form.nomorSTR}
             />
             <Gap height={20} />
             <Input
+              placeholder="email anda"
               label="Email"
               onChangeText={(value) => setForm("email", value)}
               value={form.email}
             />
             <Gap height={20} />
             <Input
+              placeholder="password anda"
               label="Password"
               onChangeText={(value) => setForm("password", value)}
               value={form.password}

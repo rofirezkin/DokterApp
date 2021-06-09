@@ -9,7 +9,7 @@ import { colors, storeData, useForm } from "../../utils";
 import Logo from "./logo.png";
 const Login = ({ navigation }) => {
   const [form, setForm] = useForm({ email: "", password: "" });
-  const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
   const login = () => {
     console.log("form", form);
@@ -57,12 +57,14 @@ const Login = ({ navigation }) => {
         <View style={styles.loginForm}>
           <Gap height={30} />
           <Input
+            placeholder="email anda"
             label="Email Addres"
             value={form.email}
             onChangeText={(value) => setForm("email", value)}
           />
           <Gap height={17} />
           <Input
+            placeholder="password anda"
             secureTextEntry
             label="Password"
             value={form.password}

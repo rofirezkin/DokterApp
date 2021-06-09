@@ -22,9 +22,15 @@ const Dashboard = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getUserData();
-    getNews();
-    getTopRatedDoctors();
+    let unmounted = false;
+    if (!unmounted) {
+      getUserData();
+      getNews();
+      getTopRatedDoctors();
+    }
+    return () => {
+      unmounted = true;
+    };
   }, []);
 
   const getTopRatedDoctors = () => {
@@ -58,16 +64,21 @@ const Dashboard = ({ navigation }) => {
   getNews = () => {
     Fire.database()
       .ref("news/")
-      .once("value")
-      .then((res) => {
-        if (res.val()) {
-          const data = res.val();
-          const filterData = data.filter((el) => el !== null);
-          setNews(filterData);
-          console.log("data news", filterData);
-        }
+      .orderByChild("date")
+      .limitToLast(3)
+      .once("value", (snapshot) => {
+        const oldData = snapshot.val();
+        const data = [];
+        Object.keys(oldData).map((key) => {
+          data.push({
+            id: key,
+            data: oldData[key],
+          });
+        });
+        setNews(data);
       });
   };
+  console.log("data news", news);
 
   const getUserData = () => {
     getData("user").then((res) => {
@@ -121,7 +132,7 @@ const Dashboard = ({ navigation }) => {
           <Text style={styles.TopDoct}>Top Doctors</Text>
           <Gap height={8} />
           <View style={styles.wrapperScroll}>
-            {loading && <Text>Loading</Text>}
+            {loading && <Text style={styles.loading}>Loading</Text>}
             <ScrollView horizontal>
               <View style={styles.topDokter}>
                 <Gap width={18} />
@@ -147,14 +158,16 @@ const Dashboard = ({ navigation }) => {
         {news.map((item) => {
           return (
             <HealthInfo
+              onPress={() => navigation.navigate("ArtikelPage", item.data)}
               key={item.id}
-              title={item.title}
-              body={item.body}
-              image={item.image}
+              title={item.data.title}
+              body={item.data.body}
+              image={item.data.image}
             />
           );
         })}
       </View>
+      <Gap height={50} />
     </ScrollView>
   );
 };
@@ -200,5 +213,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.text.default,
     marginHorizontal: 18,
+  },
+  loading: {
+    textAlign: "center",
   },
 });

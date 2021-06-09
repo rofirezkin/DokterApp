@@ -16,6 +16,8 @@ import {
   UpdateProfile,
   DoctorProfile,
   UpdateStatus,
+  DataHistory,
+  ArtikelPage,
 } from "../pages";
 import { BottomNavigator } from "../components";
 const Stack = createStackNavigator();
@@ -33,7 +35,7 @@ const MainApp = () => {
 
 const Router = () => {
   return (
-    <Stack.Navigator initialRouteName="AR">
+    <Stack.Navigator initialRouteName="MainApp">
       <Stack.Screen
         name="Splash"
         component={Splash}
@@ -45,8 +47,18 @@ const Router = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name="ArtikelPage"
+        component={ArtikelPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name="Register"
         component={Register}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DataHistory"
+        component={DataHistory}
         options={{ headerShown: false }}
       />
       <Stack.Screen

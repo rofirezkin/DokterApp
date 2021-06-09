@@ -12,6 +12,7 @@ import {
   getChatTime,
   getData,
   setDateChat,
+  setDateChatMessage,
   showError,
 } from "../../utils";
 import { Fire } from "../../config";
@@ -79,12 +80,12 @@ const Chatting = ({ navigation, route }) => {
     const urlMessageDoctor = `messages/${dataDoctor.data.uid}/${chatID}`;
     const dataHistoryChatForUser = {
       lastContentChat: chatContent,
-      lastChatDate: today.getTime(),
+      lastChatDate: setDateChatMessage(today),
       uidPartner: dataDoctor.data.uid,
     };
     const dataHistoryChatForDoctor = {
       lastContentChat: chatContent,
-      lastChatDate: today.getTime(),
+      lastChatDate: setDateChatMessage(today),
       uidPartner: user.uid,
     };
     Fire.database()
@@ -135,7 +136,7 @@ const Chatting = ({ navigation, route }) => {
         </ScrollView>
       </View>
       <TouchableOpacity
-        onPress={() => navigation.navigate("AR", dataDoctor.monitoring)}
+        onPress={() => navigation.navigate("DataHistory", dataDoctor.data.uid)}
       >
         <Text style={styles.textAR}>Lihat data medical Check Up</Text>
       </TouchableOpacity>
