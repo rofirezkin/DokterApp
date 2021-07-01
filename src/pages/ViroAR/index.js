@@ -15,6 +15,7 @@ import {
   StyleSheet,
   PixelRatio,
   TouchableHighlight,
+  TouchableOpacity,
 } from "react-native";
 
 import { ViroVRSceneNavigator, ViroARSceneNavigator } from "react-viro";
@@ -53,11 +54,12 @@ export default class ViroSample extends Component {
       photo: dataMonitoring.photo,
       fullName: dataMonitoring.name,
       bmiPasien: dataMonitoring.datamonitor.bmi,
+      gender: dataMonitoring.datamonitor.gender,
     };
-    console.log("data monitroing ARssa", dataPush);
+
     Fire.database()
       .ref(urlData)
-      .set(dataPush)
+      .update(dataPush)
       .then(() => {
         console.log("berhasil");
       });
@@ -75,9 +77,7 @@ export default class ViroSample extends Component {
     this._exitViro = this._exitViro.bind(this);
   }
 
-  componentDidMount() {
-    console.log("component didmount");
-  }
+  componentDidMount() {}
 
   // Replace this function with the contents of _getVRNavigator() or _getARNavigator()
   // if you are building a specific type of experience.
@@ -100,13 +100,13 @@ export default class ViroSample extends Component {
             Augmented Reality Experience:
           </Text>
 
-          <TouchableHighlight
+          <TouchableOpacity
             style={localStyles.buttons}
             onPress={this._getExperienceButtonOnPress(AR_NAVIGATOR_TYPE)}
             underlayColor={"#68a0ff"}
           >
             <Text style={localStyles.buttonText}>AR</Text>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
       </View>
     );

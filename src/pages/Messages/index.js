@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { DummyDoctor1, DummyDoctor2, DummyDoctor3 } from "../../assets";
+
+import { Alert, StyleSheet, Text, View } from "react-native";
+
 import { List } from "../../components";
 import { Fire } from "../../config";
 import { colors, getData } from "../../utils";
@@ -24,7 +25,7 @@ const Messages = ({ navigation }) => {
           const promises = await Object.keys(oldData).map(async (key) => {
             const urlUidUSer = `users/${oldData[key].uidPartner}`;
             const detailUser = await rootDB.child(urlUidUSer).once("value");
-            console.log("detail; doctor", detailUser.val());
+
             data.push({
               id: key,
               detailUser: detailUser.val(),
@@ -33,11 +34,13 @@ const Messages = ({ navigation }) => {
           });
           await Promise.all(promises);
           if (!unmounted) {
+            console.log("detail user", data);
             setHistoryChat(data);
             setChatEmpty(false);
           }
         }
       });
+
     return () => {
       unmounted = true;
       setChatEmpty(true);
@@ -46,11 +49,10 @@ const Messages = ({ navigation }) => {
 
   const getDataUserFromLocal = () => {
     getData("user").then((res) => {
-      console.log("dat untuk user uid", res);
       setUser(res);
     });
   };
-  console.log("messages", historyChat);
+
   return (
     <View style={styles.page}>
       <Text style={styles.title}>Messages</Text>
@@ -68,6 +70,42 @@ const Messages = ({ navigation }) => {
           fixedDesc = shortDesc;
         }
 
+        //onlongpress
+        const handlerLongClick = () => {
+          //handler for Long Click
+          Alert.alert(
+            "Hapus Pesan",
+            "Apakah kamu akan Hapus pesan ?",
+            [
+              {
+                text: "YA",
+                onPress: handlerClick,
+                style: "cancel",
+              },
+            ],
+            {
+              cancelable: true,
+              // onDismiss: () =>
+              //   Alert.alert(
+              //     'This alert was dismissed by tapping outside of the alert dialog.',
+              //   ),
+            }
+          );
+        };
+
+        const handlerClick = () => {
+          Fire.database()
+            .ref(`messages/${user.uid}/${chat.uidPartner}_${user.uid}`)
+            .remove();
+          Fire.database()
+            .ref(`chatting/${user.uid}/${chat.uidPartner}_${user.uid}`)
+            .remove();
+
+          //handler for Long Click
+          console.log("data", chat.lastContentChat);
+        };
+        //endonlongpress
+
         return (
           <List
             onPress={() => navigation.navigate("Chatting", dataDoctor)}
@@ -75,20 +113,13 @@ const Messages = ({ navigation }) => {
             profile={{ uri: chat.detailUser.photo }}
             name={chat.detailUser.fullName}
             desc={fixedDesc}
+            date={chat.lastChatDate}
+            onLongPress={handlerLongClick}
+            activeOpacity={0.6}
+            active={true}
           />
         );
       })}
-      {chatEmpty && (
-        <View
-          style={{
-            alignSelf: "center",
-            justifyContent: "center",
-            marginTop: 50,
-          }}
-        >
-          <Text>Uppss Sepertinya anda belum melakukan konsultasi</Text>
-        </View>
-      )}
     </View>
   );
 };

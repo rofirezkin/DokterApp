@@ -14,8 +14,12 @@ import DoctorProfile from "./DoctorProfile";
 import UpdateStatus from "./UpdateStatus";
 import DataHistory from "./DataHistory";
 import ArtikelPage from "./ArtikelPage";
+import AllArtikel from "./AllArtikel";
+import Success from "./Success";
 
 export {
+  Success,
+  AllArtikel,
   ArtikelPage,
   DataHistory,
   UpdateStatus,

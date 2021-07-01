@@ -8,6 +8,7 @@ import {
   HealthInfo,
   HomeProfile,
   RatedDoctor,
+  Link,
 } from "../../components";
 import { colors, getData, showError } from "../../utils";
 import { Fire } from "../../config";
@@ -36,12 +37,11 @@ const Dashboard = ({ navigation }) => {
   const getTopRatedDoctors = () => {
     setLoading(true);
     Fire.database()
-      .ref("doctors/")
-      .orderByChild("rate")
+      .ref("doctors")
+      .orderByChild("rate/ratePersentasi")
       .limitToLast(3)
       .once("value")
       .then((res) => {
-        console.log("top rated Doctors", res.val());
         if (res.val()) {
           setLoading(false);
           const oldData = res.val();
@@ -52,7 +52,7 @@ const Dashboard = ({ navigation }) => {
               data: oldData[key],
             });
           });
-          console.log("data hasil parse", data);
+
           setDoctors(data);
         }
       })
@@ -75,14 +75,13 @@ const Dashboard = ({ navigation }) => {
             data: oldData[key],
           });
         });
+        data.reverse();
         setNews(data);
       });
   };
-  console.log("data news", news);
 
   const getUserData = () => {
     getData("user").then((res) => {
-      console.log("data untuk ddaSHBOAR ", res);
       const data = res;
       data.photo = res?.photo?.length > 1 ? { uri: res.photo } : NullPhoto;
       setProfile(res);
@@ -137,10 +136,20 @@ const Dashboard = ({ navigation }) => {
               <View style={styles.topDokter}>
                 <Gap width={18} />
                 {doctors.map((doctor) => {
+                  const shortDesc = doctor.data.fullName;
+                  shortDesc.toString();
+                  let fixedDesc = "";
+                  if (shortDesc.length > 20) {
+                    fixedDesc = shortDesc.substring(0, 18) + "...";
+                  } else {
+                    fixedDesc = shortDesc;
+                  }
                   return (
                     <RatedDoctor
+                      experienced={doctor.data.pengalaman}
+                      rate={doctor.data.rate.ratePersentasi}
                       key={doctor.data.uid}
-                      name={doctor.data.fullName}
+                      name={fixedDesc}
                       desc={doctor.data.category}
                       avatar={{ uri: doctor.data.photo }}
                       onPress={() =>
@@ -166,8 +175,25 @@ const Dashboard = ({ navigation }) => {
             />
           );
         })}
+
+        <View style={styles.seeMore}>
+          <Link
+            onPress={() => navigation.navigate("AllArtikel")}
+            title="Lihat Selengkapnya"
+            align="right"
+            size={16}
+          />
+        </View>
+        <View>
+          <Text
+            style={{ textAlign: "center", marginTop: 10, color: colors.border }}
+          >
+            v1.0.2
+          </Text>
+        </View>
       </View>
-      <Gap height={50} />
+
+      <Gap height={30} />
     </ScrollView>
   );
 };
@@ -197,6 +223,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "space-between",
+  },
+  seeMore: {
+    textAlign: "right",
+    color: colors.text.secondary,
+    marginRight: 18,
+    marginTop: 10,
   },
   topDokter: {
     flexDirection: "row",

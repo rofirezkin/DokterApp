@@ -4,7 +4,18 @@ import { Account, HelpCenter, Next, Starts } from "../../../assets";
 
 import { colors } from "../../../utils";
 
-const List = ({ profile, name, desc, onPress, type, icon }) => {
+const List = ({
+  profile,
+  onLongPress,
+  date,
+  active,
+  name,
+  desc,
+  onPress,
+  type,
+  icon,
+  activeOpacity,
+}) => {
   const Icon = () => {
     if (icon === " edit-profile") {
       return <Image style={styles.userProfile} source={Account} />;
@@ -18,7 +29,12 @@ const List = ({ profile, name, desc, onPress, type, icon }) => {
     return <Image style={styles.userProfile} source={Account} />;
   };
   return (
-    <TouchableOpacity onPress={onPress} style={styles.container}>
+    <TouchableOpacity
+      activeOpacity={activeOpacity}
+      onLongPress={onLongPress}
+      onPress={onPress}
+      style={styles.container}
+    >
       <View style={styles.duaKomponen}>
         {icon ? <Icon /> : <Image source={profile} style={styles.avatar} />}
         <View>
@@ -26,6 +42,11 @@ const List = ({ profile, name, desc, onPress, type, icon }) => {
           <Text>{desc}</Text>
         </View>
       </View>
+      {active && (
+        <View>
+          <Text>{date}</Text>
+        </View>
+      )}
       {type === "next" && <Image source={Next} style={styles.userProfile} />}
     </TouchableOpacity>
   );

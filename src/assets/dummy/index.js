@@ -12,7 +12,14 @@ import Work from "./work.png";
 import DummyDoctor1 from "./DummyDoctor1.png";
 import DummyDoctor2 from "./DummyDoctor2.png";
 import DummyDoctor3 from "./DummyDoctor3.png";
+import LikeDokter from "./LikeDokter.png";
+import ExpProfile from "./ExpProfile.png";
+import LikeProfile from "./LikeProfile.png";
+
 export {
+  ExpProfile,
+  LikeProfile,
+  LikeDokter,
   Category1,
   Category2,
   Category3,

@@ -4,11 +4,12 @@ import { Header, Input, Button, Gap, Loading } from "../../components";
 import { Fire } from "../../config";
 import { colors, getData, storeData, useForm } from "../../utils";
 import { showMessage, hideMessage } from "react-native-flash-message";
+import { NullPhoto } from "../../assets";
 
 const Register = ({ navigation }) => {
   const [form, setForm] = useForm({
     fullName: "",
-    category: "dokter umum",
+    category: "Dokter Umum",
     universitas: "",
     nomorSTR: "",
     gender: "pria",
@@ -17,6 +18,7 @@ const Register = ({ navigation }) => {
     password: "",
     pengalaman: "",
   });
+  console.log("nuilll poto", NullPhoto);
   const [description, setDescription] = useState("");
   const [itemCategory] = useState([
     {

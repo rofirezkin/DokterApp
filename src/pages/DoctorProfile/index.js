@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Garuda, Universitas, Work } from "../../assets";
-import { Button, Gap, Header, Profile } from "../../components";
+import { Button, Gap, Header, LikeAndExp, Profile } from "../../components";
 import { colors } from "../../utils";
 
 const DoctorProfile = ({ navigation, route }) => {
@@ -18,14 +18,18 @@ const DoctorProfile = ({ navigation, route }) => {
             desc={dataDoctor.data.category}
           />
 
-          <Text
-            style={styles.status}
-          >{`pengalaman : ${dataDoctor.data.pengalaman}`}</Text>
+          <Text style={styles.status}>Rp15.000</Text>
 
           <Gap height={10} />
         </View>
         <View style={styles.description}>
           <View style={styles.desc}>
+            <View>
+              <LikeAndExp
+                rate={dataDoctor.data.rate.ratePersentasi}
+                experienced={dataDoctor.data.pengalaman}
+              />
+            </View>
             <Text style={styles.nameDesc}>Tentang Saya</Text>
             <Text style={styles.about}>{dataDoctor.data.shortDesc}</Text>
             <Gap height={13} />
@@ -78,10 +82,6 @@ const DoctorProfile = ({ navigation, route }) => {
 export default DoctorProfile;
 
 const styles = StyleSheet.create({
-  doublePage: {
-    justifyContent: "space-between",
-    flex: 1,
-  },
   page: {
     flex: 1,
     backgroundColor: colors.primary,
@@ -105,6 +105,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     borderTopRightRadius: 40,
     borderTopLeftRadius: 40,
+    flex: 1,
+    height: "100%",
   },
   desc: {
     padding: 23,

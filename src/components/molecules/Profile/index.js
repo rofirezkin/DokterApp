@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   name: (profile) => ({
+    textAlign: "center",
     fontSize: 20,
     fontWeight: "600",
     color: profile ? colors.white : colors.text.default,

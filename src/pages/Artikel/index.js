@@ -9,7 +9,23 @@ const Artikel = ({ navigation }) => {
   const [profile, setProfile] = useState([]);
   const [artikel, setArtikel] = useState([]);
   useEffect(() => {
+    let unmounted = false;
+
     getUserData();
+
+    return () => {
+      unmounted = true;
+    };
+  }, [profile.uid]);
+
+  console.log("Artikel ni", artikel);
+  const getUserData = () => {
+    getData("user").then((res) => {
+      console.log("data untuk ddaSHBOAR ", res);
+      const data = res;
+      data.photo = res?.photo?.length > 1 ? { uri: res.photo } : NullPhoto;
+      setProfile(res);
+    });
     Fire.database()
       .ref(`doctors/${profile.uid}/artikel/`)
       .once("value", (snapshot) => {
@@ -25,15 +41,6 @@ const Artikel = ({ navigation }) => {
           setArtikel(data);
         }
       });
-  }, [profile.uid]);
-
-  const getUserData = () => {
-    getData("user").then((res) => {
-      console.log("data untuk ddaSHBOAR ", res);
-      const data = res;
-      data.photo = res?.photo?.length > 1 ? { uri: res.photo } : NullPhoto;
-      setProfile(res);
-    });
   };
   return (
     <View style={styles.page}>

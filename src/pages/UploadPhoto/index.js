@@ -13,6 +13,7 @@ const UploadPhoto = ({ navigation, route }) => {
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(NullPhoto);
 
+  console.log("nuilll poto", NullPhoto);
   const getImage = () => {
     ImagePicker.launchImageLibrary(
       { quality: 0.5, maxWidth: 200, maxHeight: 200 },

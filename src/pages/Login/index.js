@@ -18,7 +18,7 @@ const Login = ({ navigation }) => {
       .signInWithEmailAndPassword(form.email, form.password)
       .then((res) => {
         console.log("success", res);
-        dispatch({ type: "SET_LOADING", value: false });
+
         Fire.database()
           .ref(`doctors/${res.user.uid}/`)
           .once("value")
@@ -26,7 +26,17 @@ const Login = ({ navigation }) => {
             console.log("data user", resDB.val());
             if (resDB.val()) {
               storeData("user", resDB.val());
+
               navigation.replace("MainApp");
+              dispatch({ type: "SET_LOADING", value: false });
+            } else {
+              dispatch({ type: "SET_LOADING", value: false });
+              showMessage({
+                message: "sepertinya anda salah memasukan akun",
+                type: "default",
+                backgroundColor: colors.error,
+                color: colors.white,
+              });
             }
           });
       })

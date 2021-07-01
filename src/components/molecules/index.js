@@ -11,7 +11,9 @@ import InputChat from "./InputChat";
 import Profile from "./Profile";
 import Loading from "./Loading";
 import ListData from "./ListData";
+import LikeAndExp from "./LikeAndExp";
 export {
+  LikeAndExp,
   Loading,
   ListData,
   Profile,

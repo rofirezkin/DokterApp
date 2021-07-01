@@ -1,13 +1,11 @@
 "use strict";
 
-import React, { Component, useEffect } from "react";
+import React, { Component } from "react";
 
 import { StyleSheet } from "react-native";
 
 import {
   ViroARScene,
-  ViroDirectionalLight,
-  ViroBox,
   ViroConstants,
   ViroARTrackingTargets,
   ViroMaterials,
@@ -15,15 +13,8 @@ import {
   ViroImage,
   ViroFlexView,
   ViroARImageMarker,
-  ViroARObjectMarker,
-  ViroAmbientLight,
-  ViroARPlane,
-  ViroAnimatedImage,
   ViroAnimations,
   ViroNode,
-  Viro3DObject,
-  ViroQuad,
-  ViroARSceneNavigator,
 } from "react-viro";
 import { Fire } from "../src/config";
 import { getData } from "../src/utils";
@@ -31,9 +22,8 @@ import { getData } from "../src/utils";
 export class BusinessCard extends Component {
   constructor(props) {
     super(props);
-    console.log("constructor");
+
     this.getUserData();
-    this.getStatusPasien();
 
     this.state = {
       namaPasien: "initializing",
@@ -46,6 +36,9 @@ export class BusinessCard extends Component {
       photo: "initializing",
       statusBmiPasien: "process",
       statusSuhuPasien: "process",
+      gender: "initializing",
+      isTracking: false,
+      photoGender: require("./res/local_spinner.jpg"),
     };
   }
   state = {
@@ -53,9 +46,7 @@ export class BusinessCard extends Component {
     initialized: false,
     runAnimation: false,
   };
-  getStatusPasien() {
-    console.log("cobain", this.state.namaPasien);
-  }
+
   getUserData() {
     getData("user").then((res) => {
       console.log("data untuk ddaSHBOAR ", res);
@@ -107,6 +98,20 @@ export class BusinessCard extends Component {
                 statusBmiPasien: "lebih_BB_berat",
               });
             }
+            const PhotoGender = data.gender;
+            if (PhotoGender === "pria") {
+              this.setState({
+                photoGender: require("./res/pria.png"),
+              });
+            } else if (PhotoGender === "wanita") {
+              this.setState({
+                photoGender: require("./res/wanita.png"),
+              });
+            } else {
+              this.setState({
+                photoGender: require("./res/local_spinner.jpg"),
+              });
+            }
             this.setState({
               namaPasien: data.fullName,
               beratBadan: data.beratBadan,
@@ -116,6 +121,7 @@ export class BusinessCard extends Component {
               suhu: data.suhu,
               bmiPasien: data.bmiPasien,
               photo: data.photo,
+              gender: data.gender,
             });
           }
         });
@@ -125,8 +131,20 @@ export class BusinessCard extends Component {
   getNoTrackingUI() {
     const { isTracking, initialized } = this.state;
     return (
-      <ViroText text={initialized ? "Initializing AR..." : "No Tracking"} />
+      <ViroText text={isTracking ? "Initializing AR..." : "No Tracking"} />
     );
+  }
+  HideFunction(anchor) {
+    console.log("ini anchor param", anchor);
+    if (anchor.trackingMethod === "tracking") {
+      this.setState({
+        runAnimation: true,
+      });
+    } else if (anchor.trackingMethod === "lastKnownPose") {
+      this.setState({
+        runAnimation: false,
+      });
+    }
   }
 
   getARScene() {
@@ -135,6 +153,7 @@ export class BusinessCard extends Component {
         <ViroARImageMarker
           autoFocus={true}
           target={"businessCard"}
+          onAnchorRemoved={() => console.log("halo")}
           onAnchorFound={() =>
             this.setState({
               runAnimation: true,
@@ -163,6 +182,32 @@ export class BusinessCard extends Component {
                       width={0.015}
                       style={styles.image}
                       source={{ uri: this.state.photo }}
+                    />
+                  </ViroFlexView>
+                </ViroFlexView>
+              </ViroFlexView>
+            </ViroNode>
+            <ViroNode
+              opacity={0}
+              position={[0.2, -0.03, 0.05]}
+              animation={{
+                name: "animateImage3",
+                run: this.state.runAnimation,
+              }}
+            >
+              <ViroFlexView
+                rotation={[-90, 0, 0]}
+                height={0.01}
+                width={0.06}
+                style={styles.card}
+              >
+                <ViroFlexView style={styles.cardWrapper2}>
+                  <ViroFlexView style={styles.cardWrapper}>
+                    <ViroImage
+                      height={0.07}
+                      width={0.02}
+                      style={styles.image}
+                      source={this.state.photoGender}
                     />
                   </ViroFlexView>
                 </ViroFlexView>
@@ -232,7 +277,7 @@ export class BusinessCard extends Component {
                     <ViroText
                       position={[0.3, -0.02, 0]}
                       textClipMode="None"
-                      text={`sehat`}
+                      text={``}
                       scale={[0.009, 0.009, 0.009]}
                       style={styles.textStyleKeterangan}
                     />
@@ -260,7 +305,7 @@ export class BusinessCard extends Component {
                     <ViroText
                       position={[0.3, -0.02, 0]}
                       textClipMode="None"
-                      text={`sehat`}
+                      text={``}
                       scale={[0.009, 0.009, 0.009]}
                       style={styles.textStyleKeterangan}
                     />
@@ -318,7 +363,7 @@ export class BusinessCard extends Component {
                       textClipMode="None"
                       text={`sehat`}
                       scale={[0.009, 0.009, 0.009]}
-                      style={styles.textStyleKeterangan}
+                      style={styles.textStyleKeteranganTambahan}
                     />
                   </ViroFlexView>
                 </ViroFlexView>
@@ -346,10 +391,11 @@ export class BusinessCard extends Component {
                       textClipMode="None"
                       text={`sehat`}
                       scale={[0.009, 0.009, 0.009]}
-                      style={styles.textStyleKeterangan}
+                      style={styles.textStyleKeteranganTambahan}
                     />
                   </ViroFlexView>
                 </ViroFlexView>
+
                 <ViroFlexView style={styles.cardWrapper2}>
                   <ViroFlexView style={styles.cardWrapper}>
                     <ViroText
@@ -374,7 +420,7 @@ export class BusinessCard extends Component {
                       textClipMode="None"
                       text={this.state.statusSuhuPasien}
                       scale={[0.009, 0.009, 0.009]}
-                      style={styles.textStyleKeterangan}
+                      style={styles.textStyleKeteranganTambahan}
                     />
                   </ViroFlexView>
                 </ViroFlexView>
@@ -395,9 +441,15 @@ export class BusinessCard extends Component {
   }
 
   render() {
+    console.log("halo", this.state.isTracking);
     return (
-      <ViroARScene onTrackingUpdated={this._onInitialized}>
-        {this.state.isTracking ? this.getNoTrackingUI() : this.getARScene()}
+      <ViroARScene
+        onAnchorRemoved={(params, descki) =>
+          console.log("anchor remooves", descki)
+        }
+        onTrackingUpdated={this._onInitialized}
+      >
+        {this.getARScene()}
       </ViroARScene>
     );
   }
@@ -443,7 +495,7 @@ var styles = StyleSheet.create({
   cardWrapperTinggi: {
     flexDirection: "row",
     alignItems: "flex-start",
-    backgroundColor: "red",
+
     flex: 0.5,
   },
   cardWrapperSatuan: {
@@ -467,7 +519,15 @@ var styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: -8,
   },
-
+  textStyleKeteranganTambahan: {
+    fontFamily: "Roboto",
+    fontSize: 30,
+    color: "#ffffff",
+    textAlignVertical: "top",
+    textAlign: "left",
+    fontWeight: "bold",
+    marginLeft: -4,
+  },
   subText: {
     flexDirection: "column",
     alignItems: "flex-start",
@@ -478,7 +538,7 @@ var styles = StyleSheet.create({
 
 ViroARTrackingTargets.createTargets({
   businessCard: {
-    source: require("./res/rofi.jpg"),
+    source: require("./res/bpjs.jpg"),
     orientation: "Up",
     physicalWidth: 0.05, // real world width in meters
   },
@@ -496,8 +556,8 @@ ViroMaterials.createMaterials({
 ViroAnimations.registerAnimations({
   animateImage: {
     properties: {
-      positionX: 0.055,
-      positionZ: 0.003,
+      positionX: 0.059,
+      positionZ: 0.009,
       opacity: 1.0,
     },
     easing: "Bounce",
@@ -505,7 +565,16 @@ ViroAnimations.registerAnimations({
   },
   animateImage2: {
     properties: {
-      positionX: 0.01,
+      positionX: 0.059,
+      positionZ: -0.04,
+      opacity: 1.0,
+    },
+    easing: "Bounce",
+    duration: 500,
+  },
+  animateImage3: {
+    properties: {
+      positionX: 0.03,
       positionZ: -0.03,
       opacity: 1.0,
     },

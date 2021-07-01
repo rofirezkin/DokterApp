@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   }),
   disableBg: {
+    width: "100%",
     borderRadius: 20,
     paddingVertical: 10,
     backgroundColor: colors.button.disable.background,

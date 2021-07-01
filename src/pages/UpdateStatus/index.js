@@ -43,26 +43,23 @@ const UpdateStatus = ({ navigation }) => {
   }, []);
 
   const getImage = () => {
-    ImagePicker.launchImageLibrary(
-      { quality: 0.5, maxWidth: 200, maxHeight: 200 },
-      (response) => {
-        console.log("poto", response);
-        if (response.didCancel || response.error) {
-          showMessage({
-            message: "opps, sepertinya anda tidak memilih fotonya?",
-            type: "default",
-            backgroundColor: colors.error,
-            color: colors.white,
-          });
-        } else {
-          console.log("response getImage", response);
-          const source = { uri: response.uri };
-          setPhotoForDB(`data:${response.type};base64, ${response.data}`);
+    ImagePicker.launchImageLibrary({ quality: 1 }, (response) => {
+      console.log("poto", response);
+      if (response.didCancel || response.error) {
+        showMessage({
+          message: "opps, sepertinya anda tidak memilih fotonya?",
+          type: "default",
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
+      } else {
+        console.log("response getImage", response);
+        const source = { uri: response.uri };
+        setPhotoForDB(`data:${response.type};base64, ${response.data}`);
 
-          setPhoto(source);
-        }
+        setPhoto(source);
       }
-    );
+    });
   };
 
   const uploadAndContinue = () => {
