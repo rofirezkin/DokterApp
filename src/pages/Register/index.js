@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { Header, Input, Button, Gap, Loading } from "../../components";
 import { Fire } from "../../config";
 import { colors, getData, storeData, useForm } from "../../utils";
@@ -17,8 +24,10 @@ const Register = ({ navigation }) => {
     email: "",
     password: "",
     pengalaman: "",
+    pembayaran: "Gratis",
   });
-  console.log("nuilll poto", NullPhoto);
+
+  const [isSecureEntry, setIsSecureEntry] = useState(true);
   const [description, setDescription] = useState("");
   const [itemCategory] = useState([
     {
@@ -33,8 +42,8 @@ const Register = ({ navigation }) => {
     },
     {
       id: 3,
-      label: "Dokter Obat",
-      value: "Dokter Obat",
+      label: "Dokter Anak",
+      value: "Dokter Anak",
     },
     {
       id: 4,
@@ -55,6 +64,18 @@ const Register = ({ navigation }) => {
       value: "wanita",
     },
   ]);
+  const [itemPembayaran] = useState([
+    {
+      id: 1,
+      label: "Gratis",
+      value: "Gratis",
+    },
+    {
+      id: 2,
+      label: "Berbayar",
+      value: "Berbayar",
+    },
+  ]);
 
   const [loading, setLoading] = useState(false);
 
@@ -67,56 +88,67 @@ const Register = ({ navigation }) => {
     //   email: form.email,
     // };
     // navigation.navigate("UploadPhoto", data);
+    if (
+      form.fullName !== "" &&
+      form.universitas !== "" &&
+      form.nomorSTR !== "" &&
+      form.hospital &&
+      form.pengalaman !== "" &&
+      description !== ""
+    ) {
+      setLoading(true);
+      Fire.auth()
+        .createUserWithEmailAndPassword(form.email, form.password)
+        .then((success) => {
+          setLoading(false);
+          setForm("reset");
+          const data = {
+            fullName: form.fullName,
+            category: form.category,
+            universitas: form.universitas,
+            nomorSTR: form.nomorSTR,
+            email: form.email,
+            uid: success.user.uid,
+            hospital: form.hospital,
+            gender: form.gender,
+            shortDesc: description,
+            rate: "0",
+            pengalaman: form.pengalaman,
+            pembayaran: form.pembayaran,
+          };
+          console.log("data shortdes", data);
+          Fire.database()
+            .ref("doctors/" + success.user.uid + "/")
+            .set(data);
 
-    console.log(form);
-
-    setLoading(true);
-    Fire.auth()
-      .createUserWithEmailAndPassword(form.email, form.password)
-      .then((success) => {
-        setLoading(false);
-        setForm("reset");
-        const data = {
-          fullName: form.fullName,
-          category: form.category,
-          universitas: form.universitas,
-          nomorSTR: form.nomorSTR,
-          email: form.email,
-          uid: success.user.uid,
-          hospital: form.hospital,
-          gender: form.gender,
-          shortDesc: description,
-          rate: "0",
-          pengalaman: form.pengalaman,
-        };
-        console.log("data shortdes", data);
-        Fire.database()
-          .ref("doctors/" + success.user.uid + "/")
-          .set(data);
-
-        storeData("user", data);
-        navigation.navigate("UploadPhoto", data);
-        console.log("registes sukses", success);
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        setLoading(false);
-        showMessage({
-          message: errorMessage,
-          type: "default",
-          backgroundColor: colors.error,
-          color: colors.white,
+          storeData("user", data);
+          navigation.navigate("UploadPhoto", data);
+          console.log("registes sukses", success);
+        })
+        .catch((error) => {
+          const errorMessage = error.message;
+          setLoading(false);
+          showMessage({
+            message: errorMessage,
+            type: "default",
+            backgroundColor: colors.error,
+            color: colors.white,
+          });
+          console.log("error", error);
         });
-        console.log("error", error);
+    } else {
+      return showMessage({
+        message: "Sepertinya Anda kurang Input biodata",
+        type: "default",
+        backgroundColor: colors.error,
+        color: colors.white,
       });
+    }
   };
   return (
     <>
       <View style={styles.page}>
-        <Header
-          title="Register"
-          onPress={() => navigation.navigate("GetStarted")}
-        />
+        <Header title="Register" onPress={() => navigation.goBack()} />
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.content}>
             <Gap height={20} />
@@ -151,6 +183,14 @@ const Register = ({ navigation }) => {
             />
             <Gap height={20} />
             <Input
+              label="Pembayaran Dokter"
+              value={form.gender}
+              onValueChange={(value) => setForm("pembayaran", value)}
+              select
+              selectItem={itemPembayaran}
+            />
+            <Gap height={20} />
+            <Input
               placeholder="pendidikan terakhir anda"
               label="Universitas"
               onChangeText={(value) => setForm("universitas", value)}
@@ -179,11 +219,21 @@ const Register = ({ navigation }) => {
             />
             <Gap height={20} />
             <Input
-              placeholder="password anda"
-              label="Password"
+              iconPosition="right"
+              placeholder="Buat Password"
+              secureTextEntry={isSecureEntry}
+              label="Buat Password"
+              icon={
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsSecureEntry((prev) => !prev);
+                  }}
+                >
+                  <Text>{isSecureEntry ? "Show" : "Hide"}</Text>
+                </TouchableOpacity>
+              }
               onChangeText={(value) => setForm("password", value)}
               value={form.password}
-              secureTextEntry
             />
             <Gap height={20} />
             <View>

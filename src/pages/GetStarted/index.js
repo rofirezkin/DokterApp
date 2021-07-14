@@ -12,10 +12,10 @@ const GetStarted = ({ navigation }) => {
       </View>
       <View style={styles.pageTwo}>
         <View style={styles.titleGeneral}>
-          <Text style={styles.titleOne}>Free Online Chatting With</Text>
-          <Text style={styles.titleOne}>certified doctors </Text>
+          <Text style={styles.titleOne}> Online Chatting </Text>
+          <Text style={styles.titleOne}>With Patient </Text>
           <Text style={styles.titleTwo}>
-            Get free consultations with the best doctors
+            Get consultations with the best doctors
           </Text>
           <Text style={styles.titleTwo}>
             out there to understand your symptoms

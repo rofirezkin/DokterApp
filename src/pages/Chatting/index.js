@@ -220,35 +220,55 @@ const Chatting = ({ navigation, route }) => {
             /> */}
         </View>
       )}
-      {dataDoctor.data.statusKonsultasi.status === "sukses" &&
-      dataDoctor.data.statusKonsultasi.uidDokter === user.uid ? (
+      {user.pembayaran === "Berbayar" ? (
         <View>
-          <View style={styles.tutupkonsul}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("DataHistory", dataDoctor.data.uid)
-              }
-            >
-              <Text style={styles.textAR}>Lihat data </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onPressHandler}>
-              <Text style={styles.textAR}>Tutup Konsultasi</Text>
-            </TouchableOpacity>
-          </View>
+          {dataDoctor.data.statusKonsultasi.status === "sukses" &&
+          dataDoctor.data.statusKonsultasi.uidDokter === user.uid ? (
+            <View>
+              <View style={styles.tutupkonsul}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("DataHistory", dataDoctor.data.uid)
+                  }
+                >
+                  <Text style={styles.textAR}>Lihat data </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onPressHandler}>
+                  <Text style={styles.textAR}>Tutup Konsultasi</Text>
+                </TouchableOpacity>
+              </View>
+              <InputChat
+                value={chatContent}
+                onChangeText={(value) => setChatContent(value)}
+                onButtonPress={chatSend}
+                targetChat={dataDoctor}
+              />
+            </View>
+          ) : (
+            <View style={styles.pesanTerkunci}>
+              <Button
+                disable
+                text="secondary"
+                type="secondary"
+                title="Pesan Terkunci"
+              />
+            </View>
+          )}
+        </View>
+      ) : (
+        <View>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("DataHistory", dataDoctor.data.uid)
+            }
+          >
+            <Text style={styles.textAR}>Lihat data Medical Checkup</Text>
+          </TouchableOpacity>
           <InputChat
             value={chatContent}
             onChangeText={(value) => setChatContent(value)}
             onButtonPress={chatSend}
             targetChat={dataDoctor}
-          />
-        </View>
-      ) : (
-        <View style={styles.pesanTerkunci}>
-          <Button
-            disable
-            text="secondary"
-            type="secondary"
-            title="Pesan Terkunci"
           />
         </View>
       )}
@@ -272,6 +292,10 @@ const styles = StyleSheet.create({
   },
   textAR: {
     textAlign: "center",
+    textDecorationLine: "underline",
+    color: colors.primary,
+    textDecorationLine: "underline",
+    fontSize: 17,
   },
   tutupkonsul: {
     flexDirection: "row",

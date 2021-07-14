@@ -3,7 +3,14 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { News1 } from "../../../assets";
 import { colors } from "../../../utils";
 
-const HealthInfo = ({ title, body, image, onPress }) => {
+const HealthInfo = ({
+  title,
+  onLongPress,
+  activeOpacity,
+  body,
+  image,
+  onPress,
+}) => {
   const shortDesc = title;
   shortDesc.toString();
   let fixedDesc = "";
@@ -22,7 +29,11 @@ const HealthInfo = ({ title, body, image, onPress }) => {
   }
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity
+      activeOpacity={activeOpacity}
+      onLongPress={onLongPress}
+      onPress={onPress}
+    >
       <View style={styles.container}>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>{fixedDesc}</Text>

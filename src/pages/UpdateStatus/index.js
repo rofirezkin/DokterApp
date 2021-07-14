@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { AddPhoto, RemovePhoto, TambahGambar } from "../../assets";
 import { Button, Gap, Header } from "../../components";
 import { Fire } from "../../config";
+import fotoStatus from "./uploadphoto.png";
 import {
   colors,
   getChatTime,
@@ -26,7 +27,7 @@ import {
 const UpdateStatus = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const [photo, setPhoto] = useState(TambahGambar);
+  const [photo, setPhoto] = useState("");
   const [photoForDB, setPhotoForDB] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -129,12 +130,29 @@ const UpdateStatus = ({ navigation }) => {
               />
             </View>
             <Gap height={15} />
-            <TouchableOpacity onPress={getImage}>
+            <View>
+              <TouchableOpacity
+                onPress={getImage}
+                style={styles.pembayaranBukti}
+              >
+                {photo === "" && (
+                  <View>
+                    <Image source={fotoStatus} style={styles.foto} />
+                  </View>
+                )}
+                {photo !== "" && (
+                  <View>
+                    <Image source={photo} style={styles.bukti} />
+                  </View>
+                )}
+              </TouchableOpacity>
+            </View>
+            {/* <TouchableOpacity onPress={getImage}>
               <View style={styles.tambahFoto}>
                 <Text>Tambah Foto</Text>
                 <Image source={photo} style={styles.avatar} />
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <Gap height={10} />
           <Button
@@ -159,6 +177,24 @@ const styles = StyleSheet.create({
   },
   page: {
     paddingHorizontal: 20,
+  },
+  pembayaranBukti: {
+    alignItems: "center",
+    width: "100%",
+    backgroundColor: "#F3F3F3",
+    padding: 20,
+  },
+  bukti: {
+    width: 100,
+    height: 200,
+    borderRadius: 10,
+
+    alignSelf: "center",
+    alignItems: "center",
+  },
+  foto: {
+    width: 71,
+    height: 54,
   },
   avatar: {
     width: 100,

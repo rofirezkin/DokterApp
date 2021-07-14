@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 
 import { Alert, StyleSheet, Text, View } from "react-native";
 
-import { List } from "../../components";
+import { Gap, List } from "../../components";
 import { Fire } from "../../config";
 import { colors, getData } from "../../utils";
 
 const Messages = ({ navigation }) => {
   const [user, setUser] = useState({});
   const [historyChat, setHistoryChat] = useState([]);
-  const [chatEmpty, setChatEmpty] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [empty, setEmpty] = useState(false);
   useEffect(() => {
+    setLoading(true);
     getDataUserFromLocal();
     const rootDB = Fire.database().ref();
     const urlHistory = `messages/${user.uid}/`;
@@ -19,6 +22,8 @@ const Messages = ({ navigation }) => {
     Fire.database()
       .ref(urlHistory)
       .on("value", async (snapshot) => {
+        setLoading(false);
+        setEmpty(true);
         if (snapshot.val()) {
           const oldData = snapshot.val();
           const data = [];
@@ -32,18 +37,43 @@ const Messages = ({ navigation }) => {
               ...oldData[key],
             });
           });
-          await Promise.all(promises);
+
           if (!unmounted) {
-            console.log("detail user", data);
-            setHistoryChat(data);
-            setChatEmpty(false);
+            await Promise.all(promises);
+            const dataBaru = data.sort(
+              (a, b) => parseFloat(b.uidTime) - parseFloat(a.uidTime)
+            );
+            console.log("detail user", dataBaru);
+            setHistoryChat(dataBaru);
+            setEmpty(false);
+            setLoading(false);
+          } else {
+            setLoading(false);
+            setEmpty(true);
           }
+        }
+      });
+    Fire.database()
+      .ref(`admin/${user.uid}/`)
+      .on("value", (snapshot) => {
+        if (snapshot.val()) {
+          setLoading(false);
+          const oldData = snapshot.val();
+          const data = [];
+          Object.keys(oldData).map((key) => {
+            data.push({
+              id: key,
+              data: oldData[key],
+            });
+          });
+          console.log("data hasil parse", data);
+          const dataSukses = data.filter((uid) => uid.data.status === "sukses");
+          setStatusKonsultasi(dataSukses);
         }
       });
 
     return () => {
       unmounted = true;
-      setChatEmpty(true);
     };
   }, [user.uid]);
 
@@ -107,19 +137,35 @@ const Messages = ({ navigation }) => {
         //endonlongpress
 
         return (
-          <List
-            onPress={() => navigation.navigate("Chatting", dataDoctor)}
-            key={chat.id}
-            profile={{ uri: chat.detailUser.photo }}
-            name={chat.detailUser.fullName}
-            desc={fixedDesc}
-            date={chat.lastChatDate}
-            onLongPress={handlerLongClick}
-            activeOpacity={0.6}
-            active={true}
-          />
+          <View key={chat.id}>
+            {empty === false ? (
+              <List
+                onPress={() => navigation.navigate("Chatting", dataDoctor)}
+                profile={{ uri: chat.detailUser.photo }}
+                name={chat.detailUser.fullName}
+                desc={fixedDesc}
+                date={chat.lastChatDate}
+                onLongPress={handlerLongClick}
+                activeOpacity={0.6}
+                active={true}
+              />
+            ) : (
+              <View />
+            )}
+          </View>
         );
       })}
+      <Gap height={20} />
+      {loading && (
+        <View style={styles.noData}>
+          <Text style={styles.noData1}>Loading.....</Text>
+        </View>
+      )}
+      {empty && (
+        <View style={styles.noData}>
+          <Text style={styles.noData1}>Pesan Kosong</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -137,5 +183,11 @@ const styles = StyleSheet.create({
     color: colors.text.default,
     marginTop: 30,
     textAlign: "center",
+  },
+  noData: {
+    alignItems: "center",
+  },
+  noData1: {
+    color: colors.inputBorder,
   },
 });

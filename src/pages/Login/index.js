@@ -1,15 +1,22 @@
 import React, { useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { useDispatch } from "react-redux";
 
 import { Button, Gap, Input, Link } from "../../components/atoms";
 import { Fire } from "../../config";
 import { colors, storeData, useForm } from "../../utils";
-import Logo from "./logo.png";
+import Logo from "./logoNew.png";
 const Login = ({ navigation }) => {
   const [form, setForm] = useForm({ email: "", password: "" });
-
+  const [isSecureEntry, setIsSecureEntry] = useState(true);
   const dispatch = useDispatch();
   const login = () => {
     console.log("form", form);
@@ -74,14 +81,23 @@ const Login = ({ navigation }) => {
           />
           <Gap height={17} />
           <Input
-            placeholder="password anda"
-            secureTextEntry
+            iconPosition="right"
+            placeholder="yourpassword"
+            secureTextEntry={isSecureEntry}
             label="Password"
+            icon={
+              <TouchableOpacity
+                onPress={() => {
+                  setIsSecureEntry((prev) => !prev);
+                }}
+              >
+                <Text>{isSecureEntry ? "Show" : "Hide"}</Text>
+              </TouchableOpacity>
+            }
             value={form.password}
             onChangeText={(value) => setForm("password", value)}
           />
-          <Gap height={17} />
-          <Link title="Forgot My Password" size={12} />
+
           <Gap height={40} />
           <Button
             type="secondary"

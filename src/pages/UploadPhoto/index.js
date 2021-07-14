@@ -13,7 +13,6 @@ const UploadPhoto = ({ navigation, route }) => {
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(NullPhoto);
 
-  console.log("nuilll poto", NullPhoto);
   const getImage = () => {
     ImagePicker.launchImageLibrary(
       { quality: 0.5, maxWidth: 200, maxHeight: 200 },
@@ -51,7 +50,7 @@ const UploadPhoto = ({ navigation, route }) => {
   };
   return (
     <View style={styles.page}>
-      <Header title="Upload Photo" onPress={() => navigation.goBack()} />
+      <Header title="Upload Photo" />
       <View style={styles.content}>
         <View style={styles.profile}>
           <TouchableOpacity style={styles.avatarWrapper} onPress={getImage}>
@@ -71,17 +70,6 @@ const UploadPhoto = ({ navigation, route }) => {
             onPress={uploadAndContinue}
           />
           <Gap height={30} />
-          <Link
-            onPress={() =>
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "MainApp" }],
-              })
-            }
-            title="Skip for this"
-            align="center"
-            size={16}
-          />
         </View>
       </View>
     </View>

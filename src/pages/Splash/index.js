@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Fire } from "../../config";
-import Logo from "./logo.png";
+import Logo from "./logoNew.png";
 const Splash = ({ navigation }) => {
   useEffect(() => {
     const unsubscribe = Fire.auth().onAuthStateChanged((user) => {
@@ -17,8 +17,7 @@ const Splash = ({ navigation }) => {
   }, [navigation]);
   return (
     <View style={styles.pages}>
-      <Image source={Logo} />
-      <Text style={styles.title}>Adadokter</Text>
+      <Image style={styles.logo} source={Logo} />
     </View>
   );
 };
@@ -31,6 +30,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  logo: {
+    width: 122,
+    height: 107,
   },
   title: { fontSize: 20, fontWeight: "600", color: "white" },
 });

@@ -10,5 +10,16 @@ firebase.initializeApp({
   measurementId: "G-JMJ33J81EX",
 });
 
+// firebase.initializeApp({
+//   apiKey: "AIzaSyDRn0wPRjg0uGodJYv5VbMNjQAVjKEdMD8",
+//   authDomain: "backupadadokter.firebaseapp.com",
+//   databaseURL: "https://backupadadokter-default-rtdb.firebaseio.com",
+//   projectId: "backupadadokter",
+//   storageBucket: "backupadadokter.appspot.com",
+//   messagingSenderId: "28175736060",
+//   appId: "1:28175736060:web:6d90be8aa0aa8579894b79",
+//   measurementId: "G-J1HGMZVTJK",
+// });
+
 const Fire = firebase;
 export default Fire;

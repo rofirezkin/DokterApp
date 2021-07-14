@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Header, ListData } from "../../components";
+import { Gap, Header, ListData } from "../../components";
 
 import { Fire } from "../../config";
 import { colors, getData } from "../../utils";
@@ -11,14 +11,19 @@ const DataHistory = ({ navigation, route }) => {
   const [dataMonitoring, setDataMonitoring] = useState([]);
   const [fullName, setFullName] = useState("");
   const [profile, setProfile] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [empty, setEmpty] = useState(false);
   console.log("uid Docctor", uidPasien);
   useEffect(() => {
     let unmounted = false;
+    setLoading(true);
     getNameAndPhoto();
     getUserData();
     Fire.database()
       .ref(`users/${uidPasien}/data/`)
       .on("value", (snapshot) => {
+        setLoading(false);
+        setEmpty(true);
         if (snapshot.val()) {
           const oldData = snapshot.val();
           const data = [];
@@ -31,6 +36,11 @@ const DataHistory = ({ navigation, route }) => {
           console.log("data hasil parse", data);
           if (!unmounted) {
             setDataMonitoring(data);
+            setEmpty(false);
+            setLoading(false);
+          } else {
+            setLoading(false);
+            setEmpty(true);
           }
         }
       });
@@ -72,6 +82,7 @@ const DataHistory = ({ navigation, route }) => {
             name: str1[0],
             photo: profile,
           };
+          console.log(datakirim.datamonitor);
           return (
             <View key={data.id}>
               <ListData
@@ -82,6 +93,17 @@ const DataHistory = ({ navigation, route }) => {
             </View>
           );
         })}
+        <Gap height={20} />
+        {loading && (
+          <View style={styles.noData}>
+            <Text style={styles.noData1}>Loading.....</Text>
+          </View>
+        )}
+        {empty && (
+          <View style={styles.noData}>
+            <Text style={styles.noData1}>data kosong</Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -96,5 +118,11 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: colors.background,
+  },
+  noData: {
+    alignItems: "center",
+  },
+  noData1: {
+    color: colors.inputBorder,
   },
 });

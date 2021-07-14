@@ -187,7 +187,6 @@ const UpdateProfile = ({ navigation }) => {
             disable
             onChangeText={(value) => changeText("email", value)}
           />
-          <Gap height={24} />
 
           <Gap height={24} />
           <Button

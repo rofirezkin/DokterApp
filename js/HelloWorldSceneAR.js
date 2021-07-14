@@ -5,6 +5,12 @@ import React, { Component } from "react";
 import { StyleSheet } from "react-native";
 
 import {
+  ViroAnimatedImage,
+  ViroSpotLight,
+  ViroDirectionalLight,
+  ViroAmbientLight,
+  ViroOrbitCamera,
+  Viro3DObject,
   ViroARScene,
   ViroConstants,
   ViroARTrackingTargets,
@@ -38,13 +44,14 @@ export class BusinessCard extends Component {
       statusSuhuPasien: "process",
       gender: "initializing",
       isTracking: false,
-      photoGender: require("./res/local_spinner.jpg"),
+      photoGender: require("./res/test.obj"),
     };
   }
   state = {
     isTracking: false,
     initialized: false,
     runAnimation: false,
+    masking: require("./res/grid_bg.jpg"),
   };
 
   getUserData() {
@@ -101,15 +108,15 @@ export class BusinessCard extends Component {
             const PhotoGender = data.gender;
             if (PhotoGender === "pria") {
               this.setState({
-                photoGender: require("./res/pria.png"),
+                photoGender: require("./res/test.obj"),
               });
             } else if (PhotoGender === "wanita") {
               this.setState({
-                photoGender: require("./res/wanita.png"),
+                photoGender: require("./res/woman.obj"),
               });
             } else {
               this.setState({
-                photoGender: require("./res/local_spinner.jpg"),
+                photoGender: require("./res/test.obj"),
               });
             }
             this.setState({
@@ -187,7 +194,67 @@ export class BusinessCard extends Component {
                 </ViroFlexView>
               </ViroFlexView>
             </ViroNode>
-            <ViroNode
+            <ViroSpotLight
+              position={[0, -0.25, 0]}
+              color="#777777"
+              direction={[0, 0, -1]}
+              attenuationStartDistance={5}
+              attenuationEndDistance={10}
+              innerAngle={5}
+              outerAngle={20}
+            />
+            <ViroNode position={[-0.011, 0.001, -0.001]}>
+              <ViroFlexView
+                rotation={[-90, 0, 0]}
+                style={styles.cardspiner}
+              ></ViroFlexView>
+              <ViroText
+                rotation={[-90, 0, 0]}
+                textClipMode="None"
+                text={`DJ_${this.state.detakJantung}bpm`}
+                scale={[0.005, 0.005, 0.005]}
+                style={styles.textStyleDetail}
+              />
+            </ViroNode>
+            <ViroNode position={[-0.0063, 0, -0.025]}>
+              <ViroFlexView
+                rotation={[-90, 0, 0]}
+                style={styles.cardspiner}
+              ></ViroFlexView>
+              <ViroText
+                rotation={[-90, 0, 0]}
+                textClipMode="None"
+                text={`TD_${this.state.tekananDarah}mm/hg`}
+                scale={[0.005, 0.005, 0.005]}
+                style={styles.textStyleDetail}
+              />
+            </ViroNode>
+            <ViroNode position={[0.012, 0, -0.027]}>
+              <ViroText
+                rotation={[-90, 0, 0]}
+                textClipMode="None"
+                text={`suhu_${this.state.suhu}°C`}
+                scale={[0.006, 0.006, 0.006]}
+                style={styles.textStyleDetail}
+              />
+              <ViroFlexView
+                rotation={[-90, 0, 0]}
+                style={styles.cardspiner}
+              ></ViroFlexView>
+            </ViroNode>
+            <ViroAmbientLight color="#ffffff" />
+
+            <ViroNode position={[0, 0, 0.04]} rotation={[180, 0, 0]}>
+              <Viro3DObject
+                materials={["heart"]}
+                source={this.state.photoGender}
+                resources={[require("./res/Blank.mtl")]}
+                type="OBJ"
+                scale={[0.0005, 0.0005, 0.0005]}
+              />
+            </ViroNode>
+
+            {/* <ViroNode
               opacity={0}
               position={[0.2, -0.03, 0.05]}
               animation={{
@@ -212,7 +279,7 @@ export class BusinessCard extends Component {
                   </ViroFlexView>
                 </ViroFlexView>
               </ViroFlexView>
-            </ViroNode>
+            </ViroNode> */}
             <ViroNode
               opacity={0}
               position={[0, -0.03, 0]}
@@ -472,6 +539,20 @@ var styles = StyleSheet.create({
     textAlign: "left",
     fontWeight: "bold",
   },
+  cardspiner: {
+    backgroundColor: "red",
+    width: 0.001,
+    height: 0.001,
+  },
+  textStyleDetail: {
+    paddingLeft: 9,
+    fontFamily: "Roboto",
+    fontSize: 30,
+    color: "#ffffff",
+    textAlignVertical: "top",
+    textAlign: "left",
+    fontWeight: "bold",
+  },
   textStyleSatuan: {
     fontFamily: "Roboto",
     fontSize: 30,
@@ -538,7 +619,7 @@ var styles = StyleSheet.create({
 
 ViroARTrackingTargets.createTargets({
   businessCard: {
-    source: require("./res/bpjs.jpg"),
+    source: require("./res/ktpbaru.jpg"),
     orientation: "Up",
     physicalWidth: 0.05, // real world width in meters
   },
@@ -550,6 +631,11 @@ ViroMaterials.createMaterials({
   },
   quad: {
     diffuseColor: "rgba(0,0,0,0.5)",
+  },
+  heart: {
+    lightingModel: "Blinn",
+    diffuseTexture: require("./res/grid_bg.jpg"),
+    specularTexture: require("./res/grid_bg.jpg"),
   },
 });
 

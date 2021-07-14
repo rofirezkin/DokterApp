@@ -7,11 +7,11 @@ export const getChatTime = (date) => {
 
 export const getUidTime = (oldDate) => {
   const year = oldDate.getUTCFullYear();
-  const month = oldDate.getMonth() + 1;
-  const date = oldDate.getDate();
-  const hour = oldDate.getHours();
-  const minutes = oldDate.getMinutes();
-  const second = oldDate.getSeconds();
+  const month = ("0" + (oldDate.getMonth() + 1)).slice(-2);
+  const date = ("0" + oldDate.getDate()).slice(-2);
+  const hour = ("0" + oldDate.getHours()).slice(-2);
+  const minutes = ("0" + oldDate.getMinutes()).slice(-2);
+  const second = ("0" + oldDate.getSeconds()).slice(-2);
   return `${year}${month}${date}${hour}${minutes}${second}`;
 };
 

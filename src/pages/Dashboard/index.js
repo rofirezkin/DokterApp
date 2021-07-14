@@ -21,6 +21,7 @@ const Dashboard = ({ navigation }) => {
     category: "",
   });
   const [loading, setLoading] = useState(false);
+  const [loadingInfo, setLoadingInfo] = useState(false);
 
   useEffect(() => {
     let unmounted = false;
@@ -62,11 +63,13 @@ const Dashboard = ({ navigation }) => {
   };
 
   getNews = () => {
+    setLoadingInfo(true);
     Fire.database()
       .ref("news/")
       .orderByChild("date")
       .limitToLast(3)
       .once("value", (snapshot) => {
+        setLoadingInfo(false);
         const oldData = snapshot.val();
         const data = [];
         Object.keys(oldData).map((key) => {
@@ -164,6 +167,7 @@ const Dashboard = ({ navigation }) => {
         </View>
         <Gap height={20} />
         <Text style={styles.TopHealth}>Health Information</Text>
+        {loadingInfo && <Text style={styles.loading}>Loading</Text>}
         {news.map((item) => {
           return (
             <HealthInfo

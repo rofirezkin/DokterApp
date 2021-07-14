@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { FotoBlog } from "../../assets";
+import { Alert, Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FotoBlog, NullPhoto } from "../../assets";
 import { Gap, HealthInfo, UpdateStatus } from "../../components";
 import { Fire } from "../../config";
 import { colors, getData } from "../../utils";
@@ -18,7 +18,6 @@ const Artikel = ({ navigation }) => {
     };
   }, [profile.uid]);
 
-  console.log("Artikel ni", artikel);
   const getUserData = () => {
     getData("user").then((res) => {
       console.log("data untuk ddaSHBOAR ", res);
@@ -28,7 +27,7 @@ const Artikel = ({ navigation }) => {
     });
     Fire.database()
       .ref(`doctors/${profile.uid}/artikel/`)
-      .once("value", (snapshot) => {
+      .on("value", (snapshot) => {
         const oldData = snapshot.val();
         if (snapshot.val()) {
           const data = [];
@@ -59,6 +58,38 @@ const Artikel = ({ navigation }) => {
           <Text style={styles.titleArtikel}>Artikel Yang anda dibuat</Text>
         </View>
         {artikel.map((item) => {
+          //onlongpress
+          const handlerLongClick = () => {
+            //handler for Long Click
+            Alert.alert(
+              "Hapus Pesan",
+              "Apakah kamu akan Hapus Artikel Tersebut ?",
+              [
+                {
+                  text: "YA",
+                  onPress: handlerClick,
+                  style: "cancel",
+                },
+              ],
+              {
+                cancelable: true,
+                // onDismiss: () =>
+                //   Alert.alert(
+                //     'This alert was dismissed by tapping outside of the alert dialog.',
+                //   ),
+              }
+            );
+          };
+
+          const handlerClick = () => {
+            Fire.database()
+              .ref(`doctors/${profile.uid}/artikel/${item.id}`)
+              .remove();
+            Fire.database().ref(`news/${item.id}`).remove();
+
+            //handler for Long Click
+          };
+          //endonlongpress
           return (
             <HealthInfo
               onPress={() => navigation.navigate("ArtikelPage", item.data)}
@@ -66,6 +97,7 @@ const Artikel = ({ navigation }) => {
               title={item.data.title}
               body={item.data.body}
               image={item.data.image}
+              onLongPress={handlerLongClick}
             />
           );
         })}

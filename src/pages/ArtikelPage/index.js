@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   gambar: {
     width: "100%",
-    height: 170,
+    height: 200,
     alignSelf: "center",
   },
 });
