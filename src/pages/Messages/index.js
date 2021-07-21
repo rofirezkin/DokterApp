@@ -90,6 +90,9 @@ const Messages = ({ navigation }) => {
         const dataDoctor = {
           id: chat.detailUser.uid,
           data: chat.detailUser,
+          uidDokter: user.uid,
+          pembayaran: user.pembayaran,
+          statusKonsul: chat.detailUser.statusKonsultasi,
         };
         const shortDesc = chat.lastContentChat;
         shortDesc.toString();

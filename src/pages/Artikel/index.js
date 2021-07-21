@@ -20,7 +20,6 @@ const Artikel = ({ navigation }) => {
 
   const getUserData = () => {
     getData("user").then((res) => {
-      console.log("data untuk ddaSHBOAR ", res);
       const data = res;
       data.photo = res?.photo?.length > 1 ? { uri: res.photo } : NullPhoto;
       setProfile(res);

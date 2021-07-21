@@ -142,7 +142,6 @@ export class BusinessCard extends Component {
     );
   }
   HideFunction(anchor) {
-    console.log("ini anchor param", anchor);
     if (anchor.trackingMethod === "tracking") {
       this.setState({
         runAnimation: true,
@@ -508,7 +507,6 @@ export class BusinessCard extends Component {
   }
 
   render() {
-    console.log("halo", this.state.isTracking);
     return (
       <ViroARScene
         onAnchorRemoved={(params, descki) =>

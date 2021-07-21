@@ -1,7 +1,7 @@
 export const getChatTime = (date) => {
-  const hour = date.getHours();
-  const minutes = date.getMinutes();
-  const second = date.getSeconds();
+  const hour = ("0" + date.getHours()).slice(-2);
+  const minutes = ("0" + date.getMinutes()).slice(-2);
+
   return `${hour}:${minutes} ${hour >= 12 ? "PM" : "AM"}`;
 };
 
@@ -17,13 +17,13 @@ export const getUidTime = (oldDate) => {
 
 export const setDateChat = (oldDate) => {
   const year = oldDate.getUTCFullYear();
-  const month = oldDate.getMonth() + 1;
-  const date = oldDate.getDate();
+  const month = ("0" + (oldDate.getMonth() + 1)).slice(-2);
+  const date = ("0" + oldDate.getDate()).slice(-2);
   return `${year}-${month}-${date}`;
 };
 export const setDateChatMessage = (oldDate) => {
   const year = oldDate.getUTCFullYear();
-  const month = oldDate.getMonth() + 1;
-  const date = oldDate.getDate();
+  const month = ("0" + (oldDate.getMonth() + 1)).slice(-2);
+  const date = ("0" + oldDate.getDate()).slice(-2);
   return `${year}/${month}/${date}`;
 };

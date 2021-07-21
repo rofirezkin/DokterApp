@@ -16,8 +16,10 @@ import DataHistory from "./DataHistory";
 import ArtikelPage from "./ArtikelPage";
 import AllArtikel from "./AllArtikel";
 import Success from "./Success";
+import Catatan from "./Catatan";
 
 export {
+  Catatan,
   Success,
   AllArtikel,
   ArtikelPage,

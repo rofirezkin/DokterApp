@@ -20,6 +20,7 @@ import {
   ArtikelPage,
   AllArtikel,
   Success,
+  Catatan,
 } from "../pages";
 import { BottomNavigator } from "../components";
 const Stack = createStackNavigator();
@@ -48,6 +49,7 @@ const Router = () => {
         component={GetStarted}
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
         name="Success"
         component={Success}
@@ -97,6 +99,11 @@ const Router = () => {
       <Stack.Screen
         name="Chatting"
         component={Chatting}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Catatan"
+        component={Catatan}
         options={{ headerShown: false }}
       />
       <Stack.Screen

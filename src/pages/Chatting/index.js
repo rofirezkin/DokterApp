@@ -3,10 +3,11 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { Button, ChatItem, Header, InputChat } from "../../components";
+import { Button, ChatItem, Gap, Header, InputChat } from "../../components";
 import {
   colors,
   getChatTime,
@@ -21,10 +22,43 @@ import { Modal } from "react-native";
 
 const Chatting = ({ navigation, route }) => {
   const dataDoctor = route.params;
+  const statusKonsul = dataDoctor.statusKonsul;
+
+  if (statusKonsul === undefined) {
+  } else {
+    const oldData = statusKonsul;
+    const data = [];
+    Object.keys(oldData).map((key) => {
+      data.push({
+        id: key,
+        data: oldData[key],
+      });
+    });
+
+    if (data !== "") {
+      if (data !== "sukses") {
+        const datafilter = data.filter(
+          (uid) =>
+            uid.data.uidDokter === dataDoctor.uidDokter &&
+            uid.data.status === "sukses"
+        );
+        var dataKonsul = datafilter[0];
+      }
+    } else {
+    }
+  }
+  console.log("status konsusasasaasasl", dataKonsul);
   const [chatContent, setChatContent] = useState("");
   const [user, setUser] = useState({});
   const [chatData, setChatData] = useState([]);
   const [showWarning, SetshowWarning] = useState(false);
+  const [showCatatan, setShowCatatan] = useState(false);
+
+  //catatan
+  const [symptoms, setSymptoms] = useState("");
+  const [diagnosis, setDiagnosis] = useState("");
+  const [advice, setAdvice] = useState("");
+
   useEffect(() => {
     let unmounted = false;
     getDataUserFromLocal();
@@ -73,17 +107,23 @@ const Chatting = ({ navigation, route }) => {
   const onPressHandler = () => {
     SetshowWarning(true);
   };
+  const onPressHandlerCatatan = () => {
+    setShowCatatan(true);
+  };
   //endmodals
-  console.log("data doctor", dataDoctor);
 
   const KirimDataAkhirKonsultasi = () => {
     const kirimData = {
       status: "feedback",
     };
-    Fire.database().ref(`admin/${dataDoctor.data.uid}/`).update(kirimData);
     Fire.database()
-      .ref(`users/${dataDoctor.data.uid}/statusKonsultasi/`)
+      .ref(
+        `users/${dataDoctor.data.uid}/statusKonsultasi/${dataDoctor.uidDokter}`
+      )
       .update(kirimData);
+    Fire.database()
+      .ref(`verifikasi/${dataDoctor.uidDokter}_${dataDoctor.id}`)
+      .remove();
     navigation.reset({
       index: 0,
       routes: [{ name: "Success" }],
@@ -140,6 +180,44 @@ const Chatting = ({ navigation, route }) => {
         showError(err.message);
       });
   };
+
+  const KirimCatatan = () => {
+    const today = new Date();
+    const chatID = `${dataDoctor.data.uid}_${user.uid}`;
+
+    const urlFirebaseforUser = `chatting/${
+      user.uid
+    }/${chatID}/allChat/${setDateChat(today)}`;
+
+    //for partner
+    const urlFirebaseforPartner = `chatting/${
+      dataDoctor.data.uid
+    }/${chatID}/allChat/${setDateChat(today)}`;
+
+    const kirimData = {
+      dataCatatan: {
+        statement: "lihat Catatan",
+        symptoms: symptoms,
+        diagnosis: diagnosis,
+        advice: advice,
+        namaDokter: user.fullName,
+      },
+      sendBy: user.uid,
+    };
+    Fire.database()
+      .ref(urlFirebaseforUser)
+      .push(kirimData)
+      .then(() => {
+        Fire.database().ref(urlFirebaseforPartner).push(kirimData);
+        Fire.database()
+          .ref(`catatanUser/${dataDoctor.data.uid}`)
+          .push(kirimData);
+        setShowCatatan(false);
+      })
+      .catch((err) => {
+        showError(err.message);
+      });
+  };
   return (
     <View style={styles.page}>
       <Header
@@ -187,6 +265,65 @@ const Chatting = ({ navigation, route }) => {
           </View>
         </View>
       </Modal>
+      <Modal
+        visible={showCatatan}
+        transparent
+        onRequestClose={() => setShowCatatan(false)}
+        animationType="slide"
+        hardwareAccelerated
+      >
+        <View style={styles.centered_view}>
+          <View style={styles.warning_modal_catatan}>
+            <View style={styles.warning_title_cttn}>
+              <Text style={styles.text}>Buat Catatan</Text>
+            </View>
+            <View style={styles.warning_body_catatan}>
+              <Gap height={8} />
+              <Text>Symptoms</Text>
+              <TextInput
+                onChangeText={(value) => setSymptoms(value)}
+                value={symptoms}
+                style={styles.judul}
+                placeholder="patient symptoms"
+              />
+              <Gap height={8} />
+              <Text>Possible Diagnosis</Text>
+              <TextInput
+                onChangeText={(value) => setDiagnosis(value)}
+                value={diagnosis}
+                style={styles.judul}
+                placeholder="patient diagnosis"
+              />
+              <Gap height={8} />
+              <Text>Advice</Text>
+              <TextInput
+                style={styles.textArea}
+                underlineColorAndroid="transparent"
+                placeholder="advice for patients"
+                placeholderTextColor="grey"
+                numberOfLines={2}
+                multiline={true}
+                onChangeText={(value) => setAdvice(value)}
+                value={advice}
+              />
+            </View>
+            <View style={styles.modalsButton}>
+              <TouchableOpacity
+                onPress={() => setShowCatatan(false)}
+                style={styles.warning_button}
+              >
+                <Text style={styles.textModals}>Cencel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={KirimCatatan}
+                style={styles.warning_button}
+              >
+                <Text style={styles.textModals}>Kirim</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View style={styles.content}>
         <ScrollView>
           {chatData.map((chat) => {
@@ -196,13 +333,38 @@ const Chatting = ({ navigation, route }) => {
                 {chat.data.map((itemChat) => {
                   const isMe = itemChat.data.sendBy === user.uid;
                   return (
-                    <ChatItem
-                      key={itemChat.id}
-                      isMe={isMe}
-                      text={itemChat.data.chatContent}
-                      date={itemChat.data.chatTime}
-                      photo={isMe ? null : { uri: dataDoctor.data.photo }}
-                    />
+                    <View key={itemChat.id}>
+                      {isMe && (
+                        <View>
+                          {itemChat.data.dataCatatan !== undefined && (
+                            <View style={styles.catatanHasil}>
+                              <TouchableOpacity
+                                style={styles.buttonCatatanHasil}
+                                onPress={() =>
+                                  navigation.navigate(
+                                    "Catatan",
+                                    itemChat.data.dataCatatan
+                                  )
+                                }
+                              >
+                                <Text style={styles.textHasilCatatan}>
+                                  {itemChat.data.dataCatatan.statement}
+                                </Text>
+                              </TouchableOpacity>
+                            </View>
+                          )}
+                          <Gap height={13} />
+                        </View>
+                      )}
+                      {itemChat.data.chatContent && (
+                        <ChatItem
+                          isMe={isMe}
+                          text={itemChat.data.chatContent}
+                          date={itemChat.data.chatTime}
+                          photo={isMe ? null : { uri: dataDoctor.data.photo }}
+                        />
+                      )}
+                    </View>
                   );
                 })}
               </View>
@@ -210,7 +372,7 @@ const Chatting = ({ navigation, route }) => {
           })}
         </ScrollView>
       </View>
-      {dataDoctor.data.statusKonsultasi.status === "" && (
+      {statusKonsul === undefined && (
         <View style={styles.pesanTerkunci}>
           {/* <Button
               disable
@@ -220,29 +382,60 @@ const Chatting = ({ navigation, route }) => {
             /> */}
         </View>
       )}
-      {user.pembayaran === "Berbayar" ? (
+      {dataDoctor.pembayaran === "Berbayar" ? (
         <View>
-          {dataDoctor.data.statusKonsultasi.status === "sukses" &&
-          dataDoctor.data.statusKonsultasi.uidDokter === user.uid ? (
+          {statusKonsul !== undefined ? (
             <View>
-              <View style={styles.tutupkonsul}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("DataHistory", dataDoctor.data.uid)
-                  }
-                >
-                  <Text style={styles.textAR}>Lihat data </Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={onPressHandler}>
-                  <Text style={styles.textAR}>Tutup Konsultasi</Text>
-                </TouchableOpacity>
-              </View>
-              <InputChat
-                value={chatContent}
-                onChangeText={(value) => setChatContent(value)}
-                onButtonPress={chatSend}
-                targetChat={dataDoctor}
-              />
+              {dataKonsul !== undefined ? (
+                <View>
+                  {dataKonsul.data.status === "sukses" ? (
+                    <View>
+                      <View style={styles.tutupkonsul}>
+                        <TouchableOpacity
+                          onPress={() =>
+                            navigation.navigate(
+                              "DataHistory",
+                              dataDoctor.data.uid
+                            )
+                          }
+                        >
+                          <Text style={styles.textAR}>Lihat data </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onPressHandlerCatatan}>
+                          <Text style={styles.textAR}>Catatan</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onPressHandler}>
+                          <Text style={styles.textAR}>Tutup </Text>
+                        </TouchableOpacity>
+                      </View>
+                      <InputChat
+                        value={chatContent}
+                        onChangeText={(value) => setChatContent(value)}
+                        onButtonPress={chatSend}
+                        targetChat={dataDoctor}
+                      />
+                    </View>
+                  ) : (
+                    <View style={styles.pesanTerkunci}>
+                      <Button
+                        disable
+                        text="secondary"
+                        type="secondary"
+                        title="Pesan Terkunci"
+                      />
+                    </View>
+                  )}
+                </View>
+              ) : (
+                <View style={styles.pesanTerkunci}>
+                  <Button
+                    disable
+                    text="secondary"
+                    type="secondary"
+                    title="Pesan Terkunci"
+                  />
+                </View>
+              )}
             </View>
           ) : (
             <View style={styles.pesanTerkunci}>
@@ -262,7 +455,18 @@ const Chatting = ({ navigation, route }) => {
               navigation.navigate("DataHistory", dataDoctor.data.uid)
             }
           >
-            <Text style={styles.textAR}>Lihat data Medical Checkup</Text>
+            <View style={styles.tutupkonsul}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("DataHistory", dataDoctor.data.uid)
+                }
+              >
+                <Text style={styles.textAR}>Lihat data </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={onPressHandlerCatatan}>
+                <Text style={styles.textAR}>Catatan</Text>
+              </TouchableOpacity>
+            </View>
           </TouchableOpacity>
           <InputChat
             value={chatContent}
@@ -320,6 +524,14 @@ const styles = StyleSheet.create({
 
     borderRadius: 10,
   },
+  warning_modal_catatan: {
+    width: 300,
+    height: 400,
+    backgroundColor: "#ffffff",
+
+    borderRadius: 10,
+  },
+
   warning_title: {
     height: 50,
     justifyContent: "center",
@@ -328,10 +540,24 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
   },
-  warning_body: {
-    height: 200,
+
+  warning_title_cttn: {
+    height: 50,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: colors.primary,
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+  },
+  warning_body: {
+    height: 200,
+
+    paddingHorizontal: 14,
+  },
+  warning_body_catatan: {
+    height: 300,
+
+    paddingHorizontal: 14,
   },
   warning_button: {
     backgroundColor: colors.primary,
@@ -359,5 +585,30 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 15,
+  },
+
+  //catatan
+  judul: {
+    borderRadius: 8,
+    backgroundColor: "#F3F3F3",
+  },
+  textArea: {
+    borderRadius: 4,
+    backgroundColor: "#F3F3F3",
+    justifyContent: "flex-start",
+    textAlignVertical: "top",
+    height: 100,
+  },
+  catatanHasil: {
+    paddingHorizontal: 18,
+  },
+  buttonCatatanHasil: {
+    backgroundColor: colors.border,
+    borderRadius: 8,
+  },
+  textHasilCatatan: {
+    textAlign: "center",
+    padding: 15,
+    color: colors.primary,
   },
 });
