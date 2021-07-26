@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -19,8 +19,10 @@ import {
 } from "../../utils";
 import { Fire } from "../../config";
 import { Modal } from "react-native";
+import { showMessage } from "react-native-flash-message";
 
 const Chatting = ({ navigation, route }) => {
+  const scrollViewRef = useRef();
   const dataDoctor = route.params;
   const statusKonsul = dataDoctor.statusKonsul;
 
@@ -180,7 +182,10 @@ const Chatting = ({ navigation, route }) => {
         showError(err.message);
       });
   };
-
+  const dataResep = {
+    uidPartner: dataDoctor.data.uid,
+    uidUser: user.uid,
+  };
   const KirimCatatan = () => {
     const today = new Date();
     const chatID = `${dataDoctor.data.uid}_${user.uid}`;
@@ -204,19 +209,32 @@ const Chatting = ({ navigation, route }) => {
       },
       sendBy: user.uid,
     };
-    Fire.database()
-      .ref(urlFirebaseforUser)
-      .push(kirimData)
-      .then(() => {
-        Fire.database().ref(urlFirebaseforPartner).push(kirimData);
-        Fire.database()
-          .ref(`catatanUser/${dataDoctor.data.uid}`)
-          .push(kirimData);
-        setShowCatatan(false);
-      })
-      .catch((err) => {
-        showError(err.message);
+    if (
+      kirimData.dataCatatan.symptoms !== "" &&
+      kirimData.dataCatatan.diagnosis !== "" &&
+      kirimData.dataCatatan.advice !== ""
+    ) {
+      Fire.database()
+        .ref(urlFirebaseforUser)
+        .push(kirimData)
+        .then(() => {
+          Fire.database().ref(urlFirebaseforPartner).push(kirimData);
+          Fire.database()
+            .ref(`catatanUser/${dataDoctor.data.uid}`)
+            .push(kirimData);
+          setShowCatatan(false);
+        })
+        .catch((err) => {
+          showError(err.message);
+        });
+    } else {
+      showMessage({
+        message: "sepertinya anda kurang input data",
+        type: "default",
+        backgroundColor: colors.error,
+        color: colors.white,
       });
+    }
   };
   return (
     <View style={styles.page}>
@@ -325,13 +343,19 @@ const Chatting = ({ navigation, route }) => {
         </View>
       </Modal>
       <View style={styles.content}>
-        <ScrollView>
+        <ScrollView
+          ref={scrollViewRef}
+          onContentSizeChange={() =>
+            scrollViewRef.current.scrollToEnd({ animated: true })
+          }
+        >
           {chatData.map((chat) => {
             return (
               <View key={chat.id}>
                 <Text style={styles.chatDate}>{chat.id}</Text>
                 {chat.data.map((itemChat) => {
                   const isMe = itemChat.data.sendBy === user.uid;
+
                   return (
                     <View key={itemChat.id}>
                       {isMe && (
@@ -404,6 +428,13 @@ const Chatting = ({ navigation, route }) => {
                         <TouchableOpacity onPress={onPressHandlerCatatan}>
                           <Text style={styles.textAR}>Catatan</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() =>
+                            navigation.navigate("ResepObat", dataResep)
+                          }
+                        >
+                          <Text style={styles.textAR}>Resep</Text>
+                        </TouchableOpacity>
                         <TouchableOpacity onPress={onPressHandler}>
                           <Text style={styles.textAR}>Tutup </Text>
                         </TouchableOpacity>
@@ -450,11 +481,7 @@ const Chatting = ({ navigation, route }) => {
         </View>
       ) : (
         <View>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("DataHistory", dataDoctor.data.uid)
-            }
-          >
+          <View>
             <View style={styles.tutupkonsul}>
               <TouchableOpacity
                 onPress={() =>
@@ -466,8 +493,13 @@ const Chatting = ({ navigation, route }) => {
               <TouchableOpacity onPress={onPressHandlerCatatan}>
                 <Text style={styles.textAR}>Catatan</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("ResepObat", dataResep)}
+              >
+                <Text style={styles.textAR}>Resep</Text>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+          </View>
           <InputChat
             value={chatContent}
             onChangeText={(value) => setChatContent(value)}
@@ -499,7 +531,7 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     color: colors.primary,
     textDecorationLine: "underline",
-    fontSize: 17,
+    fontSize: 16,
   },
   tutupkonsul: {
     flexDirection: "row",

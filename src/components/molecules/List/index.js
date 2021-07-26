@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Account, HelpCenter, Next, Starts } from "../../../assets";
+import { Account, HelpCenter, Next, Starts, Signout } from "../../../assets";
 
 import { colors } from "../../../utils";
 
@@ -20,8 +20,8 @@ const List = ({
     if (icon === " edit-profile") {
       return <Image style={styles.userProfile} source={Account} />;
     }
-    if (icon === "rate") {
-      return <Image style={styles.userProfile} source={Starts} />;
+    if (icon === "signout") {
+      return <Image style={styles.userProfile} source={Signout} />;
     }
     if (icon === "help") {
       return <Image style={styles.userProfile} source={HelpCenter} />;

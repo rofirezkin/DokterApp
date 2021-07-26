@@ -45,8 +45,10 @@ const UploadPhoto = ({ navigation, route }) => {
     data.photo = photoForDB;
 
     storeData("user", data);
-
-    navigation.replace("MainApp");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "SelamatDatang" }],
+    });
   };
   return (
     <View style={styles.page}>

@@ -17,8 +17,16 @@ import ArtikelPage from "./ArtikelPage";
 import AllArtikel from "./AllArtikel";
 import Success from "./Success";
 import Catatan from "./Catatan";
+import ResepObat from "./ResepObat";
+import PanduanAplikasi from "./PanduanAplikasi";
+import PanduanDetail from "./PanduanDetail";
+import SelamatDatang from "./SelamatDatang";
 
 export {
+  SelamatDatang,
+  PanduanDetail,
+  PanduanAplikasi,
+  ResepObat,
   Catatan,
   Success,
   AllArtikel,

@@ -50,16 +50,17 @@ const UserProfile = ({ navigation, route }) => {
         onPress={() => navigation.navigate("UpdateProfile")}
       />
       <List
-        name="Give Us Rate"
-        desc="Last Update Yesterday"
+        name="Panduan Aplikasi"
+        desc="Pemakaian Fitur"
         type="next"
-        icon="rate"
+        icon="help"
+        onPress={() => navigation.navigate("PanduanAplikasi")}
       />
       <List
         name="Logout"
         desc="Labbst Update Yesterday"
         type="next"
-        icon="help"
+        icon="signout"
         onPress={signOut1}
       />
     </View>

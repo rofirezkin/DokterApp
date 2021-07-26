@@ -21,6 +21,10 @@ import {
   AllArtikel,
   Success,
   Catatan,
+  ResepObat,
+  PanduanAplikasi,
+  PanduanDetail,
+  SelamatDatang,
 } from "../pages";
 import { BottomNavigator } from "../components";
 const Stack = createStackNavigator();
@@ -49,10 +53,30 @@ const Router = () => {
         component={GetStarted}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="SelamatDatang"
+        component={SelamatDatang}
+        options={{ headerShown: false }}
+      />
 
       <Stack.Screen
         name="Success"
         component={Success}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PanduanAplikasi"
+        component={PanduanAplikasi}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PanduanDetail"
+        component={PanduanDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ResepObat"
+        component={ResepObat}
         options={{ headerShown: false }}
       />
       <Stack.Screen

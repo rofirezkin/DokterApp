@@ -115,7 +115,7 @@ const Dashboard = ({ navigation }) => {
           />
           <Text
             style={styles.welcome}
-          >{`Selamat Pagi ${profile.fullName}`}</Text>
+          >{`Selamat Datang ${profile.fullName}`}</Text>
           <Text style={styles.welcome2}>
             Ayo Lakukan konsultasi Dengan Pasien Anda
           </Text>
