@@ -40,7 +40,7 @@ const MainApp = () => {
   );
 };
 
-const Router = () => {
+const Router = ({ user }) => {
   return (
     <Stack.Navigator initialRouteName="Splash">
       <Stack.Screen

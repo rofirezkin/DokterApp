@@ -7,7 +7,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Button, ChatItem, Gap, Header, InputChat } from "../../components";
+import {
+  Button,
+  ChatItem,
+  Gap,
+  Header,
+  InputChat,
+  Modals,
+} from "../../components";
 import {
   colors,
   getChatTime,
@@ -18,13 +25,38 @@ import {
   showError,
 } from "../../utils";
 import { Fire } from "../../config";
-import { Modal } from "react-native";
 import { showMessage } from "react-native-flash-message";
 
 const Chatting = ({ navigation, route }) => {
   const scrollViewRef = useRef();
   const dataDoctor = route.params;
   const statusKonsul = dataDoctor.statusKonsul;
+  const lihatDataAR = dataDoctor.lihatDataPasien;
+
+  //chatt
+  const [chatContent, setChatContent] = useState("");
+  const [user, setUser] = useState({});
+  const [chatData, setChatData] = useState([]);
+  //modals
+  const [showWarning, SetshowWarning] = useState(false);
+  const [showCatatan, setShowCatatan] = useState(false);
+  const [showWarning1, SetshowWarning1] = useState(false);
+  //catatan
+  const [symptoms, setSymptoms] = useState("");
+  const [diagnosis, setDiagnosis] = useState("");
+  const [advice, setAdvice] = useState("");
+
+  console.log("data dpklter", dataDoctor);
+
+  if (lihatDataAR === "data belum dilihat") {
+    useEffect(() => {
+      SetshowWarning1(true);
+    }, []);
+  } else {
+    useEffect(() => {
+      SetshowWarning1(false);
+    }, []);
+  }
 
   if (statusKonsul === undefined) {
   } else {
@@ -50,16 +82,6 @@ const Chatting = ({ navigation, route }) => {
     }
   }
   console.log("status konsusasasaasasl", dataKonsul);
-  const [chatContent, setChatContent] = useState("");
-  const [user, setUser] = useState({});
-  const [chatData, setChatData] = useState([]);
-  const [showWarning, SetshowWarning] = useState(false);
-  const [showCatatan, setShowCatatan] = useState(false);
-
-  //catatan
-  const [symptoms, setSymptoms] = useState("");
-  const [diagnosis, setDiagnosis] = useState("");
-  const [advice, setAdvice] = useState("");
 
   useEffect(() => {
     let unmounted = false;
@@ -114,23 +136,6 @@ const Chatting = ({ navigation, route }) => {
   };
   //endmodals
 
-  const KirimDataAkhirKonsultasi = () => {
-    const kirimData = {
-      status: "feedback",
-    };
-    Fire.database()
-      .ref(
-        `users/${dataDoctor.data.uid}/statusKonsultasi/${dataDoctor.uidDokter}`
-      )
-      .update(kirimData);
-    Fire.database()
-      .ref(`verifikasi/${dataDoctor.uidDokter}_${dataDoctor.id}`)
-      .remove();
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Success" }],
-    });
-  };
   const chatSend = () => {
     const today = new Date();
     setChatContent("");
@@ -154,29 +159,42 @@ const Chatting = ({ navigation, route }) => {
     }/${chatID}/allChat/${setDateChat(today)}`;
 
     const urlMessageUser = `messages/${user.uid}/${chatID}`;
-    const urlMessageDoctor = `messages/${dataDoctor.data.uid}/${chatID}`;
-    const dataHistoryChatForUser = {
-      lastContentChat: chatContent,
-      lastChatDate: setDateChatMessage(today),
-      uidPartner: dataDoctor.data.uid,
-      uidTime: `${getUidTime(today)}`,
-    };
+    const urlMessagePartner = `messages/${dataDoctor.data.uid}/${chatID}`;
+
     const dataHistoryChatForDoctor = {
       lastContentChat: chatContent,
       lastChatDate: setDateChatMessage(today),
       uidPartner: user.uid,
       uidTime: `${getUidTime(today)}`,
     };
+    if (chatData.length > 0) {
+      console.log("data dilihat");
+      const dataHistoryChatForUser = {
+        lastContentChat: chatContent,
+        lastChatDate: setDateChatMessage(today),
+        uidPartner: dataDoctor.data.uid,
+        uidTime: `${getUidTime(today)}`,
+      };
+      Fire.database().ref(urlMessageUser).update(dataHistoryChatForUser);
+    } else {
+      console.log("data belum dilihat");
+      const dataHistoryChatForUser = {
+        lastContentChat: chatContent,
+        lastChatDate: setDateChatMessage(today),
+        uidPartner: dataDoctor.data.uid,
+        uidTime: `${getUidTime(today)}`,
+        lihatData: "data belum dilihat",
+      };
+      Fire.database().ref(urlMessageUser).set(dataHistoryChatForUser);
+    }
+
     Fire.database()
       .ref(urlFirebaseforUser)
       .push(data)
       .then(() => {
         Fire.database().ref(urlFirebaseforPartner).push(data);
         // set history for user
-        Fire.database().ref(urlMessageUser).set(dataHistoryChatForUser);
-
-        // set history for dataDoctor
-        Fire.database().ref(urlMessageDoctor).set(dataHistoryChatForDoctor);
+        Fire.database().ref(urlMessagePartner).set(dataHistoryChatForDoctor);
       })
       .catch((err) => {
         showError(err.message);
@@ -236,6 +254,14 @@ const Chatting = ({ navigation, route }) => {
       });
     }
   };
+  const GotoData = () => {
+    const kirimData = {
+      dataUid: dataDoctor.data.uid,
+      urlMessages: `messages/${user.uid}/${dataDoctor.data.uid}_${user.uid}`,
+    };
+    SetshowWarning1(false);
+    navigation.navigate("DataHistory", kirimData);
+  };
   return (
     <View style={styles.page}>
       <Header
@@ -245,103 +271,40 @@ const Chatting = ({ navigation, route }) => {
         title={dataDoctor.data.fullName}
         onPress={() => navigation.goBack()}
       />
-      <Modal
+      <Modals
         visible={showWarning}
-        transparent
+        dataDoctor={dataDoctor}
+        user={user}
+        type="tutup"
         onRequestClose={() => SetshowWarning(false)}
-        animationType="slide"
-        hardwareAccelerated
-      >
-        <View style={styles.centered_view}>
-          <View style={styles.warning_modal}>
-            <View style={styles.warning_title}>
-              <Text style={styles.text}>PERINGATAN!</Text>
-            </View>
-            <View style={styles.warning_body}>
-              <Text style={styles.text}>
-                Jika anda menutup konsultasi dengan pasien, sesi konsultasi di
-                tutup dan pasien tidak bisa mengirim pesan.
-              </Text>
-              <Text style={styles.text}>
-                apakah anda ingin mengakhiri Konsultasi dengan pasien anda ?
-              </Text>
-            </View>
-            <View style={styles.modalsButton}>
-              <TouchableOpacity
-                onPress={() => SetshowWarning(false)}
-                style={styles.warning_button}
-              >
-                <Text style={styles.textModals}>Cencel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={KirimDataAkhirKonsultasi}
-                style={styles.warning_button}
-              >
-                <Text style={styles.textModals}>OK</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-      <Modal
+        showWarningFalse={() => SetshowWarning(false)}
+        navigation={navigation}
+      />
+      <Modals
         visible={showCatatan}
-        transparent
+        dataDoctor={dataDoctor}
+        user={user}
+        type="catatan"
         onRequestClose={() => setShowCatatan(false)}
-        animationType="slide"
-        hardwareAccelerated
-      >
-        <View style={styles.centered_view}>
-          <View style={styles.warning_modal_catatan}>
-            <View style={styles.warning_title_cttn}>
-              <Text style={styles.text}>Buat Catatan</Text>
-            </View>
-            <View style={styles.warning_body_catatan}>
-              <Gap height={8} />
-              <Text>Symptoms</Text>
-              <TextInput
-                onChangeText={(value) => setSymptoms(value)}
-                value={symptoms}
-                style={styles.judul}
-                placeholder="patient symptoms"
-              />
-              <Gap height={8} />
-              <Text>Possible Diagnosis</Text>
-              <TextInput
-                onChangeText={(value) => setDiagnosis(value)}
-                value={diagnosis}
-                style={styles.judul}
-                placeholder="patient diagnosis"
-              />
-              <Gap height={8} />
-              <Text>Advice</Text>
-              <TextInput
-                style={styles.textArea}
-                underlineColorAndroid="transparent"
-                placeholder="advice for patients"
-                placeholderTextColor="grey"
-                numberOfLines={2}
-                multiline={true}
-                onChangeText={(value) => setAdvice(value)}
-                value={advice}
-              />
-            </View>
-            <View style={styles.modalsButton}>
-              <TouchableOpacity
-                onPress={() => setShowCatatan(false)}
-                style={styles.warning_button}
-              >
-                <Text style={styles.textModals}>Cencel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={KirimCatatan}
-                style={styles.warning_button}
-              >
-                <Text style={styles.textModals}>Kirim</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        showWarningFalse={() => setShowCatatan(false)}
+        navigation={navigation}
+        setSymptoms={(value) => setSymptoms(value)}
+        symptoms={symptoms}
+        setDiagnosis={(value) => setDiagnosis(value)}
+        diagnosis={diagnosis}
+        setAdvice={(value) => setAdvice(value)}
+        advice={advice}
+        onPress={KirimCatatan}
+      />
+      <Modals
+        visible={showWarning1}
+        type="lihat data"
+        onRequestClose={() => SetshowWarning1(false)}
+        showWarningFalse={() => SetshowWarning1(false)}
+        navigation={navigation}
+        onPress={GotoData}
+      />
+
       <View style={styles.content}>
         <ScrollView
           ref={scrollViewRef}
@@ -543,104 +506,4 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   //datamodals
-  centered_view: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#00000099",
-  },
-  warning_modal: {
-    width: 300,
-    height: 300,
-    backgroundColor: "#ffffff",
-
-    borderRadius: 10,
-  },
-  warning_modal_catatan: {
-    width: 300,
-    height: 400,
-    backgroundColor: "#ffffff",
-
-    borderRadius: 10,
-  },
-
-  warning_title: {
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F3E494",
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-  },
-
-  warning_title_cttn: {
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.primary,
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-  },
-  warning_body: {
-    height: 200,
-
-    paddingHorizontal: 14,
-  },
-  warning_body_catatan: {
-    height: 300,
-
-    paddingHorizontal: 14,
-  },
-  warning_button: {
-    backgroundColor: colors.primary,
-    width: 100,
-    borderRadius: 10,
-  },
-  text: {
-    color: "#000000",
-    fontSize: 13,
-    margin: 10,
-    textAlign: "center",
-  },
-  textModals: {
-    color: colors.white,
-    fontSize: 13,
-    margin: 10,
-    textAlign: "center",
-  },
-  button: {
-    width: 150,
-    height: 50,
-    alignItems: "center",
-  },
-  modalsButton: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 15,
-  },
-
-  //catatan
-  judul: {
-    borderRadius: 8,
-    backgroundColor: "#F3F3F3",
-  },
-  textArea: {
-    borderRadius: 4,
-    backgroundColor: "#F3F3F3",
-    justifyContent: "flex-start",
-    textAlignVertical: "top",
-    height: 100,
-  },
-  catatanHasil: {
-    paddingHorizontal: 18,
-  },
-  buttonCatatanHasil: {
-    backgroundColor: colors.border,
-    borderRadius: 8,
-  },
-  textHasilCatatan: {
-    textAlign: "center",
-    padding: 15,
-    color: colors.primary,
-  },
 });

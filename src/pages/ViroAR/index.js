@@ -56,7 +56,10 @@ export default class ViroSample extends Component {
       bmiPasien: dataMonitoring.datamonitor.bmi,
       gender: dataMonitoring.datamonitor.gender,
     };
-
+    const dataKirim = {
+      lihatData: dataMonitoring.lihatData,
+    };
+    Fire.database().ref(dataMonitoring.urlMessages).update(dataKirim);
     Fire.database()
       .ref(urlData)
       .update(dataPush)

@@ -45,7 +45,6 @@ const UpdateStatus = ({ navigation }) => {
 
   const getImage = () => {
     ImagePicker.launchImageLibrary({ quality: 1 }, (response) => {
-      console.log("poto", response);
       if (response.didCancel || response.error) {
         showMessage({
           message: "opps, sepertinya anda tidak memilih fotonya?",
@@ -54,7 +53,6 @@ const UpdateStatus = ({ navigation }) => {
           color: colors.white,
         });
       } else {
-        console.log("response getImage", response);
         const source = { uri: response.uri };
         setPhotoForDB(`data:${response.type};base64, ${response.data}`);
 
@@ -64,7 +62,6 @@ const UpdateStatus = ({ navigation }) => {
   };
 
   const uploadAndContinue = () => {
-    console.log("photo For ", photoForDB);
     if (title.length > 0 && description.length > 0 && photoForDB.length > 0) {
       dispatch({ type: "SET_LOADING", value: true });
       const today = new Date();
@@ -101,7 +98,7 @@ const UpdateStatus = ({ navigation }) => {
       });
     }
   };
-  console.log("dATA photo", photo);
+
   return (
     <View style={styles.page1}>
       <Header title="Buat Artikel" onPress={() => navigation.goBack()} />

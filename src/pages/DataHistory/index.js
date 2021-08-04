@@ -6,7 +6,9 @@ import { Fire } from "../../config";
 import { colors, getData } from "../../utils";
 
 const DataHistory = ({ navigation, route }) => {
-  const uidPasien = route.params;
+  const dataPasien = route.params;
+  const urlMessages = dataPasien.urlMessages;
+  const uidPasien = dataPasien.dataUid;
   const [uidUser, setUidUser] = useState("");
   const [dataMonitoring, setDataMonitoring] = useState([]);
   const [fullName, setFullName] = useState("");
@@ -81,6 +83,8 @@ const DataHistory = ({ navigation, route }) => {
             datamonitor: data.data,
             name: str1[0],
             photo: profile,
+            lihatData: "data dilihat",
+            urlMessages: urlMessages,
           };
           console.log(datakirim.datamonitor);
           return (

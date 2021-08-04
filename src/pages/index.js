@@ -21,8 +21,10 @@ import ResepObat from "./ResepObat";
 import PanduanAplikasi from "./PanduanAplikasi";
 import PanduanDetail from "./PanduanDetail";
 import SelamatDatang from "./SelamatDatang";
+import Welcome from "./Welcome";
 
 export {
+  Welcome,
   SelamatDatang,
   PanduanDetail,
   PanduanAplikasi,

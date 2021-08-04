@@ -12,7 +12,9 @@ import Profile from "./Profile";
 import Loading from "./Loading";
 import ListData from "./ListData";
 import LikeAndExp from "./LikeAndExp";
+import Modals from "./Modals";
 export {
+  Modals,
   LikeAndExp,
   Loading,
   ListData,

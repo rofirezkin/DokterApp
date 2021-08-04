@@ -6,17 +6,27 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { Button, Gap, Header } from "../../components";
 import { Fire } from "../../config";
 import { colors, setDateChat } from "../../utils";
 import { useDispatch } from "react-redux";
+import ImagePicker from "react-native-image-picker";
+import { NullPhoto } from "../../assets";
+import fotoStatus from "./uploadphoto.png";
 
 const ResepObat = ({ navigation, route }) => {
   const dataPengiriman = route.params;
   const dispatch = useDispatch();
   const [advice, setAdvice] = useState("");
+
+  //photo
+  const [photoForDB, setPhotoForDB] = useState("");
+  const [photo, setPhoto] = useState("");
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
 
   //add multiple input
   const [inputs, setInputs] = useState([{ key: "", value: "" }]);
@@ -39,6 +49,35 @@ const ResepObat = ({ navigation, route }) => {
     setInputs(_inputs);
   };
 
+  // launch camera
+  const getImage = () => {
+    ImagePicker.launchImageLibrary({ quality: 1 }, (response) => {
+      console.log("poto", response);
+      if (response.didCancel || response.error) {
+        showMessage({
+          message: "opps, sepertinya anda tidak memilih fotonya?",
+          type: "default",
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
+      } else if (response.type === "video/mp4") {
+        showMessage({
+          message: "opps, sepertinya anda tidak memilih fotonya?",
+          type: "default",
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
+      } else {
+        console.log("response getImage", response);
+        const source = { uri: response.uri };
+        setPhotoForDB(`data:${response.type};base64, ${response.data}`);
+        setWidth(response.width);
+        setHeight(response.height);
+        setPhoto(source);
+      }
+    });
+  };
+
   //kirim catatan
   const KirimResep = () => {
     const today = new Date();
@@ -56,6 +95,15 @@ const ResepObat = ({ navigation, route }) => {
     const kirimData = {
       dataCatatan: {
         resep: inputs,
+        catatan: advice,
+        photoResep: photoForDB,
+        statement: "Lihat Resep Obat",
+      },
+      sendBy: dataPengiriman.uidUser,
+    };
+    const kirimPhoto = {
+      dataCatatan: {
+        photoResep: photoForDB,
         catatan: advice,
         statement: "Lihat Resep Obat",
       },
@@ -81,6 +129,22 @@ const ResepObat = ({ navigation, route }) => {
         .catch((err) => {
           showError(err.message);
         });
+    } else if (photoForDB !== "") {
+      dispatch({ type: "SET_LOADING", value: true });
+      Fire.database()
+        .ref(urlFirebaseforUser)
+        .push(kirimPhoto)
+        .then(() => {
+          Fire.database().ref(urlFirebaseforPartner).push(kirimPhoto);
+          Fire.database()
+            .ref(`resepUser/${dataPengiriman.uidPartner}`)
+            .push(kirimPhoto);
+          dispatch({ type: "SET_LOADING", value: false });
+          navigation.goBack();
+        })
+        .catch((err) => {
+          showError(err.message);
+        });
     } else {
       showMessage({
         message: "anda kurang memasukan data",
@@ -90,6 +154,7 @@ const ResepObat = ({ navigation, route }) => {
       });
     }
   };
+
   return (
     <View style={styles.page}>
       <Header title="Buat Resep Obat" onPress={() => navigation.goBack()} />
@@ -97,7 +162,7 @@ const ResepObat = ({ navigation, route }) => {
         <View style={styles.container}>
           <View style={styles.card}>
             <View style={styles.titleCard}>
-              <Text style={styles.titleText}>Resep Obat</Text>
+              <Text style={styles.titleText}>Resep Obat Digital</Text>
             </View>
             <View style={styles.bodyCard}>
               {inputs.map((input, key) => (
@@ -136,6 +201,22 @@ const ResepObat = ({ navigation, route }) => {
                 />
               </View>
             </View>
+          </View>
+          <Gap height={15} />
+          <Text>Opsional Resep Obat dengan Foto</Text>
+          <View>
+            <TouchableOpacity onPress={getImage} style={styles.pembayaranBukti}>
+              {photo === "" && (
+                <View>
+                  <Image source={fotoStatus} style={styles.foto} />
+                </View>
+              )}
+              {photo !== "" && (
+                <View>
+                  <Image source={photo} style={styles.bukti(width, height)} />
+                </View>
+              )}
+            </TouchableOpacity>
           </View>
           <Gap height={15} />
           <Button
@@ -215,5 +296,28 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     textAlignVertical: "top",
     height: 100,
+  },
+
+  //styles photo
+
+  pembayaranBukti: {
+    alignItems: "center",
+    width: "100%",
+    backgroundColor: "#F3F3F3",
+    padding: 20,
+  },
+  bukti: (width, height) => ({
+    width: 300,
+    height: 350,
+    resizeMode: "contain",
+
+    borderRadius: 10,
+
+    alignSelf: "center",
+    alignItems: "center",
+  }),
+  foto: {
+    width: 71,
+    height: 54,
   },
 });
