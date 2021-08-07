@@ -7,7 +7,11 @@ const Splash = ({ navigation }) => {
     const unsubscribe = Fire.auth().onAuthStateChanged((user) => {
       setTimeout(() => {
         if (user) {
-          navigation.replace("MainApp");
+          if (user.emailVerified === true) {
+            navigation.replace("MainApp");
+          } else {
+            navigation.replace("EmailVerification");
+          }
         } else {
           navigation.replace("GetStarted");
         }

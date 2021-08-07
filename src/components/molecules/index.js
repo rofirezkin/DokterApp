@@ -13,7 +13,9 @@ import Loading from "./Loading";
 import ListData from "./ListData";
 import LikeAndExp from "./LikeAndExp";
 import Modals from "./Modals";
+import ItemWelcome from "./ItemWelcome";
 export {
+  ItemWelcome,
   Modals,
   LikeAndExp,
   Loading,

@@ -20,12 +20,13 @@ import Catatan from "./Catatan";
 import ResepObat from "./ResepObat";
 import PanduanAplikasi from "./PanduanAplikasi";
 import PanduanDetail from "./PanduanDetail";
-import SelamatDatang from "./SelamatDatang";
+import PanduanSingkat from "./PanduanSingkat";
 import Welcome from "./Welcome";
-
+import EmailVerification from "./EmailVerification";
 export {
+  EmailVerification,
+  PanduanSingkat,
   Welcome,
-  SelamatDatang,
   PanduanDetail,
   PanduanAplikasi,
   ResepObat,

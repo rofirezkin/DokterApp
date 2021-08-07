@@ -1,12 +1,13 @@
 import React from "react";
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { IconWelcome } from "../../assets";
+import { IconWelcome, WelcomScreen } from "../../assets";
 import { Gap, ItemWelcome } from "../../components";
 import { colors } from "../../utils";
 
@@ -19,12 +20,12 @@ const Welcome = ({ navigation }) => {
           Selamat Datang di Aplikasi Adadokter
         </Text>
         <Text style={styles.desc}>
-          Aplikasi yang membuat konsultasi anda dengan dokter menjadi lebih
+          Aplikasi yang membuat konsultasi anda dengan pasien menjadi lebih
           dekat
         </Text>
         <Gap height={20} />
         <View style={styles.boxHeader}>
-          <IconWelcome />
+          <Image source={WelcomScreen} style={styles.iconScreen} />
         </View>
         <View style={styles.header} />
         <View style={styles.container}>
@@ -35,13 +36,13 @@ const Welcome = ({ navigation }) => {
             </Text>
             <Gap height={20} />
             <View style={styles.componentItem}>
-              <ItemWelcome gambar="iconKoneksi" title="Koneksi Alat" />
+              <ItemWelcome gambar="iconArtikel" title="Buat Artikel" />
               <ItemWelcome gambar="iconKonsul" title="Konsultasi" />
             </View>
             <Gap height={20} />
             <View style={styles.componentItem}>
-              <ItemWelcome gambar="iconMonitor" title="Monitoring Data" />
-              <ItemWelcome gambar="iconDokter" title="Pilih Dokter" />
+              <ItemWelcome gambar="iconMonitor" title="Lihat Data" />
+              <ItemWelcome gambar="iconAugmented" title="Fitur AR" />
             </View>
             <Gap height={20} />
             <View style={styles.button}>
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
   },
   buttonNext: {
     backgroundColor: colors.primary,
-    marginHorizontal: 40,
+    marginHorizontal: 20,
     padding: 15,
     borderRadius: 15 / 2,
   },
@@ -95,11 +96,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   componentItem: {
-    marginHorizontal: 40,
+    marginHorizontal: 20,
     flexDirection: "row",
     justifyContent: "space-between",
   },
   button: {
     alignSelf: "flex-end",
+  },
+  iconScreen: {
+    width: 245,
+    height: 217,
   },
 });

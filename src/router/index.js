@@ -24,7 +24,9 @@ import {
   ResepObat,
   PanduanAplikasi,
   PanduanDetail,
-  SelamatDatang,
+  Welcome,
+  PanduanSingkat,
+  EmailVerification,
 } from "../pages";
 import { BottomNavigator } from "../components";
 const Stack = createStackNavigator();
@@ -53,9 +55,20 @@ const Router = ({ user }) => {
         component={GetStarted}
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
-        name="SelamatDatang"
-        component={SelamatDatang}
+        name="Welcome"
+        component={Welcome}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PanduanSingkat"
+        component={PanduanSingkat}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EmailVerification"
+        component={EmailVerification}
         options={{ headerShown: false }}
       />
 

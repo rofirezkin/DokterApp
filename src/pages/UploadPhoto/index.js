@@ -45,7 +45,7 @@ const UploadPhoto = ({ navigation, route }) => {
     storeData("user", data);
     navigation.reset({
       index: 0,
-      routes: [{ name: "SelamatDatang" }],
+      routes: [{ name: "Welcome" }],
     });
   };
   return (

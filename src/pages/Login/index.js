@@ -25,27 +25,29 @@ const Login = ({ navigation }) => {
       .signInWithEmailAndPassword(form.email, form.password)
       .then((res) => {
         console.log("success", res);
-
-        Fire.database()
-          .ref(`doctors/${res.user.uid}/`)
-          .once("value")
-          .then((resDB) => {
-            console.log("data user", resDB.val());
-            if (resDB.val()) {
-              storeData("user", resDB.val());
-
-              navigation.replace("MainApp");
-              dispatch({ type: "SET_LOADING", value: false });
-            } else {
-              dispatch({ type: "SET_LOADING", value: false });
-              showMessage({
-                message: "sepertinya anda salah memasukan akun",
-                type: "default",
-                backgroundColor: colors.error,
-                color: colors.white,
-              });
-            }
-          });
+        if (res.user.emailVerified === true) {
+          Fire.database()
+            .ref(`doctors/${res.user.uid}/`)
+            .once("value")
+            .then((resDB) => {
+              if (resDB.val()) {
+                storeData("user", resDB.val());
+                navigation.replace("MainApp");
+                dispatch({ type: "SET_LOADING", value: false });
+              } else {
+                dispatch({ type: "SET_LOADING", value: false });
+                showMessage({
+                  message: "sepertinya anda salah memasukan akun",
+                  type: "default",
+                  backgroundColor: colors.error,
+                  color: colors.white,
+                });
+              }
+            });
+        } else {
+          dispatch({ type: "SET_LOADING", value: false });
+          navigation.replace("EmailVerification", res.user);
+        }
       })
       .catch((err) => {
         console.log("error", err);
@@ -57,11 +59,6 @@ const Login = ({ navigation }) => {
           color: colors.white,
         });
       });
-  };
-
-  const showLoadingTemp = () => {
-    console.log("halooo temporary");
-    dispatch({ type: "SET_LOADING", value: true });
   };
 
   return (

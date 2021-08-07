@@ -15,8 +15,24 @@ import DummyDoctor3 from "./DummyDoctor3.png";
 import LikeDokter from "./LikeDokter.png";
 import ExpProfile from "./ExpProfile.png";
 import LikeProfile from "./LikeProfile.png";
+import IconWelcomeArtikel from "./artikel.png";
+import IconWelcomeAugmented from "./Augmented.png";
+import IconWelcomeKonsul from "./konsultasi.png";
+import IconWelcomeMonitor from "./monitor.png";
+import WelcomScreen from "./WelcomeScreen.png";
+import PanduanSatu from "./panduan1.png";
+import PanduanDua from "./panduan2.png";
+import EmailIcon from "./email.png";
 
 export {
+  EmailIcon,
+  PanduanSatu,
+  PanduanDua,
+  IconWelcomeArtikel,
+  IconWelcomeAugmented,
+  IconWelcomeKonsul,
+  IconWelcomeMonitor,
+  WelcomScreen,
   ExpProfile,
   LikeProfile,
   LikeDokter,

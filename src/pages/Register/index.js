@@ -116,14 +116,18 @@ const Register = ({ navigation }) => {
             pengalaman: form.pengalaman,
             pembayaran: form.pembayaran,
           };
-          console.log("data shortdes", data);
+
+          // send verification mail.
+          success.user.sendEmailVerification();
           Fire.database()
             .ref("doctors/" + success.user.uid + "/")
             .set(data);
 
           storeData("user", data);
-          navigation.navigate("UploadPhoto", data);
-          console.log("registes sukses", success);
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "UploadPhoto", params: data }],
+          });
         })
         .catch((error) => {
           const errorMessage = error.message;
@@ -134,7 +138,6 @@ const Register = ({ navigation }) => {
             backgroundColor: colors.error,
             color: colors.white,
           });
-          console.log("error", error);
         });
     } else {
       return showMessage({
@@ -154,7 +157,7 @@ const Register = ({ navigation }) => {
             <Gap height={20} />
             <Input
               placeholder="nama lengkap anda"
-              label="Full Name"
+              label="Nama Lengkap dan Gelar"
               onChangeText={(value) => setForm("fullName", value)}
               value={form.fullName}
             />
