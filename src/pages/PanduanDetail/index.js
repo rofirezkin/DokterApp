@@ -8,7 +8,7 @@ import { colors } from "../../utils";
 
 const PanduanDetail = ({ navigation, route }) => {
   const dataPanduan = route.params;
-  console.log("dataPAnduan ", dataPanduan);
+
   return (
     <View style={styles.page}>
       <Header title="Panduan Lengkap" onPress={() => navigation.goBack()} />

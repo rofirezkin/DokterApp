@@ -10,29 +10,26 @@ import {
 import { showMessage } from "react-native-flash-message";
 import ImagePicker from "react-native-image-picker";
 import { useDispatch } from "react-redux";
-import { AddPhoto, RemovePhoto, TambahGambar } from "../../assets";
+import { NullPhoto } from "../../assets";
+
 import { Button, Gap, Header } from "../../components";
 import { Fire } from "../../config";
-import fotoStatus from "./uploadphoto.png";
-import {
-  colors,
-  getChatTime,
-  getData,
-  getDelay,
-  getUidTime,
-  setDateChat,
-  setDateChatMessage,
-  showError,
-} from "../../utils";
 
-const UpdateStatus = ({ navigation }) => {
+import { colors, getData } from "../../utils";
+
+const EditArtikel = ({ navigation, route }) => {
   const dispatch = useDispatch();
-
+  const editData = route.params;
   const [photo, setPhoto] = useState("");
-  const [photoForDB, setPhotoForDB] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [profile, setProfile] = useState({});
+
+  const [artikel, setArtikel] = useState({
+    title: "",
+    body: "",
+    photoForDB: editData.artikelData.image,
+  });
 
   useEffect(() => {
     getData("user").then((res) => {
@@ -42,6 +39,7 @@ const UpdateStatus = ({ navigation }) => {
 
       setProfile(data);
     });
+    setArtikel(editData.artikelData);
   }, []);
 
   const getImage = () => {
@@ -55,50 +53,40 @@ const UpdateStatus = ({ navigation }) => {
         });
       } else {
         const source = { uri: response.uri };
-        setPhotoForDB(`data:${response.type};base64, ${response.data}`);
-
+        setArtikel({
+          ...artikel,
+          image: `data:${response.type};base64, ${response.data}`,
+        });
         setPhoto(source);
       }
     });
   };
 
-  const uploadAndContinue = () => {
-    if (title.length > 0 && description.length > 0 && photoForDB.length > 0) {
-      dispatch({ type: "SET_LOADING", value: true });
-      const today = new Date();
-      const uidArtikel = `${getUidTime(today)}`;
-      const dateArtikel = `${setDateChatMessage(today)}- ${getChatTime(today)}`;
+  const editDataArtikel = () => {
+    const data = artikel;
 
-      const formArtikel = {
-        title: title,
-        body: description,
-        image: photoForDB,
-        nama: profile.fullName,
-        date: dateArtikel,
-        uid: uidArtikel,
-      };
+    dispatch({ type: "SET_LOADING", value: true });
+    const today = new Date();
 
-      Fire.database()
-        .ref("news/" + uidArtikel + "/")
-        .update(formArtikel)
-        .then((data) => {
-          dispatch({ type: "SET_LOADING", value: false });
-          navigation.replace("MainApp");
-        });
-
-      Fire.database()
-        .ref(`doctors/${profile.uid}/artikel/${uidArtikel}`)
-        .update(formArtikel);
-    } else {
-      return showMessage({
-        message: "upss sepertinya anda kurang memasukan data",
-        type: "default",
-        backgroundColor: colors.error,
-        color: colors.white,
+    Fire.database()
+      .ref("news/" + data.uid + "/")
+      .update(data)
+      .then((data) => {
+        dispatch({ type: "SET_LOADING", value: false });
+        navigation.replace("MainApp");
       });
-    }
+
+    Fire.database()
+      .ref(`doctors/${profile.uid}/artikel/${data.uid}/`)
+      .update(data);
   };
 
+  const changeText = (key, value) => {
+    setArtikel({
+      ...artikel,
+      [key]: value,
+    });
+  };
   return (
     <View style={styles.page1}>
       <Header title="Buat Artikel" onPress={() => navigation.goBack()} />
@@ -109,8 +97,8 @@ const UpdateStatus = ({ navigation }) => {
           <View>
             <View style={styles.textAreaContainer}>
               <TextInput
-                onChangeText={(value) => setTitle(value)}
-                value={title}
+                onChangeText={(value) => changeText("title", value)}
+                value={artikel.title}
                 style={styles.judul}
                 placeholder="Judul Artikel"
               />
@@ -122,8 +110,8 @@ const UpdateStatus = ({ navigation }) => {
                 placeholderTextColor="grey"
                 numberOfLines={10}
                 multiline={true}
-                onChangeText={(value) => setDescription(value)}
-                value={description}
+                onChangeText={(value) => changeText("body", value)}
+                value={artikel.body}
               />
             </View>
             <Gap height={15} />
@@ -134,28 +122,15 @@ const UpdateStatus = ({ navigation }) => {
                 onPress={getImage}
                 style={styles.pembayaranBukti}
               >
-                {photo === "" && (
-                  <View>
-                    <Image source={fotoStatus} style={styles.foto} />
-                  </View>
-                )}
-                {photo !== "" && (
-                  <View>
-                    <Image source={photo} style={styles.bukti} />
-                  </View>
-                )}
+                <View>
+                  <Image source={{ uri: artikel.image }} style={styles.bukti} />
+                </View>
               </TouchableOpacity>
             </View>
-            {/* <TouchableOpacity onPress={getImage}>
-              <View style={styles.tambahFoto}>
-                <Text>Tambah Foto</Text>
-                <Image source={photo} style={styles.avatar} />
-              </View>
-            </TouchableOpacity> */}
           </View>
           <Gap height={10} />
           <Button
-            onPress={uploadAndContinue}
+            onPress={editDataArtikel}
             title="Update Status"
             type="secondary"
             text="secondary"
@@ -167,7 +142,7 @@ const UpdateStatus = ({ navigation }) => {
   );
 };
 
-export default UpdateStatus;
+export default EditArtikel;
 
 const styles = StyleSheet.create({
   page1: {

@@ -23,7 +23,9 @@ import PanduanDetail from "./PanduanDetail";
 import PanduanSingkat from "./PanduanSingkat";
 import Welcome from "./Welcome";
 import EmailVerification from "./EmailVerification";
+import EditArtikel from "./EditArtikel";
 export {
+  EditArtikel,
   EmailVerification,
   PanduanSingkat,
   Welcome,

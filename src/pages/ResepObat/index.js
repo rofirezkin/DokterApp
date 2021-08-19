@@ -11,7 +11,7 @@ import {
 import { showMessage } from "react-native-flash-message";
 import { Button, Gap, Header } from "../../components";
 import { Fire } from "../../config";
-import { colors, setDateChat } from "../../utils";
+import { colors, getDelay, setDateChat } from "../../utils";
 import { useDispatch } from "react-redux";
 import ImagePicker from "react-native-image-picker";
 import { NullPhoto } from "../../assets";
@@ -52,7 +52,6 @@ const ResepObat = ({ navigation, route }) => {
   // launch camera
   const getImage = () => {
     ImagePicker.launchImageLibrary({ quality: 1 }, (response) => {
-      console.log("poto", response);
       if (response.didCancel || response.error) {
         showMessage({
           message: "opps, sepertinya anda tidak memilih fotonya?",
@@ -68,7 +67,6 @@ const ResepObat = ({ navigation, route }) => {
           color: colors.white,
         });
       } else {
-        console.log("response getImage", response);
         const source = { uri: response.uri };
         setPhotoForDB(`data:${response.type};base64, ${response.data}`);
         setWidth(response.width);
@@ -124,6 +122,7 @@ const ResepObat = ({ navigation, route }) => {
             .ref(`resepUser/${dataPengiriman.uidPartner}`)
             .push(kirimData);
           dispatch({ type: "SET_LOADING", value: false });
+
           navigation.goBack();
         })
         .catch((err) => {

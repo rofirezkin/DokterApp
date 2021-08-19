@@ -23,7 +23,7 @@ import {
   ViroNode,
 } from "react-viro";
 import { Fire } from "../src/config";
-import { getData } from "../src/utils";
+import { getData, getDelay } from "../src/utils";
 
 export class BusinessCard extends Component {
   constructor(props) {
@@ -41,6 +41,8 @@ export class BusinessCard extends Component {
       suhu: "initializing",
       photo: "initializing",
       statusBmiPasien: "process",
+      statusDetakJantung: "process",
+      statusTekananDarah: "process",
       statusSuhuPasien: "process",
       gender: "initializing",
       isTracking: false,
@@ -56,10 +58,9 @@ export class BusinessCard extends Component {
 
   getUserData() {
     getData("user").then((res) => {
-      console.log("data untuk ddaSHBOAR ", res);
       const data = res;
       const urlDOctor = data.uid;
-      console.log("ini Url doctor", urlDOctor);
+
       Fire.database()
         .ref(`doctors/${urlDOctor}/dataAR/`)
         .once("value")
@@ -71,7 +72,7 @@ export class BusinessCard extends Component {
               this.setState({
                 statusSuhuPasien: "tidak_normal",
               });
-            } else if (suhu <= 37 && suhu >= 36) {
+            } else if (suhu < 37 && suhu >= 35) {
               this.setState({
                 statusSuhuPasien: "normal",
               });
@@ -80,14 +81,14 @@ export class BusinessCard extends Component {
                 statusSuhuPasien: "tidak_normal",
               });
             }
-            console.log("data news", data);
+
             const bmiPasien = data.bmiPasien;
-            console.log("bmiPasiennn", bmiPasien);
-            if (bmiPasien > 0 && bmiPasien < 17) {
+
+            if (bmiPasien >= 0 && bmiPasien <= 17) {
               this.setState({
                 statusBmiPasien: "kurang_BB_berat",
               });
-            } else if (bmiPasien >= 17 && bmiPasien <= 18) {
+            } else if (bmiPasien > 17 && bmiPasien <= 18) {
               this.setState({
                 statusBmiPasien: "kurang_BB_ringan",
               });
@@ -100,7 +101,6 @@ export class BusinessCard extends Component {
                 statusBmiPasien: "lebih_BB_ringan",
               });
             } else if (bmiPasien > 27) {
-              console.log("sudahdi mount");
               this.setState({
                 statusBmiPasien: "lebih_BB_berat",
               });
@@ -119,6 +119,35 @@ export class BusinessCard extends Component {
                 photoGender: require("./res/test.obj"),
               });
             }
+            const detakJantungData = data.detakJantung;
+            if (detakJantungData < 60) {
+              this.setState({
+                statusDetakJantung: "tidak_normal",
+              });
+            } else if (detakJantungData >= 60 && bmiPasien < 100) {
+              this.setState({
+                statusDetakJantung: "normal",
+              });
+            } else if (detakJantungData > 100) {
+              this.setState({
+                statusDetakJantung: "tidak_normal",
+              });
+            }
+            const tekananDarahData = data.tekananDarah;
+            if (tekananDarahData < 100) {
+              this.setState({
+                statusTekananDarah: "tidak_normal",
+              });
+            } else if (tekananDarahData >= 100 && tekananDarahData <= 130) {
+              this.setState({
+                statusTekananDarah: "normal",
+              });
+            } else if (tekananDarahData > 130) {
+              this.setState({
+                statusTekananDarah: "tidak_normal",
+              });
+            }
+
             this.setState({
               namaPasien: data.fullName,
               beratBadan: data.beratBadan,
@@ -427,7 +456,7 @@ export class BusinessCard extends Component {
                     <ViroText
                       position={[0.3, -0.02, 0]}
                       textClipMode="None"
-                      text={`sehat`}
+                      text={`${this.state.statusTekananDarah}`}
                       scale={[0.009, 0.009, 0.009]}
                       style={styles.textStyleKeteranganTambahan}
                     />
@@ -455,7 +484,7 @@ export class BusinessCard extends Component {
                     <ViroText
                       position={[0.3, -0.02, 0]}
                       textClipMode="None"
-                      text={`sehat`}
+                      text={`${this.state.statusDetakJantung}`}
                       scale={[0.009, 0.009, 0.009]}
                       style={styles.textStyleKeteranganTambahan}
                     />
@@ -508,12 +537,7 @@ export class BusinessCard extends Component {
 
   render() {
     return (
-      <ViroARScene
-        onAnchorRemoved={(params, descki) =>
-          console.log("anchor remooves", descki)
-        }
-        onTrackingUpdated={this._onInitialized}
-      >
+      <ViroARScene onTrackingUpdated={this._onInitialized}>
         {this.getARScene()}
       </ViroARScene>
     );

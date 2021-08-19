@@ -76,6 +76,7 @@ const UpdateProfile = ({ navigation }) => {
     Fire.auth().onAuthStateChanged((user) => {
       if (user) {
         user.updatePassword(password).catch((err) => {
+          dispatch({ type: "SET_LOADING", value: false });
           showMessage({
             message: err.message,
             type: "default",
@@ -95,7 +96,6 @@ const UpdateProfile = ({ navigation }) => {
       .ref(`doctors/${profile.uid}/`)
       .update(data)
       .then(() => {
-        console.log("success", data);
         storeData("user", data);
         dispatch({ type: "SET_LOADING", value: false });
         navigation.reset({
@@ -104,6 +104,7 @@ const UpdateProfile = ({ navigation }) => {
         });
       })
       .catch((err) => {
+        dispatch({ type: "SET_LOADING", value: false });
         showMessage({
           message: err.message,
           type: "default",
@@ -124,7 +125,6 @@ const UpdateProfile = ({ navigation }) => {
     ImagePicker.launchImageLibrary(
       { quality: 0.5, maxWidth: 200, maxHeight: 200 },
       (response) => {
-        console.log("poto", response);
         if (response.didCancel || response.error) {
           showMessage({
             message: "opps, sepertinya anda tidak memilih fotonya?",

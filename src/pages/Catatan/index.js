@@ -7,7 +7,6 @@ import { colors } from "../../utils";
 const Catatan = ({ navigation, route }) => {
   const dataPasien = route.params;
 
-  console.log("halocatatam", dataPasien);
   return (
     <View style={styles.page}>
       <Header

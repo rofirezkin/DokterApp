@@ -15,7 +15,7 @@ const Splash = ({ navigation }) => {
         } else {
           navigation.replace("GetStarted");
         }
-      }, 3000);
+      }, 2000);
     });
     return () => unsubscribe();
   }, [navigation]);

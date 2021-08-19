@@ -43,7 +43,7 @@ var defaultNavigatorType = UNSET;
 export default class ViroSample extends Component {
   constructor({ route, props }) {
     const dataMonitoring = route.params;
-    console.log("data monitroing AR", dataMonitoring);
+
     const urlData = `doctors/${dataMonitoring.uidUser}/dataAR`;
     const dataPush = {
       beratBadan: dataMonitoring.datamonitor.beratBadan,
@@ -60,12 +60,8 @@ export default class ViroSample extends Component {
       lihatData: dataMonitoring.lihatData,
     };
     Fire.database().ref(dataMonitoring.urlMessages).update(dataKirim);
-    Fire.database()
-      .ref(urlData)
-      .update(dataPush)
-      .then(() => {
-        console.log("berhasil");
-      });
+    Fire.database().ref(urlData).update(dataPush);
+
     super(props);
     this.state = {
       navigatorType: defaultNavigatorType,
@@ -96,7 +92,7 @@ export default class ViroSample extends Component {
   // Presents the user with a choice of an AR or VR experience
   _getExperienceSelector(dataMonitoring) {
     var lool = dataMonitoring;
-    console.log("data nih di experience", this.state.dataMonitoring);
+
     return (
       <View style={localStyles.outer}>
         <View style={localStyles.inner}>
@@ -127,7 +123,6 @@ export default class ViroSample extends Component {
 
   // Returns the ViroARSceneNavigator which will start the AR experience
   _getARNavigator(dataMonitoring) {
-    console.log("datya mon", dataMonitoring);
     return (
       <ViroARSceneNavigator
         autofocus={true}

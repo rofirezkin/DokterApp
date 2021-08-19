@@ -89,9 +89,13 @@ const Artikel = ({ navigation }) => {
             //handler for Long Click
           };
           //endonlongpress
+          const data = {
+            dataArtikel: item.data,
+            edit: true,
+          };
           return (
             <HealthInfo
-              onPress={() => navigation.navigate("ArtikelPage", item.data)}
+              onPress={() => navigation.navigate("ArtikelPage", data)}
               key={item.id}
               title={item.data.title}
               body={item.data.body}

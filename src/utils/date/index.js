@@ -27,3 +27,8 @@ export const setDateChatMessage = (oldDate) => {
   const date = ("0" + oldDate.getDate()).slice(-2);
   return `${year}/${month}/${date}`;
 };
+export const getDelay = (oldDate) => {
+  const second = ("0" + oldDate.getSeconds()).slice(-2);
+  const miliscnd = ("0" + oldDate.getMilliseconds()).slice(-2);
+  return `${second}: ${miliscnd}`;
+};

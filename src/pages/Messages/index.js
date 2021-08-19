@@ -43,7 +43,6 @@ const Messages = ({ navigation }) => {
             const dataBaru = data.sort(
               (a, b) => parseFloat(b.uidTime) - parseFloat(a.uidTime)
             );
-            console.log("detail user", dataBaru);
             setHistoryChat(dataBaru);
             setEmpty(false);
             setLoading(false);
@@ -66,7 +65,7 @@ const Messages = ({ navigation }) => {
               data: oldData[key],
             });
           });
-          console.log("data hasil parse", data);
+
           const dataSukses = data.filter((uid) => uid.data.status === "sukses");
           setStatusKonsultasi(dataSukses);
         }
@@ -136,7 +135,6 @@ const Messages = ({ navigation }) => {
             .remove();
 
           //handler for Long Click
-          console.log("data", chat.lastContentChat);
         };
         //endonlongpress
 

@@ -9,7 +9,7 @@ const RatedDoctor = ({ onPress, name, desc, avatar, experienced, rate }) => {
     <View style={styles.page}>
       <TouchableOpacity onPress={onPress}>
         <View style={styles.container}>
-          <Image source={avatar} style={styles.avatar} />
+          <Image source={{ uri: avatar }} style={styles.avatar} />
           <View style={styles.wrapperText}>
             <Text style={styles.name}>{name}</Text>
             <Text style={styles.category}>{desc}</Text>

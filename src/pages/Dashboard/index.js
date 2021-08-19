@@ -66,9 +66,9 @@ const Dashboard = ({ navigation }) => {
     setLoadingInfo(true);
     Fire.database()
       .ref("news/")
-      .orderByChild("date")
+      .orderByChild("uid")
       .limitToLast(3)
-      .once("value", (snapshot) => {
+      .on("value", (snapshot) => {
         setLoadingInfo(false);
         const oldData = snapshot.val();
         const data = [];
@@ -78,6 +78,7 @@ const Dashboard = ({ navigation }) => {
             data: oldData[key],
           });
         });
+
         data.reverse();
         setNews(data);
       });
@@ -154,7 +155,7 @@ const Dashboard = ({ navigation }) => {
                       key={doctor.data.uid}
                       name={fixedDesc}
                       desc={doctor.data.category}
-                      avatar={{ uri: doctor.data.photo }}
+                      avatar={doctor.data.photo}
                       onPress={() =>
                         navigation.navigate("DoctorProfile", doctor)
                       }
@@ -169,9 +170,13 @@ const Dashboard = ({ navigation }) => {
         <Text style={styles.TopHealth}>Health Information</Text>
         {loadingInfo && <Text style={styles.loading}>Loading</Text>}
         {news.map((item) => {
+          const data = {
+            dataArtikel: item.data,
+            edit: false,
+          };
           return (
             <HealthInfo
-              onPress={() => navigation.navigate("ArtikelPage", item.data)}
+              onPress={() => navigation.navigate("ArtikelPage", data)}
               key={item.id}
               title={item.data.title}
               body={item.data.body}

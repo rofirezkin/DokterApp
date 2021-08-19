@@ -14,18 +14,14 @@ import { colors } from "../../utils";
 
 import { showMessage } from "react-native-flash-message";
 
-const EmailVerification = ({ navigation, route }) => {
-  const loginVerification = route.params;
-  console.log("email", loginVerification);
-
+const EmailVerification = ({ navigation }) => {
   const Logout = () => {
     Fire.auth()
       .signOut()
       .then((res) => {
-        console.log("succes sign out", res);
         navigation.reset({
           index: 0,
-          routes: [{ name: "GetStarted" }],
+          routes: [{ name: "Splash" }],
         });
       })
       .catch((err) => {
@@ -52,28 +48,34 @@ const EmailVerification = ({ navigation, route }) => {
   };
   return (
     <View style={styles.page}>
-      <Gap height={20} />
-      <Text style={styles.titleHeader}>
-        Link Verifikasi Terkirim Ke Email anda
-      </Text>
-      <Text style={styles.desc}>
-        silahkan lakukan Verifikasi di Email anddda untuk memulai konsultasi
-      </Text>
-      <Gap height={20} />
-      <View style={styles.boxHeader}>
-        <Image source={EmailIcon} style={styles.avatarEmail} />
-      </View>
-      <Gap height={20} />
-      <Text style={styles.desc}>Tidak Menerima Verifikasi?</Text>
-      <Text style={styles.desc}>Kirim Ulang Verifikasi</Text>
-      <Gap height={10} />
-      <TouchableOpacity onPress={SendVerification} style={styles.buttonNext}>
-        <Text style={styles.textNext}>Kirim Ulang Verifikasi</Text>
-      </TouchableOpacity>
-      <Gap height={20} />
-      <TouchableOpacity onPress={Logout} style={styles.buttonNext}>
-        <Text style={styles.textNext}>Logout</Text>
-      </TouchableOpacity>
+      <ScrollView>
+        <Gap height={20} />
+        <Text style={styles.titleHeader}>
+          Link Verifikasi Terkirim Ke Email anda
+        </Text>
+        <Text style={styles.desc}>
+          silahkan lakukan Verifikasi di Email anda untuk memulai konsultasi
+        </Text>
+        <Gap height={20} />
+        <View style={styles.boxHeader}>
+          <Image source={EmailIcon} style={styles.avatarEmail} />
+        </View>
+        <Gap height={10} />
+        <Text style={styles.desc}>
+          Jika sudah Verifikasi anda bisa Sign In Ulang
+        </Text>
+        <TouchableOpacity onPress={Logout} style={styles.buttonNext}>
+          <Text style={styles.textNext}> Sign In</Text>
+        </TouchableOpacity>
+        <Gap height={20} />
+        <Text style={styles.desc}>Tidak Menerima Verifikasi?</Text>
+        <Text style={styles.desc}>Kirim Ulang Verifikasi</Text>
+        <Gap height={10} />
+        <TouchableOpacity onPress={SendVerification} style={styles.buttonNext}>
+          <Text style={styles.textNext}>Kirim Ulang Verifikasi</Text>
+        </TouchableOpacity>
+        <Gap height={20} />
+      </ScrollView>
     </View>
   );
 };

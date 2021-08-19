@@ -34,6 +34,8 @@ const Modals = ({
     const kirimData = {
       status: "feedback",
     };
+    const dataurl = `users/${dataDoctor.data.uid}/statusKonsultasi/${dataDoctor.uidDokter}`;
+
     Fire.database()
       .ref(
         `users/${dataDoctor.data.uid}/statusKonsultasi/${dataDoctor.uidDokter}`

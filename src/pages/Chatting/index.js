@@ -46,8 +46,6 @@ const Chatting = ({ navigation, route }) => {
   const [diagnosis, setDiagnosis] = useState("");
   const [advice, setAdvice] = useState("");
 
-  console.log("data dpklter", dataDoctor);
-
   if (lihatDataAR === "data belum dilihat") {
     useEffect(() => {
       SetshowWarning1(true);
@@ -81,7 +79,6 @@ const Chatting = ({ navigation, route }) => {
     } else {
     }
   }
-  console.log("status konsusasasaasasl", dataKonsul);
 
   useEffect(() => {
     let unmounted = false;
@@ -91,7 +88,6 @@ const Chatting = ({ navigation, route }) => {
     Fire.database()
       .ref(urlFirebase)
       .on("value", (snapshot) => {
-        console.log("data chat", snapshot.val());
         if (snapshot.val()) {
           const dataSnapshot = snapshot.val();
           const allDataChat = [];
@@ -109,7 +105,7 @@ const Chatting = ({ navigation, route }) => {
               data: newDataChat,
             });
           });
-          console.log("all data chat ", allDataChat);
+
           if (!unmounted) {
             setChatData(allDataChat);
           }
@@ -122,7 +118,6 @@ const Chatting = ({ navigation, route }) => {
 
   const getDataUserFromLocal = () => {
     getData("user").then((res) => {
-      console.log("user login", res);
       setUser(res);
     });
   };
@@ -168,7 +163,6 @@ const Chatting = ({ navigation, route }) => {
       uidTime: `${getUidTime(today)}`,
     };
     if (chatData.length > 0) {
-      console.log("data dilihat");
       const dataHistoryChatForUser = {
         lastContentChat: chatContent,
         lastChatDate: setDateChatMessage(today),
@@ -177,7 +171,6 @@ const Chatting = ({ navigation, route }) => {
       };
       Fire.database().ref(urlMessageUser).update(dataHistoryChatForUser);
     } else {
-      console.log("data belum dilihat");
       const dataHistoryChatForUser = {
         lastContentChat: chatContent,
         lastChatDate: setDateChatMessage(today),
@@ -261,6 +254,10 @@ const Chatting = ({ navigation, route }) => {
     };
     SetshowWarning1(false);
     navigation.navigate("DataHistory", kirimData);
+  };
+  const kirimData = {
+    dataUid: dataDoctor.data.uid,
+    urlMessages: `messages/${user.uid}/${dataDoctor.data.uid}_${user.uid}`,
   };
   return (
     <View style={styles.page}>
@@ -380,10 +377,7 @@ const Chatting = ({ navigation, route }) => {
                       <View style={styles.tutupkonsul}>
                         <TouchableOpacity
                           onPress={() =>
-                            navigation.navigate(
-                              "DataHistory",
-                              dataDoctor.data.uid
-                            )
+                            navigation.navigate("DataHistory", kirimData)
                           }
                         >
                           <Text style={styles.textAR}>Lihat data </Text>
@@ -447,9 +441,7 @@ const Chatting = ({ navigation, route }) => {
           <View>
             <View style={styles.tutupkonsul}>
               <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("DataHistory", dataDoctor.data.uid)
-                }
+                onPress={() => navigation.navigate("DataHistory", kirimData)}
               >
                 <Text style={styles.textAR}>Lihat data </Text>
               </TouchableOpacity>
@@ -506,4 +498,16 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   //datamodals
+  catatanHasil: {
+    paddingHorizontal: 18,
+  },
+  buttonCatatanHasil: {
+    backgroundColor: colors.border,
+    borderRadius: 8,
+  },
+  textHasilCatatan: {
+    textAlign: "center",
+    padding: 15,
+    color: colors.primary,
+  },
 });

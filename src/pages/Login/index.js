@@ -19,22 +19,37 @@ const Login = ({ navigation }) => {
   const [isSecureEntry, setIsSecureEntry] = useState(true);
   const dispatch = useDispatch();
   const login = () => {
-    console.log("form", form);
     dispatch({ type: "SET_LOADING", value: true });
     Fire.auth()
       .signInWithEmailAndPassword(form.email, form.password)
       .then((res) => {
-        console.log("success", res);
         if (res.user.emailVerified === true) {
           Fire.database()
             .ref(`doctors/${res.user.uid}/`)
             .once("value")
             .then((resDB) => {
               if (resDB.val()) {
-                storeData("user", resDB.val());
+                const dataKirim = resDB.val();
+                const kirimStorage = {
+                  category: dataKirim.category,
+                  email: dataKirim.email,
+                  fullName: dataKirim.fullName,
+                  gender: dataKirim.gender,
+                  photo: dataKirim.photo,
+                  uid: dataKirim.uid,
+                  hospital: dataKirim.hospital,
+                  nomorSTR: dataKirim.nomorSTR,
+                  pembayaran: dataKirim.pembayaran,
+                  pengalaman: dataKirim.pengalaman,
+                  shortDesc: dataKirim.shortDesc,
+                  universitas: dataKirim.universitas,
+                };
+
+                storeData("user", kirimStorage);
                 navigation.replace("MainApp");
                 dispatch({ type: "SET_LOADING", value: false });
               } else {
+                Fire.auth().signOut();
                 dispatch({ type: "SET_LOADING", value: false });
                 showMessage({
                   message: "sepertinya anda salah memasukan akun",
@@ -46,11 +61,10 @@ const Login = ({ navigation }) => {
             });
         } else {
           dispatch({ type: "SET_LOADING", value: false });
-          navigation.replace("EmailVerification", res.user);
+          navigation.replace("EmailVerification");
         }
       })
       .catch((err) => {
-        console.log("error", err);
         dispatch({ type: "SET_LOADING", value: false });
         showMessage({
           message: err.message,

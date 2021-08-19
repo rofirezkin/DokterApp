@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Gap, Header, ListData } from "../../components";
 
 import { Fire } from "../../config";
-import { colors, getData } from "../../utils";
+import { colors, getData, getDelay } from "../../utils";
 
 const DataHistory = ({ navigation, route }) => {
   const dataPasien = route.params;
@@ -15,7 +15,7 @@ const DataHistory = ({ navigation, route }) => {
   const [profile, setProfile] = useState("");
   const [loading, setLoading] = useState(false);
   const [empty, setEmpty] = useState(false);
-  console.log("uid Docctor", uidPasien);
+
   useEffect(() => {
     let unmounted = false;
     setLoading(true);
@@ -35,7 +35,6 @@ const DataHistory = ({ navigation, route }) => {
               data: oldData[key],
             });
           });
-          console.log("data hasil parse", data);
           if (!unmounted) {
             setDataMonitoring(data);
             setEmpty(false);
@@ -54,7 +53,6 @@ const DataHistory = ({ navigation, route }) => {
   const getUserData = () => {
     getData("user").then((res) => {
       setUidUser(res.uid);
-      console.log("get usreeee", res.uid);
     });
   };
 
@@ -64,8 +62,6 @@ const DataHistory = ({ navigation, route }) => {
       .on("value", (snapshot) => {
         if (snapshot.val()) {
           const data = snapshot.val();
-
-          console.log("data hasil parseuntuk poto", data);
           setProfile(data.photo);
           setFullName(data.fullName);
         }
@@ -86,7 +82,6 @@ const DataHistory = ({ navigation, route }) => {
             lihatData: "data dilihat",
             urlMessages: urlMessages,
           };
-          console.log(datakirim.datamonitor);
           return (
             <View key={data.id}>
               <ListData

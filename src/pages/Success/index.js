@@ -5,7 +5,7 @@ import { Button, Gap } from "../../components";
 import { colors, getData } from "../../utils";
 const Success = ({ navigation, route }) => {
   const dataSuccess = route.params;
-  console.log("data succes", dataSuccess);
+
   const GotoBerhasil = () => {
     navigation.reset({
       index: 0,

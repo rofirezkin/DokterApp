@@ -187,7 +187,7 @@ const Register = ({ navigation }) => {
             <Gap height={20} />
             <Input
               label="Pembayaran Dokter"
-              value={form.gender}
+              value={form.pembayaran}
               onValueChange={(value) => setForm("pembayaran", value)}
               select
               selectItem={itemPembayaran}

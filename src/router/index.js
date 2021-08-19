@@ -27,6 +27,7 @@ import {
   Welcome,
   PanduanSingkat,
   EmailVerification,
+  EditArtikel,
 } from "../pages";
 import { BottomNavigator } from "../components";
 const Stack = createStackNavigator();
@@ -161,6 +162,11 @@ const Router = ({ user }) => {
       <Stack.Screen
         name="Messages"
         component={Messages}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="EditArtikel"
+        component={EditArtikel}
         options={{ headerShown: false }}
       />
       <Stack.Screen

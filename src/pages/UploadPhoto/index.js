@@ -1,17 +1,52 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ImagePicker from "react-native-image-picker";
 import { AddPhoto, NullPhoto, RemovePhoto } from "../../assets";
 import { Button, Gap, Header, Link } from "../../components";
-import { colors, storeData } from "../../utils";
+import { colors, showError, storeData } from "../../utils";
 import { showMessage } from "react-native-flash-message";
 import { Fire } from "../../config";
+import RNFetchBlob from "rn-fetch-blob";
 
 const UploadPhoto = ({ navigation, route }) => {
   const { fullName, category, uid } = route.params;
   const [photoForDB, setPhotoForDB] = useState("");
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(NullPhoto);
+  const [kirimPhoto, setKirimPhoto] = useState("");
+
+  useEffect(() => {
+    const fs = RNFetchBlob.fs;
+    let imagePath = null;
+    RNFetchBlob.config({
+      fileCache: true,
+    })
+      .fetch(
+        "GET",
+        "https://firebasestorage.googleapis.com/v0/b/adadokter-3afed.appspot.com/o/nullPhoto.png?alt=media&token=87546253-41c4-4259-91f6-d917f08ba7fbb"
+      )
+      // the image is now dowloaded to device's storage
+      .then((resp) => {
+        // the image path you can use it directly with Image component
+        imagePath = resp.path();
+        return resp.readFile("base64");
+      })
+      .then((base64Data) => {
+        // here's base64 encoded image
+
+        setKirimPhoto(base64Data);
+        // remove the file from storage
+        return fs.unlink(imagePath);
+      })
+      .catch((err) => {
+        showMessage({
+          message: err,
+          type: "default",
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
+      });
+  });
 
   const getImage = () => {
     ImagePicker.launchImageLibrary(
@@ -48,6 +83,32 @@ const UploadPhoto = ({ navigation, route }) => {
       routes: [{ name: "Welcome" }],
     });
   };
+
+  const updateProfile = () => {
+    if (kirimPhoto.length > 1) {
+      const base64fire = `data:image/png;base64, ${kirimPhoto}`;
+      Fire.database()
+        .ref("doctors/" + uid + "/")
+        .update({ photo: base64fire });
+
+      const data = route.params;
+      data.photo = base64fire;
+
+      storeData("user", data);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Welcome" }],
+      });
+    } else {
+      showMessage({
+        message: "opps, sepertinya anda tidak memilih fotonya?",
+        type: "default",
+        backgroundColor: colors.error,
+        color: colors.white,
+      });
+    }
+  };
+
   return (
     <View style={styles.page}>
       <Header title="Upload Photo" />
@@ -70,6 +131,12 @@ const UploadPhoto = ({ navigation, route }) => {
             onPress={uploadAndContinue}
           />
           <Gap height={30} />
+          <Link
+            onPress={updateProfile}
+            title="Skip for this"
+            align="center"
+            size={16}
+          />
         </View>
       </View>
     </View>

@@ -14,7 +14,6 @@ const UserProfile = ({ navigation, route }) => {
     Fire.auth()
       .signOut()
       .then((res) => {
-        console.log("succes sign out", res);
         navigation.reset({
           index: 0,
           routes: [{ name: "GetStarted" }],
