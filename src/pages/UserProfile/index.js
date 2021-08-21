@@ -8,7 +8,35 @@ import { Fire } from "../../config";
 import { colors, getData } from "../../utils";
 
 const UserProfile = ({ navigation, route }) => {
-  const profile = route.params;
+  const Userprofile = route.params;
+  const profile = Userprofile.profile;
+  const UserApp = Userprofile.user;
+
+  const [admin, setDataAdmin] = useState([]);
+  useEffect(() => {
+    let unmounted = false;
+    Fire.database()
+      .ref(`users/${profile.uid}/statusKonsultasi`)
+      .on("value", (snapshot) => {
+        if (snapshot.val()) {
+          const oldData = snapshot.val();
+          const data = [];
+          Object.keys(oldData).map((key) => {
+            data.push({
+              id: key,
+              data: oldData[key],
+            });
+          });
+
+          if (!unmounted) {
+            setDataAdmin(data);
+          }
+        }
+      });
+    return () => {
+      unmounted = true;
+    };
+  }, [profile.uid]);
 
   const signOut1 = () => {
     Fire.auth()
@@ -48,6 +76,15 @@ const UserProfile = ({ navigation, route }) => {
         icon="edit-profile"
         onPress={() => navigation.navigate("UpdateProfile")}
       />
+      {UserApp && (
+        <List
+          name="Pembayaran"
+          desc="Lihat Status Pembayaran anda"
+          type="next"
+          icon="help"
+          onPress={() => navigation.navigate("StatusPembayaran", admin)}
+        />
+      )}
       <List
         name="Panduan Aplikasi"
         desc="Pemakaian Fitur"

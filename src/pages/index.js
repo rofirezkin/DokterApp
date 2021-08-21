@@ -24,7 +24,33 @@ import PanduanSingkat from "./PanduanSingkat";
 import Welcome from "./Welcome";
 import EmailVerification from "./EmailVerification";
 import EditArtikel from "./EditArtikel";
+import DashboardPasien from "./DashboardPasien";
+import Monitoring from "./Monitoring";
+import Doctors from "./Doctors";
+import ChooseDoctor from "./ChooseDoctor";
+import BodyMassIndex from "./BodyMassIndex";
+import DoctorProfilePasien from "./DoctorProfilePasien";
+import MessagesPasien from "./MessagesPasien";
+import KoneksiAlat from "./KoneksiAlat";
+import RealtimeData from "./RealtimeData";
+import SaveData from "./SaveData";
+import ChattingPasien from "./ChattingPasien";
+import Pembayaran from "./Pembayaran";
+import StatusPembayaran from "./StatusPembayaran";
 export {
+  StatusPembayaran,
+  Pembayaran,
+  ChattingPasien,
+  SaveData,
+  RealtimeData,
+  KoneksiAlat,
+  MessagesPasien,
+  DoctorProfilePasien,
+  BodyMassIndex,
+  ChooseDoctor,
+  Doctors,
+  Monitoring,
+  DashboardPasien,
   EditArtikel,
   EmailVerification,
   PanduanSingkat,

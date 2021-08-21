@@ -9,36 +9,93 @@ const Success = ({ navigation, route }) => {
   const GotoBerhasil = () => {
     navigation.reset({
       index: 0,
-      routes: [{ name: "MainApp" }],
+      routes: [{ name: "MainAppPasien" }],
     });
   };
   return (
-    <View style={styles.page}>
-      <View style={styles.container}>
-        <View style={styles.succes}>
-          <Image source={SuccessPhoto} style={styles.avatar} />
-        </View>
-        <View>
-          <Gap height={25} />
-          <Text style={styles.berhasil}>
-            Anda Telah Selesai Memberikan Konsultasi kepada Pasien
-          </Text>
-          <Gap height={10} />
+    <>
+      {dataSuccess ? (
+        <View style={styles.page}>
+          {dataSuccess.data === "Anda Berhasil Mengirimkan Feedback" && (
+            <View style={styles.container}>
+              <View style={styles.succes}>
+                <Image source={SuccessPhoto} style={styles.avatar} />
+              </View>
+              <View>
+                <Gap height={25} />
+                <Text style={styles.berhasil}>
+                  Anda Berhasil Mengirimkan Feeback
+                </Text>
+                <Gap height={10} />
 
-          <Text style={styles.admin}>
-            Ayo Lakukan Konsultasi selanjutnya dengan Pasien Yang membutuhkan
-            Pertolongan anda
-          </Text>
-          <Gap height={25} />
-          <Button
-            title="Kembali ke Dashboard"
-            type="secondary"
-            text="secondary"
-            onPress={GotoBerhasil}
-          />
+                <Gap height={25} />
+                <Button
+                  title="Kembali ke Dashboard"
+                  type="secondary"
+                  text="secondary"
+                  onPress={GotoBerhasil}
+                />
+              </View>
+            </View>
+          )}
+          {dataSuccess.data === "Anda Berhasil Melakukan Pembayaran" && (
+            <View style={styles.container}>
+              <View style={styles.succes}>
+                <Image source={SuccessPhoto} style={styles.avatar} />
+              </View>
+              <View>
+                <Gap height={25} />
+                <Text style={styles.berhasil}>
+                  Anda Berhasil Melakukan Pembayaran
+                </Text>
+                <Gap height={10} />
+                <Text style={styles.admin}>
+                  Admin Akan Konfirmasi Pesanan Konsultasi Anda dalam waktu 1x10
+                  Menit
+                </Text>
+                <Text style={styles.admin}>
+                  {"Lihat pesanan anda dengan klik Profile > Pembayaran"}
+                </Text>
+                <Gap height={25} />
+                <Button
+                  title="Kembali ke Dashboard"
+                  type="secondary"
+                  text="secondary"
+                  onPress={GotoBerhasil}
+                />
+              </View>
+            </View>
+          )}
         </View>
-      </View>
-    </View>
+      ) : (
+        <View style={styles.page}>
+          <View style={styles.container}>
+            <View style={styles.succes}>
+              <Image source={SuccessPhoto} style={styles.avatar} />
+            </View>
+            <View>
+              <Gap height={25} />
+              <Text style={styles.berhasil}>
+                Anda Telah Selesai Memberikan Konsultasi kepada Pasien
+              </Text>
+              <Gap height={10} />
+
+              <Text style={styles.admin}>
+                Ayo Lakukan Konsultasi selanjutnya dengan Pasien Yang
+                membutuhkan Pertolongan anda
+              </Text>
+              <Gap height={25} />
+              <Button
+                title="Kembali ke Dashboard"
+                type="secondary"
+                text="secondary"
+                onPress={GotoBerhasil}
+              />
+            </View>
+          </View>
+        </View>
+      )}
+    </>
   );
 };
 

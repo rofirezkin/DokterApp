@@ -6,9 +6,31 @@ const Splash = ({ navigation }) => {
   useEffect(() => {
     const unsubscribe = Fire.auth().onAuthStateChanged((user) => {
       setTimeout(() => {
+        console.log("userrr", user);
         if (user) {
           if (user.emailVerified === true) {
-            navigation.replace("MainApp");
+            Fire.database()
+              .ref(`users/${user.uid}`)
+              .on("value", (snapshot) => {
+                if (snapshot.val()) {
+                  navigation.replace("MainAppPasien");
+                } else {
+                  Fire.database()
+                    .ref(`doctors/${user.uid}`)
+                    .on("value", (snapshot) => {
+                      if (snapshot.val()) {
+                        navigation.replace("MainApp");
+                      } else
+                        Fire.database()
+                          .ref(`admin/`)
+                          .on("value", (snapshot) => {
+                            if (snapshot.val()) {
+                              navigation.replace("DashboardAdmin");
+                            }
+                          });
+                    });
+                }
+              });
           } else {
             navigation.replace("EmailVerification");
           }

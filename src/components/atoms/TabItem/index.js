@@ -7,6 +7,8 @@ import {
   IconHomeActive,
   IconMessages,
   IconMEssagesActive,
+  IconMonitoring,
+  IconMonitoringActive,
 } from "../../../assets";
 import { colors } from "../../../utils";
 
@@ -31,6 +33,13 @@ const TabItem = ({ title, active, onLongPress, onPress }) => {
         <Image source={IconArtikelActive} />
       ) : (
         <Image source={IconArtikel} />
+      );
+    }
+    if (title === "Monitoring") {
+      return active ? (
+        <Image source={IconMonitoringActive} />
+      ) : (
+        <Image source={IconMonitoring} />
       );
     }
     return <Image source={IconHome} />;

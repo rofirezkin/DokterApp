@@ -49,7 +49,35 @@ const Login = ({ navigation }) => {
                 navigation.replace("MainApp");
                 dispatch({ type: "SET_LOADING", value: false });
               } else {
-                Fire.auth().signOut();
+                Fire.database()
+                  .ref(`users/${res.user.uid}/`)
+                  .once("value")
+                  .then((resDB) => {
+                    if (resDB.val()) {
+                      const dataKirim = resDB.val();
+                      const kirimStorage = {
+                        category: dataKirim.category,
+                        email: dataKirim.email,
+                        fullName: dataKirim.fullName,
+                        gender: dataKirim.gender,
+                        photo: dataKirim.photo,
+                        uid: dataKirim.uid,
+                      };
+
+                      storeData("user", kirimStorage);
+                      navigation.replace("DashboardPasien");
+                      dispatch({ type: "SET_LOADING", value: false });
+                    } else {
+                      Fire.auth().signOut();
+                      dispatch({ type: "SET_LOADING", value: false });
+                      showMessage({
+                        message: "sepertinya anda salah memasukan akun",
+                        type: "default",
+                        backgroundColor: colors.error,
+                        color: colors.white,
+                      });
+                    }
+                  });
                 dispatch({ type: "SET_LOADING", value: false });
                 showMessage({
                   message: "sepertinya anda salah memasukan akun",

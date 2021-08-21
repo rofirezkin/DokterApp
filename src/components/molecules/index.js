@@ -14,7 +14,18 @@ import ListData from "./ListData";
 import LikeAndExp from "./LikeAndExp";
 import Modals from "./Modals";
 import ItemWelcome from "./ItemWelcome";
+import FiturUser from "./FiturUser";
+import CategoryDoctor from "./CategoryDoctor";
+import OnlineDoctors from "./OnlineDoctors";
+import ItemMonitoring from "./ItemMonitoring";
+import Desc from "./Desc";
 export {
+  Desc,
+  
+  ItemMonitoring,
+  OnlineDoctors,
+  CategoryDoctor,
+  FiturUser,
   ItemWelcome,
   Modals,
   LikeAndExp,

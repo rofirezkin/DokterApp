@@ -3,6 +3,7 @@ package com.virosample;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativepagerview.PagerViewPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 
 import com.reactnativecommunity.picker.RNCPickerPackage;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
          new MainReactPackage(),
+            new PagerViewPackage(),
             new RNFetchBlobPackage(),
           
             new RNCPickerPackage(),

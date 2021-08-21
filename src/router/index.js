@@ -28,6 +28,19 @@ import {
   PanduanSingkat,
   EmailVerification,
   EditArtikel,
+  DashboardPasien,
+  Monitoring,
+  Doctors,
+  ChooseDoctor,
+  BodyMassIndex,
+  DoctorProfilePasien,
+  MessagesPasien,
+  KoneksiAlat,
+  RealtimeData,
+  SaveData,
+  ChattingPasien,
+  Pembayaran,
+  StatusPembayaran,
 } from "../pages";
 import { BottomNavigator } from "../components";
 const Stack = createStackNavigator();
@@ -39,6 +52,16 @@ const MainApp = () => {
       <Tab.Screen name="Home" component={Dashboard} />
       <Tab.Screen name="Messages" component={Messages} />
       <Tab.Screen name="Artikel" component={Artikel} />
+    </Tab.Navigator>
+  );
+};
+
+const MainAppPasien = () => {
+  return (
+    <Tab.Navigator tabBar={(props) => <BottomNavigator {...props} />}>
+      <Tab.Screen name="Home" component={DashboardPasien} />
+      <Tab.Screen name="Messages" component={MessagesPasien} />
+      <Tab.Screen name="Monitoring" component={Monitoring} />
     </Tab.Navigator>
   );
 };
@@ -56,10 +79,55 @@ const Router = ({ user }) => {
         component={GetStarted}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="SaveData"
+        component={SaveData}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Doctors"
+        component={Doctors}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="StatusPembayaran"
+        component={StatusPembayaran}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ChooseDoctor"
+        component={ChooseDoctor}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="KoneksiAlat"
+        component={KoneksiAlat}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Monitoring"
+        component={Monitoring}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="BodyMassIndex"
+        component={BodyMassIndex}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DoctorProfilePasien"
+        component={DoctorProfilePasien}
+        options={{ headerShown: false }}
+      />
 
       <Stack.Screen
         name="Welcome"
         component={Welcome}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DashboardPasien"
+        component={DashboardPasien}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -125,10 +193,16 @@ const Router = ({ user }) => {
       />
       <Stack.Screen name="AR" component={AR} options={{ headerShown: false }} />
       <Stack.Screen
+        name="MainAppPasien"
+        component={MainAppPasien}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name="MainApp"
         component={MainApp}
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
         name="Artikel"
         component={Artikel}
@@ -137,6 +211,11 @@ const Router = ({ user }) => {
       <Stack.Screen
         name="Chatting"
         component={Chatting}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ChattingPasien"
+        component={ChattingPasien}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -172,6 +251,16 @@ const Router = ({ user }) => {
       <Stack.Screen
         name="UpdateStatus"
         component={UpdateStatus}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="RealtimeData"
+        component={RealtimeData}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Pembayaran"
+        component={Pembayaran}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

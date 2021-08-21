@@ -23,8 +23,10 @@ import WelcomScreen from "./WelcomeScreen.png";
 import PanduanSatu from "./panduan1.png";
 import PanduanDua from "./panduan2.png";
 import EmailIcon from "./email.png";
+import DoctorFitur from "./docterrFitur.png";
 
 export {
+  DoctorFitur,
   EmailIcon,
   PanduanSatu,
   PanduanDua,

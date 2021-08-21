@@ -400,7 +400,7 @@ const Chatting = ({ navigation, route }) => {
                         value={chatContent}
                         onChangeText={(value) => setChatContent(value)}
                         onButtonPress={chatSend}
-                        targetChat={dataDoctor}
+                        placeholder={`tulis pesan untuk ${dataDoctor.data.fullName}`}
                       />
                     </View>
                   ) : (
@@ -456,10 +456,10 @@ const Chatting = ({ navigation, route }) => {
             </View>
           </View>
           <InputChat
+            placeholder={`tulis pesan untuk ${dataDoctor.data.fullName}`}
             value={chatContent}
             onChangeText={(value) => setChatContent(value)}
             onButtonPress={chatSend}
-            targetChat={dataDoctor}
           />
         </View>
       )}

@@ -6,7 +6,11 @@ import IconArtikelActive from "./activeArt.png";
 import IconArtikel from "./notActiveArt.png";
 import BtnIconActive from "./activeBtn.png";
 import BtnIconNotActive from "./notActiveIcon.png";
+import IconMonitoringActive from "./monitoringActive.png";
+import IconMonitoring from "./monitoringNotActive.png";
 export {
+  IconMonitoring,
+  IconMonitoringActive,
   BtnIconActive,
   BtnIconNotActive,
   IconArtikel,
