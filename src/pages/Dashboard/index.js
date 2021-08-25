@@ -106,13 +106,17 @@ const Dashboard = ({ navigation }) => {
       image: Category3,
     },
   ]);
+  const dataProfile = {
+    profile: profile,
+    user: "doctors",
+  };
   return (
     <ScrollView style={styles.pages} showsVerticalScrollIndicator={false}>
       <View>
         <View style={styles.wrapperSection}>
           <HomeProfile
             profile={profile}
-            onPress={() => navigation.navigate("UserProfile", profile)}
+            onPress={() => navigation.navigate("UserProfile", dataProfile)}
           />
           <Text
             style={styles.welcome}

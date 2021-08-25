@@ -140,9 +140,9 @@ const Pembayaran = ({ navigation, route }) => {
               metodePembayaran={true}
               name={detailDoctor.data.fullName}
               avatar={detailDoctor.data.photo}
-              experience={detailDoctor.data.pengalaman}
+              experienced={detailDoctor.data.pengalaman}
               desc={detailDoctor.data.category}
-              rate={detailDoctor.data.rate}
+              rate={detailDoctor.data.rate.ratePersentasi}
             />
           </View>
           <Gap height={20} />

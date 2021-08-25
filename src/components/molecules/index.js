@@ -19,9 +19,15 @@ import CategoryDoctor from "./CategoryDoctor";
 import OnlineDoctors from "./OnlineDoctors";
 import ItemMonitoring from "./ItemMonitoring";
 import Desc from "./Desc";
+import Feedback from "./Feedback";
+import ListAdmin from "./ListAdmin";
+import ListPembayaran from "./ListPembayaran";
+
 export {
+  ListPembayaran,
+  ListAdmin,
+  Feedback,
   Desc,
-  
   ItemMonitoring,
   OnlineDoctors,
   CategoryDoctor,

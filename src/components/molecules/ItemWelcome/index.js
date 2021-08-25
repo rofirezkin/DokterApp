@@ -6,6 +6,8 @@ import {
   IconMonitor,
   IconWelcomeArtikel,
   IconWelcomeAugmented,
+  IconWelcomeDokter,
+  IconWelcomeIntegrated,
   IconWelcomeKonsul,
   IconWelcomeMonitor,
 } from "../../../assets";
@@ -21,6 +23,12 @@ const ItemWelcome = ({ gambar, title }) => {
       return <Image source={IconWelcomeMonitor} style={styles.iconWelcome} />;
     } else if (gambar === "iconAugmented") {
       return <Image source={IconWelcomeAugmented} style={styles.iconWelcome} />;
+    } else if (gambar === "iconDokter") {
+      return <Image source={IconWelcomeDokter} style={styles.iconWelcome} />;
+    } else if (gambar === "iconIntegrated") {
+      return (
+        <Image source={IconWelcomeIntegrated} style={styles.iconWelcome} />
+      );
     }
     return <Image source={IconWelcomeArtikel} style={styles.iconWelcome} />;
   };

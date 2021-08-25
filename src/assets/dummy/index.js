@@ -20,12 +20,16 @@ import IconWelcomeAugmented from "./Augmented.png";
 import IconWelcomeKonsul from "./konsultasi.png";
 import IconWelcomeMonitor from "./monitor.png";
 import WelcomScreen from "./WelcomeScreen.png";
+import IconWelcomeIntegrated from "./Welcomeintegrated.png";
+import IconWelcomeDokter from "./WelcomeDokter.png";
 import PanduanSatu from "./panduan1.png";
 import PanduanDua from "./panduan2.png";
 import EmailIcon from "./email.png";
 import DoctorFitur from "./docterrFitur.png";
 
 export {
+  IconWelcomeDokter,
+  IconWelcomeIntegrated,
   DoctorFitur,
   EmailIcon,
   PanduanSatu,

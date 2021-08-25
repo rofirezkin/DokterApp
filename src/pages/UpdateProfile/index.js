@@ -9,7 +9,8 @@ import ImagePicker from "react-native-image-picker";
 import { NullPhoto } from "../../assets";
 import { useDispatch } from "react-redux";
 
-const UpdateProfile = ({ navigation }) => {
+const UpdateProfile = ({ navigation, route }) => {
+  const role = route.params;
   const dispatch = useDispatch();
   const [profile, setProfile] = useState({
     fullName: "",
@@ -93,15 +94,24 @@ const UpdateProfile = ({ navigation }) => {
     data.photo = profile.photoForDB;
     delete data.photoForDB;
     Fire.database()
-      .ref(`doctors/${profile.uid}/`)
+      .ref(`${role}/${profile.uid}/`)
       .update(data)
       .then(() => {
-        storeData("user", data);
-        dispatch({ type: "SET_LOADING", value: false });
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "MainApp" }],
-        });
+        if (role === "doctors") {
+          storeData("user", data);
+          dispatch({ type: "SET_LOADING", value: false });
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "MainApp" }],
+          });
+        } else {
+          storeData("user", data);
+          dispatch({ type: "SET_LOADING", value: false });
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "MainAppPasien" }],
+          });
+        }
       })
       .catch((err) => {
         dispatch({ type: "SET_LOADING", value: false });
@@ -152,49 +162,86 @@ const UpdateProfile = ({ navigation }) => {
       />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
-          <Gap height={24} />
-          <Profile isRemove photo={photo} onPress={getImage} />
-          <Gap height={23} />
-          <Input
-            value={profile.fullName}
-            label="Full Name"
-            onChangeText={(value) => changeText("fullName", value)}
-          />
-          <Gap height={24} />
-          <Input
-            label="Kategori"
-            value={profile.category}
-            onValueChange={(value) => changeText("category", value)}
-            select
-            selectItem={itemCategory}
-          />
-          <Gap height={24} />
-          <Input
-            value={profile.hospital}
-            label="Nama Rumah Sakit"
-            onChangeText={(value) => changeText("hospital", value)}
-          />
-          <Gap height={24} />
-          <Input
-            value={profile.universitas}
-            label="Pendidikan Terakhir"
-            onChangeText={(value) => changeText("universitas", value)}
-          />
-          <Gap height={24} />
-          <Input
-            value={profile.email}
-            label="Email"
-            disable
-            onChangeText={(value) => changeText("email", value)}
-          />
+          {role === "doctors" ? (
+            <View>
+              <Gap height={24} />
+              <Profile isRemove photo={photo} onPress={getImage} />
+              <Gap height={23} />
+              <Input
+                value={profile.fullName}
+                label="Full Name"
+                onChangeText={(value) => changeText("fullName", value)}
+              />
+              <Gap height={24} />
+              <Input
+                label="Kategori"
+                value={profile.category}
+                onValueChange={(value) => changeText("category", value)}
+                select
+                selectItem={itemCategory}
+              />
+              <Gap height={24} />
+              <Input
+                value={profile.hospital}
+                label="Nama Rumah Sakit"
+                onChangeText={(value) => changeText("hospital", value)}
+              />
+              <Gap height={24} />
+              <Input
+                value={profile.universitas}
+                label="Pendidikan Terakhir"
+                onChangeText={(value) => changeText("universitas", value)}
+              />
+              <Gap height={24} />
+              <Input
+                value={profile.email}
+                label="Email"
+                disable
+                onChangeText={(value) => changeText("email", value)}
+              />
 
-          <Gap height={24} />
-          <Button
-            title="Save Profile"
-            type="secondary"
-            text="secondary"
-            onPress={update}
-          />
+              <Gap height={24} />
+              <Button
+                title="Save Profile"
+                type="secondary"
+                text="secondary"
+                onPress={update}
+              />
+            </View>
+          ) : (
+            <View>
+              <Gap height={24} />
+              <Profile isRemove photo={photo} onPress={getImage} />
+              <Gap height={23} />
+              <Input
+                value={profile.fullName}
+                label="Full Name"
+                onChangeText={(value) => changeText("fullName", value)}
+              />
+              <Gap height={24} />
+              <Input
+                value={profile.category}
+                label="Category"
+                onChangeText={(value) => changeText("category", value)}
+              />
+              <Gap height={24} />
+              <Input
+                value={profile.email}
+                label="Email"
+                disable
+                onChangeText={(value) => changeText("email", value)}
+              />
+              <Gap height={24} />
+
+              <Gap height={24} />
+              <Button
+                title="Save Profile"
+                type="secondary"
+                text="secondary"
+                onPress={update}
+              />
+            </View>
+          )}
         </View>
       </ScrollView>
     </View>

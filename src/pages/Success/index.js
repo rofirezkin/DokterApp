@@ -38,6 +38,37 @@ const Success = ({ navigation, route }) => {
               </View>
             </View>
           )}
+          {dataSuccess.data === "Anda Berhasil Konfirmasi Pembayaran" && (
+            <View style={styles.container}>
+              <View style={styles.succes}>
+                <Image source={SuccessPhoto} style={styles.avatar} />
+              </View>
+              <View>
+                <Gap height={25} />
+                <Text style={styles.berhasil}>
+                  Anda Berhasil Konfirmasi Pembayaran kepada Pasien
+                </Text>
+                <Gap height={10} />
+                <Text style={styles.admin}>
+                  Ayo lakukan Konfirmasi Pembayaran yang lain!
+                </Text>
+
+                <Gap height={25} />
+                <Button
+                  title="Kembali ke Dashboard"
+                  type="secondary"
+                  text="secondary"
+                  onPress={() =>
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: "DashboardAdmin" }],
+                    })
+                  }
+                />
+              </View>
+            </View>
+          )}
+
           {dataSuccess.data === "Anda Berhasil Melakukan Pembayaran" && (
             <View style={styles.container}>
               <View style={styles.succes}>

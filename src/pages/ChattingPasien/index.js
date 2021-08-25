@@ -20,7 +20,7 @@ import {
   getData,
   getUidTime,
   setDateChat,
-  setDateChatMessages,
+  setDateChatMessage,
   showError,
 } from "../../utils";
 import { Fire } from "../../config";
@@ -128,7 +128,7 @@ const ChattingPasien = ({ navigation, route }) => {
 
     const dataHistoryChatForUser = {
       lastContentChat: chatContent,
-      lastChatDate: setDateChatMessages(today),
+      lastChatDate: setDateChatMessage(today),
       uidPartner: dataDoctor.data.uid,
       uidTime: `${getUidTime(today)}`,
     };
@@ -136,7 +136,7 @@ const ChattingPasien = ({ navigation, route }) => {
     if (chatData.length > 0) {
       const dataHistoryChatForDoctor = {
         lastContentChat: chatContent,
-        lastChatDate: setDateChatMessages(today),
+        lastChatDate: setDateChatMessage(today),
         uidPartner: user.uid,
         uidTime: `${getUidTime(today)}`,
       };
@@ -144,7 +144,7 @@ const ChattingPasien = ({ navigation, route }) => {
     } else {
       const dataHistoryChatForDoctor = {
         lastContentChat: chatContent,
-        lastChatDate: setDateChatMessages(today),
+        lastChatDate: setDateChatMessage(today),
         uidPartner: user.uid,
         uidTime: `${getUidTime(today)}`,
         lihatData: "data belum dilihat",

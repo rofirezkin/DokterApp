@@ -1,35 +1,105 @@
-import * as React from "react";
-import { View, useWindowDimensions } from "react-native";
-import { TabView, SceneMap } from "react-native-tab-view";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Gap, Header, List } from "../../components";
+import { Fire } from "../../config";
+import { colors, getData } from "../../utils";
 
-const FirstRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
-);
+const StatusPembayaran = ({ navigation, route }) => {
+  const dataAdmin = route.params;
+  console.log("daraaadamti", dataAdmin);
+  const [user, setUser] = useState({});
+  const [dataMedical, setDataMedical] = useState("");
 
-const SecondRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-);
+  const [filter, setFilter] = useState([]);
 
-const renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
-});
+  const getUserData = () => {
+    getData("user").then((res) => {
+      setUser(res);
+    });
+  };
+  useEffect(() => {
+    getUserData();
 
-export default function TabViewExample() {
-  const layout = useWindowDimensions();
+    let unmounted = false;
+    Fire.database()
+      .ref(`users/${user.uid}/data/`)
+      .on("value", (snapshot) => {
+        if (snapshot.val()) {
+          if (!unmounted) {
+            setDataMedical(snapshot.val());
+          }
+        }
+      });
+    return () => {
+      unmounted = true;
+    };
+  }, [user.uid]);
 
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    { key: "first", title: "First" },
-    { key: "second", title: "Second" },
-  ]);
-
-  return (
-    <TabView
-      navigationState={{ index, routes }}
-      renderScene={renderScene}
-      onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
-    />
+  const dataFilterVerifikasi = dataAdmin.filter(
+    (element) => element.data.status === "Belum dikonfirmasi"
   );
-}
+  const dataFilterSukses = dataAdmin.filter(
+    (element) => element.data.status === "sukses"
+  );
+  const dataFilterFeedback = dataAdmin.filter(
+    (element) => element.data.status === "feedback"
+  );
+  const _dataFilterVerifikasi = {
+    dataVerifikasi: dataFilterVerifikasi,
+    status: "Belum dikonfirmasi",
+  };
+  const _dataFilterSukses = {
+    dataVerifikasi: dataFilterSukses,
+    status: "Pembayaran berhasil",
+    dataMedical: dataMedical,
+  };
+
+  const _dataFilterFeedback = {
+    dataVerifikasi: dataFilterFeedback,
+    status: "Feedback Dokter",
+  };
+  return (
+    <View style={styles.pages}>
+      <Header title="Panduan Aplikasi" onPress={() => navigation.goBack()} />
+      <View style={styles.container}>
+        <Gap height={15} />
+        <List
+          name="Verifikasi Admin"
+          desc="Lihat Verifikasi Admin"
+          type="next"
+          icon="help"
+          onPress={() =>
+            navigation.navigate("DetailPembayaranPasien", _dataFilterVerifikasi)
+          }
+        />
+        <List
+          name="Berhasil"
+          desc="Panduan Lengkap"
+          type="next"
+          icon="help"
+          onPress={() =>
+            navigation.navigate("DetailPembayaranPasien", _dataFilterSukses)
+          }
+        />
+        <List
+          name="Feedback"
+          desc="Panduan Lengkap"
+          type="next"
+          icon="help"
+          onPress={() =>
+            navigation.navigate("DetailPembayaranPasien", _dataFilterFeedback)
+          }
+        />
+      </View>
+    </View>
+  );
+};
+
+export default StatusPembayaran;
+
+const styles = StyleSheet.create({
+  pages: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+});

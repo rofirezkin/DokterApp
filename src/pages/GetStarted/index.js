@@ -12,8 +12,8 @@ const GetStarted = ({ navigation }) => {
       </View>
       <View style={styles.pageTwo}>
         <View style={styles.titleGeneral}>
-          <Text style={styles.titleOne}> Online Chatting </Text>
-          <Text style={styles.titleOne}>With Patient </Text>
+          <Text style={styles.titleOne}> Get Online Chatting with </Text>
+          <Text style={styles.titleOne}>Certified Doctors</Text>
           <Text style={styles.titleTwo}>
             Get consultations with the best doctors
           </Text>
@@ -24,14 +24,14 @@ const GetStarted = ({ navigation }) => {
         <View style={{ width: "100%" }}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("Register")}
+            onPress={() => navigation.navigate("RoleUser", "Register")}
           >
             <Text style={styles.text}>Get Started</Text>
           </TouchableOpacity>
           <Gap height={12} />
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.replace("Login")}
+            onPress={() => navigation.navigate("RoleUser", "Masuk")}
           >
             <Text style={styles.text}>Sign In</Text>
           </TouchableOpacity>

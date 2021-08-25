@@ -11,7 +11,8 @@ import { IconWelcome, WelcomScreen } from "../../assets";
 import { Gap, ItemWelcome } from "../../components";
 import { colors } from "../../utils";
 
-const Welcome = ({ navigation }) => {
+const Welcome = ({ navigation, route }) => {
+  const role = route.params;
   return (
     <View style={styles.page}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -34,26 +35,53 @@ const Welcome = ({ navigation }) => {
             <Text style={styles.titleHeader}>
               Fitur yang akan Membantu anda
             </Text>
-            <Gap height={20} />
-            <View style={styles.componentItem}>
-              <ItemWelcome gambar="iconArtikel" title="Buat Artikel" />
-              <ItemWelcome gambar="iconKonsul" title="Konsultasi" />
-            </View>
-            <Gap height={20} />
-            <View style={styles.componentItem}>
-              <ItemWelcome gambar="iconMonitor" title="Lihat Data" />
-              <ItemWelcome gambar="iconAugmented" title="Fitur AR" />
-            </View>
-            <Gap height={20} />
-            <View style={styles.button}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("PanduanSingkat")}
-                style={styles.buttonNext}
-              >
-                <Text style={styles.textNext}>Next</Text>
-              </TouchableOpacity>
-            </View>
-            <Gap height={20} />
+            {role === "users" ? (
+              <View>
+                <Gap height={20} />
+                <View style={styles.componentItem}>
+                  <ItemWelcome gambar="iconIntegrated" title="Integrasi Alat" />
+                  <ItemWelcome gambar="iconKonsul" title="Konsultasi" />
+                </View>
+                <Gap height={20} />
+                <View style={styles.componentItem}>
+                  <ItemWelcome gambar="iconMonitor" title="Lihat Data" />
+                  <ItemWelcome gambar="iconDokter" title="Pilih Dokter" />
+                </View>
+                <Gap height={20} />
+                <View style={styles.button}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("PanduanSingkat")}
+                    style={styles.buttonNext}
+                  >
+                    <Text style={styles.textNext}>Next</Text>
+                  </TouchableOpacity>
+                </View>
+                <Gap height={20} />
+              </View>
+            ) : (
+              <View>
+                <Gap height={20} />
+                <View style={styles.componentItem}>
+                  <ItemWelcome gambar="iconArtikel" title="Buat Artikel" />
+                  <ItemWelcome gambar="iconKonsul" title="Konsultasi" />
+                </View>
+                <Gap height={20} />
+                <View style={styles.componentItem}>
+                  <ItemWelcome gambar="iconMonitor" title="Lihat Data" />
+                  <ItemWelcome gambar="iconAugmented" title="Fitur AR" />
+                </View>
+                <Gap height={20} />
+                <View style={styles.button}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("PanduanSingkat")}
+                    style={styles.buttonNext}
+                  >
+                    <Text style={styles.textNext}>Next</Text>
+                  </TouchableOpacity>
+                </View>
+                <Gap height={20} />
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>

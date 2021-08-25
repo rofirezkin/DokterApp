@@ -9,7 +9,8 @@ import { Fire } from "../../config";
 import RNFetchBlob from "rn-fetch-blob";
 
 const UploadPhoto = ({ navigation, route }) => {
-  const { fullName, category, uid } = route.params;
+  const { fullName, category, uid, role } = route.params;
+  console.log("rolee", role);
   const [photoForDB, setPhotoForDB] = useState("");
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(NullPhoto);
@@ -70,9 +71,7 @@ const UploadPhoto = ({ navigation, route }) => {
     );
   };
   const uploadAndContinue = () => {
-    Fire.database()
-      .ref("doctors/" + uid + "/")
-      .update({ photo: photoForDB });
+    Fire.database().ref(`${role}/${uid}/`).update({ photo: photoForDB });
 
     const data = route.params;
     data.photo = photoForDB;
@@ -80,16 +79,14 @@ const UploadPhoto = ({ navigation, route }) => {
     storeData("user", data);
     navigation.reset({
       index: 0,
-      routes: [{ name: "Welcome" }],
+      routes: [{ name: "Welcome", params: role }],
     });
   };
 
   const updateProfile = () => {
     if (kirimPhoto.length > 1) {
       const base64fire = `data:image/png;base64, ${kirimPhoto}`;
-      Fire.database()
-        .ref("doctors/" + uid + "/")
-        .update({ photo: base64fire });
+      Fire.database().ref(`${role}/${uid}/`).update({ photo: base64fire });
 
       const data = route.params;
       data.photo = base64fire;
@@ -97,7 +94,7 @@ const UploadPhoto = ({ navigation, route }) => {
       storeData("user", data);
       navigation.reset({
         index: 0,
-        routes: [{ name: "Welcome" }],
+        routes: [{ name: "Welcome", params: role }],
       });
     } else {
       showMessage({

@@ -13,8 +13,6 @@ import {
   Text,
   View,
   StyleSheet,
-  PixelRatio,
-  TouchableHighlight,
   TouchableOpacity,
 } from "react-native";
 
@@ -41,7 +39,7 @@ var AR_NAVIGATOR_TYPE = "AR";
 var defaultNavigatorType = UNSET;
 
 export default class ViroSample extends Component {
-  constructor({ route, props }) {
+  constructor({ route, props, navigation }) {
     const dataMonitoring = route.params;
 
     const urlData = `doctors/${dataMonitoring.uidUser}/dataAR`;
@@ -66,7 +64,10 @@ export default class ViroSample extends Component {
     this.state = {
       navigatorType: defaultNavigatorType,
       sharedProps: sharedProps,
-      dataMonitoring: dataPush,
+      dataMonitoring: {
+        dataMonitor: dataPush,
+      },
+      navigation: navigation,
     };
 
     this._getExperienceSelector = this._getExperienceSelector.bind(this);
@@ -90,22 +91,32 @@ export default class ViroSample extends Component {
   }
 
   // Presents the user with a choice of an AR or VR experience
-  _getExperienceSelector(dataMonitoring) {
-    var lool = dataMonitoring;
-
+  _getExperienceSelector() {
     return (
       <View style={localStyles.outer}>
         <View style={localStyles.inner}>
-          <Text style={localStyles.titleText}>
-            Augmented Reality Experience:
-          </Text>
-          {this.state.dataMonitoring.gender === "pria" ? (
+          <Text style={localStyles.titleText}>Tampilkan data Pasien:</Text>
+
+          <TouchableOpacity
+            style={localStyles.buttons}
+            onPress={() =>
+              this.state.navigation.navigate(
+                "SaveData",
+                this.state.dataMonitoring
+              )
+            }
+            underlayColor={"#68a0ff"}
+          >
+            <Text style={localStyles.buttonText}>Lihat Data</Text>
+          </TouchableOpacity>
+
+          {this.state.dataMonitoring.dataMonitor.gender === "pria" ? (
             <TouchableOpacity
               style={localStyles.buttons}
               onPress={this._getExperienceButtonOnPress(AR_NAVIGATOR_TYPE)}
               underlayColor={"#68a0ff"}
             >
-              <Text style={localStyles.buttonText}>AR </Text>
+              <Text style={localStyles.buttonText}>lihat dengan AR </Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
@@ -113,7 +124,7 @@ export default class ViroSample extends Component {
               onPress={this._getExperienceButtonOnPress(WN_NAVIGATOR_TYPE)}
               underlayColor={"#68a0ff"}
             >
-              <Text style={localStyles.buttonText}>AR</Text>
+              <Text style={localStyles.buttonText}> lihat dengan AR</Text>
             </TouchableOpacity>
           )}
         </View>

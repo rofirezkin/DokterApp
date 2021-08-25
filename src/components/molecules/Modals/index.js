@@ -196,6 +196,47 @@ const Modals = ({
           </View>
         </Modal>
       )}
+      {type === "medical checkup" && (
+        <Modal
+          visible={visible}
+          transparent
+          onRequestClose={onRequestClose}
+          animationType="slide"
+          hardwareAccelerated
+        >
+          <View style={styles.centered_view}>
+            <View style={styles.warning_modal}>
+              <View style={styles.warning_title}>
+                <Text style={styles.text}>PERINGATAN!</Text>
+              </View>
+              <View style={styles.warning_body}>
+                <Text style={styles.text}>
+                  Anda disarankan untuk melakukan medical checkup pada alat
+                  Smart Health Monitoring, karena dibutuhkan agar dokter bisa
+                  mengetahui kondisi anda.
+                </Text>
+                <Text style={styles.text}>
+                  apakah anda ingin melakukan medical checkup ?
+                </Text>
+              </View>
+              <View style={styles.modalsButton}>
+                <TouchableOpacity
+                  onPress={showWarningFalse}
+                  style={styles.warning_button}
+                >
+                  <Text style={styles.textModals}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={onPress}
+                  style={styles.warning_button}
+                >
+                  <Text style={styles.textModals}>Koneksi Alat</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )}
     </>
   );
 };

@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import { ListData, Gap, Button } from "../../components";
 import { Fire } from "../../config";
@@ -86,7 +92,7 @@ const Monitoring = ({ navigation }) => {
             </View>
           )}
 
-          <View style={styles.koneksialat}>
+          {/* <View style={styles.koneksialat}>
             <Text style={styles.koneksi}>Koneksikan Alat Dengan Aplikasi</Text>
             <Button
               title="Koneksikan Alat"
@@ -94,6 +100,33 @@ const Monitoring = ({ navigation }) => {
               type="secondary"
               onPress={() => navigation.navigate("KoneksiAlat")}
             />
+          </View>
+          <View style={styles.koneksialat}>
+            <Text style={styles.koneksi}>Input Manual Data</Text>
+            <Button
+              title="Input Data Manual"
+              text="secondary"
+              type="secondary"
+              onPress={() => navigation.navigate("InputDataMedis")}
+            />
+          </View> */}
+          <View style={styles.koneksialat}>
+            <Text style={styles.koneksi}>Input Data Medical Checkup</Text>
+            <View style={styles.componentEdit}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("InputDataMedis")}
+                style={styles.buttonInputData}
+              >
+                <Text style={styles.editText}>Input Form</Text>
+              </TouchableOpacity>
+              <Gap width={7} />
+              <TouchableOpacity
+                onPress={() => navigation.navigate("KoneksiAlat")}
+                style={styles.buttonInputData}
+              >
+                <Text style={styles.editText}>Koneksi Alat</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
         <Gap height={20} />
@@ -137,5 +170,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: colors.secondary,
     marginVertical: 20,
+  },
+  componentEdit: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  buttonInputData: {
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    backgroundColor: colors.primary,
+
+    borderRadius: 8,
+  },
+
+  editText: {
+    color: "white",
   },
 });

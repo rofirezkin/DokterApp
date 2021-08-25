@@ -37,7 +37,17 @@ import SaveData from "./SaveData";
 import ChattingPasien from "./ChattingPasien";
 import Pembayaran from "./Pembayaran";
 import StatusPembayaran from "./StatusPembayaran";
+import DetailPembayaranPasien from "./DetailPembayaranPasien";
+import RoleUser from "./RoleUser";
+import DashboardAdmin from "./DashboardAdmin";
+import DetailPembayaranAdmin from "./DetailPembayaranAdmin";
+import InputDataMedis from "./InputDataMedis";
 export {
+  InputDataMedis,
+  DetailPembayaranAdmin,
+  DashboardAdmin,
+  RoleUser,
+  DetailPembayaranPasien,
   StatusPembayaran,
   Pembayaran,
   ChattingPasien,

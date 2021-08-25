@@ -5,8 +5,8 @@ import Logo from "./logoNew.png";
 const Splash = ({ navigation }) => {
   useEffect(() => {
     const unsubscribe = Fire.auth().onAuthStateChanged((user) => {
+      console.log("userrr", user);
       setTimeout(() => {
-        console.log("userrr", user);
         if (user) {
           if (user.emailVerified === true) {
             Fire.database()
@@ -37,7 +37,7 @@ const Splash = ({ navigation }) => {
         } else {
           navigation.replace("GetStarted");
         }
-      }, 2000);
+      }, 4000);
     });
     return () => unsubscribe();
   }, [navigation]);

@@ -14,7 +14,8 @@ import { Button, Gap, Input, Link } from "../../components/atoms";
 import { Fire } from "../../config";
 import { colors, storeData, useForm } from "../../utils";
 import Logo from "./logoNew.png";
-const Login = ({ navigation }) => {
+const Login = ({ navigation, route }) => {
+  const role = route.params;
   const [form, setForm] = useForm({ email: "", password: "" });
   const [isSecureEntry, setIsSecureEntry] = useState(true);
   const dispatch = useDispatch();
@@ -25,59 +26,59 @@ const Login = ({ navigation }) => {
       .then((res) => {
         if (res.user.emailVerified === true) {
           Fire.database()
-            .ref(`doctors/${res.user.uid}/`)
+            .ref(`${role}/${res.user.uid}/`)
             .once("value")
             .then((resDB) => {
               if (resDB.val()) {
-                const dataKirim = resDB.val();
-                const kirimStorage = {
-                  category: dataKirim.category,
-                  email: dataKirim.email,
-                  fullName: dataKirim.fullName,
-                  gender: dataKirim.gender,
-                  photo: dataKirim.photo,
-                  uid: dataKirim.uid,
-                  hospital: dataKirim.hospital,
-                  nomorSTR: dataKirim.nomorSTR,
-                  pembayaran: dataKirim.pembayaran,
-                  pengalaman: dataKirim.pengalaman,
-                  shortDesc: dataKirim.shortDesc,
-                  universitas: dataKirim.universitas,
-                };
+                if (role === "doctors") {
+                  const dataKirim = resDB.val();
+                  const kirimStorage = {
+                    category: dataKirim.category,
+                    email: dataKirim.email,
+                    fullName: dataKirim.fullName,
+                    gender: dataKirim.gender,
+                    photo: dataKirim.photo,
+                    uid: dataKirim.uid,
+                    hospital: dataKirim.hospital,
+                    nomorSTR: dataKirim.nomorSTR,
+                    pembayaran: dataKirim.pembayaran,
+                    pengalaman: dataKirim.pengalaman,
+                    shortDesc: dataKirim.shortDesc,
+                    universitas: dataKirim.universitas,
+                  };
 
-                storeData("user", kirimStorage);
-                navigation.replace("MainApp");
-                dispatch({ type: "SET_LOADING", value: false });
-              } else {
-                Fire.database()
-                  .ref(`users/${res.user.uid}/`)
-                  .once("value")
-                  .then((resDB) => {
-                    if (resDB.val()) {
-                      const dataKirim = resDB.val();
-                      const kirimStorage = {
-                        category: dataKirim.category,
-                        email: dataKirim.email,
-                        fullName: dataKirim.fullName,
-                        gender: dataKirim.gender,
-                        photo: dataKirim.photo,
-                        uid: dataKirim.uid,
-                      };
+                  storeData("user", kirimStorage);
+                  navigation.replace("MainApp");
+                  dispatch({ type: "SET_LOADING", value: false });
+                } else if (role === "users") {
+                  const dataKirim = resDB.val();
+                  const kirimStorage = {
+                    category: dataKirim.category,
+                    email: dataKirim.email,
+                    fullName: dataKirim.fullName,
+                    gender: dataKirim.gender,
+                    photo: dataKirim.photo,
+                    uid: dataKirim.uid,
+                  };
 
-                      storeData("user", kirimStorage);
-                      navigation.replace("DashboardPasien");
-                      dispatch({ type: "SET_LOADING", value: false });
-                    } else {
-                      Fire.auth().signOut();
-                      dispatch({ type: "SET_LOADING", value: false });
-                      showMessage({
-                        message: "sepertinya anda salah memasukan akun",
-                        type: "default",
-                        backgroundColor: colors.error,
-                        color: colors.white,
-                      });
-                    }
+                  storeData("user", kirimStorage);
+                  navigation.replace("MainAppPasien");
+                  dispatch({ type: "SET_LOADING", value: false });
+                } else if (role === "admin") {
+                  navigation.replace("DashboardAdmin");
+                  dispatch({ type: "SET_LOADING", value: false });
+                } else {
+                  Fire.auth().signOut();
+                  dispatch({ type: "SET_LOADING", value: false });
+                  showMessage({
+                    message: "sepertinya anda salah memasukan akun",
+                    type: "default",
+                    backgroundColor: colors.error,
+                    color: colors.white,
                   });
+                }
+              } else {
+                Fire.auth().signOut();
                 dispatch({ type: "SET_LOADING", value: false });
                 showMessage({
                   message: "sepertinya anda salah memasukan akun",
@@ -145,12 +146,12 @@ const Login = ({ navigation }) => {
             onPress={login}
           />
           <Gap height={30} />
-          <Link
+          {/* <Link
             title="Create New Account"
             size={16}
             align="center"
-            onPress={() => navigation.navigate("Register")}
-          />
+            onPress={() => navigation.navigate("RoleUser", "Register")}
+          /> */}
         </View>
       </ScrollView>
     </View>

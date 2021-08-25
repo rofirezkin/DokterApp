@@ -151,7 +151,7 @@ const DashboardPasien = ({ navigation }) => {
   ]);
   const dataProfile = {
     profile: profile,
-    user: "pasien",
+    user: "users",
   };
   return (
     <View style={styles.pages}>

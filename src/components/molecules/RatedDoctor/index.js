@@ -4,17 +4,70 @@ import { Hari, LikeDokter, TopDoct1, Waktu, Work } from "../../../assets";
 import { colors } from "../../../utils";
 import { Gap } from "../../atoms";
 
-const RatedDoctor = ({ onPress, name, desc, avatar, experienced, rate }) => {
+const RatedDoctor = ({
+  onPress,
+  name,
+  desc,
+  avatar,
+  experienced,
+  rate,
+  metodePembayaran,
+}) => {
+  if (metodePembayaran) {
+    return (
+      <View style={styles.page(metodePembayaran)}>
+        <TouchableOpacity onPress={onPress}>
+          <View style={styles.container}>
+            <Image
+              source={{ uri: avatar }}
+              style={styles.avatar(metodePembayaran)}
+            />
+            <View style={styles.wrapperText}>
+              <Text style={styles.name(metodePembayaran)}>{name}</Text>
+              <Text style={styles.category}>{desc}</Text>
+
+              <View style={styles.smallDesc}>
+                <View style={styles.work}>
+                  <View style={styles.direction1}>
+                    <Image source={Work} />
+                    <Gap width={4} />
+                    <Text style={styles.pad}>{experienced}</Text>
+                  </View>
+                </View>
+                {rate !== undefined && (
+                  <View style={styles.work}>
+                    <View style={styles.direction1}>
+                      <Image source={LikeDokter} />
+                      <Gap width={4} />
+                      <Text style={styles.pad}>{`${rate}%`}</Text>
+                    </View>
+                  </View>
+                )}
+              </View>
+              <View style={styles.spaceDate}>
+                <View>
+                  <Text style={styles.harga}>Rp15.000</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  }
   return (
-    <View style={styles.page}>
+    <View style={styles.page(metodePembayaran)}>
       <TouchableOpacity onPress={onPress}>
         <View style={styles.container}>
-          <Image source={{ uri: avatar }} style={styles.avatar} />
+          <Image
+            source={{ uri: avatar }}
+            style={styles.avatar(metodePembayaran)}
+          />
           <View style={styles.wrapperText}>
-            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.name(metodePembayaran)}>{name}</Text>
             <Text style={styles.category}>{desc}</Text>
 
-            <View style={styles.spaceHorizontal}>
+            <View style={styles.smallDesc}>
               <View style={styles.work}>
                 <View style={styles.direction1}>
                   <Image source={Work} />
@@ -47,8 +100,8 @@ const RatedDoctor = ({ onPress, name, desc, avatar, experienced, rate }) => {
 export default RatedDoctor;
 
 const styles = StyleSheet.create({
-  page: {
-    width: 259,
+  page: (metodePembayaran) => ({
+    width: metodePembayaran ? "100%" : 259,
     marginRight: 15,
     marginBottom: 10,
     marginTop: 5,
@@ -65,13 +118,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
 
     elevation: 6,
-  },
-  spaceHorizontal: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 5,
-    marginBottom: 7,
-  },
+  }),
   pad: {
     fontSize: 12,
   },
@@ -84,12 +131,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   wrapperText: {},
-  avatar: { width: 60, height: 100, borderRadius: 13, marginRight: 12 },
-  name: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#0A3745",
-  },
+  avatar: (metodePembayaran) => ({
+    width: metodePembayaran ? 70 : 60,
+    height: metodePembayaran ? 100 : 100,
+    borderRadius: 13,
+    marginRight: 12,
+  }),
+  name: (metodePembayaran) => ({
+    maxWidth: metodePembayaran ? 200 : 150,
+    fontSize: metodePembayaran ? 18 : 13,
+    fontWeight: metodePembayaran ? "bold" : "600",
+    color: metodePembayaran ? colors.text.secondary : "#0A3745",
+    marginTop: 2,
+  }),
   category: {
     fontSize: 10,
     color: "#727272",
@@ -122,5 +176,11 @@ const styles = StyleSheet.create({
   imageIcon: {
     width: 15,
     height: 15,
+  },
+  smallDesc: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 5,
+    marginBottom: 3,
   },
 });

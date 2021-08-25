@@ -41,6 +41,11 @@ import {
   ChattingPasien,
   Pembayaran,
   StatusPembayaran,
+  DetailPembayaranPasien,
+  RoleUser,
+  DashboardAdmin,
+  DetailPembayaranAdmin,
+  InputDataMedis,
 } from "../pages";
 import { BottomNavigator } from "../components";
 const Stack = createStackNavigator();
@@ -85,6 +90,26 @@ const Router = ({ user }) => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name="RoleUser"
+        component={RoleUser}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="InputDataMedis"
+        component={InputDataMedis}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DashboardAdmin"
+        component={DashboardAdmin}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DetailPembayaranAdmin"
+        component={DetailPembayaranAdmin}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name="Doctors"
         component={Doctors}
         options={{ headerShown: false }}
@@ -92,6 +117,11 @@ const Router = ({ user }) => {
       <Stack.Screen
         name="StatusPembayaran"
         component={StatusPembayaran}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DetailPembayaranPasien"
+        component={DetailPembayaranPasien}
         options={{ headerShown: false }}
       />
       <Stack.Screen

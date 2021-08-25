@@ -11,32 +11,35 @@ const UserProfile = ({ navigation, route }) => {
   const Userprofile = route.params;
   const profile = Userprofile.profile;
   const UserApp = Userprofile.user;
+  console.log("userrss", profile);
 
   const [admin, setDataAdmin] = useState([]);
-  useEffect(() => {
-    let unmounted = false;
-    Fire.database()
-      .ref(`users/${profile.uid}/statusKonsultasi`)
-      .on("value", (snapshot) => {
-        if (snapshot.val()) {
-          const oldData = snapshot.val();
-          const data = [];
-          Object.keys(oldData).map((key) => {
-            data.push({
-              id: key,
-              data: oldData[key],
+  if (UserApp !== "doctors") {
+    useEffect(() => {
+      let unmounted = false;
+      Fire.database()
+        .ref(`users/${profile.uid}/statusKonsultasi`)
+        .on("value", (snapshot) => {
+          if (snapshot.val()) {
+            const oldData = snapshot.val();
+            const data = [];
+            Object.keys(oldData).map((key) => {
+              data.push({
+                id: key,
+                data: oldData[key],
+              });
             });
-          });
 
-          if (!unmounted) {
-            setDataAdmin(data);
+            if (!unmounted) {
+              setDataAdmin(data);
+            }
           }
-        }
-      });
-    return () => {
-      unmounted = true;
-    };
-  }, [profile.uid]);
+        });
+      return () => {
+        unmounted = true;
+      };
+    }, [profile.uid]);
+  }
 
   const signOut1 = () => {
     Fire.auth()
@@ -74,9 +77,9 @@ const UserProfile = ({ navigation, route }) => {
         desc="Last Update Yesterday"
         type="next"
         icon="edit-profile"
-        onPress={() => navigation.navigate("UpdateProfile")}
+        onPress={() => navigation.navigate("UpdateProfile", UserApp)}
       />
-      {UserApp && (
+      {UserApp === "users" && (
         <List
           name="Pembayaran"
           desc="Lihat Status Pembayaran anda"
